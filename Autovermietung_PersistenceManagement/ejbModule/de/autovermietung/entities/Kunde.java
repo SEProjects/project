@@ -14,6 +14,7 @@ public class Kunde {
 	public String PLZ;
 	public String Straße;
 	public boolean SAF;
+	public boolean Admin;
 	
 	public Kunde(){
 		
