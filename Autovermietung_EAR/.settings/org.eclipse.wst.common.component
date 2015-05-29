@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
     <wb-module deploy-name="Autovermietung_EAR">
         <wb-resource deploy-path="/" source-path="/ejbModule" tag="defaultRootSource"/>
+        <dependent-module archiveName="Autovermietung_OnlineSystem.jar" deploy-path="/" handle="module:/resource/Autovermietung_OnlineSystem/Autovermietung_OnlineSystem">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="Autovermietung_PersistenceManagement.jar" deploy-path="/" handle="module:/resource/Autovermietung_PersistenceManagement/Autovermietung_PersistenceManagement">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
         <property name="java-output-path" value="/Autovermietung_EAR/build/classes"/>
     </wb-module>
 </project-modules>

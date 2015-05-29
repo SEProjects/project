@@ -3,6 +3,8 @@
 	<name>Autovermietung_EAR</name>
 	<comment></comment>
 	<projects>
+		<project>Autovermietung_OnlineSystem</project>
+		<project>Autovermietung_PersistenceManagement</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
