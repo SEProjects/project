@@ -19,13 +19,9 @@ public class mieten implements Serializable{
 	private int Mid;
 	@Column(nullable=false)
 	private double Anfangskm;
-	@Column(nullable=false)
 	private double Endkm;
-	@Column(nullable=false)
 	private BigDecimal Vorpreis;
-	@Column(nullable=false)
 	private BigDecimal Rabatt;
-	@Column(nullable=false)
 	private BigDecimal Endpreis;
 	
 	@ManyToOne(optional=false)
@@ -43,18 +39,14 @@ public class mieten implements Serializable{
 		
 	}
 
-	public mieten(double anfangskm, double endkm, BigDecimal vorpreis,
-			BigDecimal rabatt, BigDecimal endpreis, Auto auto, Kunde kunde,
-			Rechnung rechnung) {
+	public mieten(double anfangskm, Auto auto, Kunde kunde) {
 		super();
 		Anfangskm = anfangskm;
-		Endkm = endkm;
-		Vorpreis = vorpreis;
-		Rabatt = rabatt;
-		Endpreis = endpreis;
 		this.auto = auto;
 		this.kunde = kunde;
-		this.rechnung = rechnung;
+		this.rechnung = null;
+		
+
 	}
 
 	public Auto getAuto() {

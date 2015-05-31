@@ -33,6 +33,12 @@ public class Auto implements Serializable {
 	private Autoart autoart;
 	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, mappedBy="auto") @MapKey
 	private Map<Integer,mieten> gemietet;
+	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, mappedBy="auto") @MapKey
+	private Map<Integer,Schaden> schaden;
+	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, mappedBy="auto") @MapKey
+	private Map<Integer,Bewertung> Bewertungen;
+	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, mappedBy="auto") @MapKey
+	private Map<Integer,Dreck> Dreck;
 	
 	public Auto(){
 		

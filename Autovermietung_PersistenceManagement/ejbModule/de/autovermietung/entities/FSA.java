@@ -24,7 +24,7 @@ public class FSA implements Serializable{
 	@Column(nullable=false)
 	private String FSAName;
 	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, mappedBy="FSA") @MapKey
-	private Map<Integer,Kunde> Kunden;
+	private Map<String,Kunde> Kunden;
 	public FSA(){
 		
 	}
@@ -59,12 +59,18 @@ public class FSA implements Serializable{
 		FSAName = fSAName;
 	}
 
-	public Map<Integer, Kunde> getKunden() {
+
+
+	public Map<String, Kunde> getKunden() {
 		return Kunden;
 	}
 
-	public void setKunden(Map<Integer, Kunde> kunden) {
+
+
+	public void setKunden(Map<String, Kunde> kunden) {
 		Kunden = kunden;
 	}
+
+	
 
 }

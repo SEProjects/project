@@ -14,12 +14,7 @@ import javax.persistence.MapKey;
 import javax.persistence.OneToMany;
 @Entity
 public class PLZ implements Serializable{
-	public PLZ(String pLZ, String wohnort, Map<Integer, Kunde> kunden) {
-		super();
-		PLZ = pLZ;
-		Wohnort = wohnort;
-		Kunden = kunden;
-	}
+	
 
 	/**
 	 * 
@@ -30,7 +25,7 @@ public class PLZ implements Serializable{
 	@Column(nullable=false)
 	private String Wohnort;
 	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, mappedBy="Kplz") @MapKey
-	private Map<Integer,Kunde> Kunden;
+	private Map<String,Kunde> Kunden;
 	
 	public PLZ(){
 		
@@ -63,15 +58,30 @@ public class PLZ implements Serializable{
 
 
 
-	public Map<Integer, Kunde> getKunden() {
+
+
+	@Override
+	public String toString() {
+		return "PLZ [PLZ=" + PLZ + ", Wohnort=" + Wohnort + "]";
+	}
+
+
+
+
+
+	public Map<String, Kunde> getKunden() {
 		return Kunden;
 	}
 
 
 
-	public void setKunden(Map<Integer, Kunde> kunden) {
+
+
+	public void setKunden(Map<String, Kunde> kunden) {
 		Kunden = kunden;
 	}
+
+
 
 
 

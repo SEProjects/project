@@ -21,14 +21,13 @@ public class Kunde implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 	@Id @GeneratedValue
-	private int kid;
+	private String email;
 	
 	@Column(nullable=false)
 	private String Kvorname;
 	@Column(nullable=false)
 	private String Knachname;
-	@Column(nullable=false,unique=true)
-	private String email;
+	
 	@Column(nullable=false)
 	private String Kpassword;
 	@Column(nullable=false,unique=true)
@@ -49,6 +48,12 @@ public class Kunde implements Serializable {
 	private Map<Integer,Rechnung> Rechnungen;
 	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, mappedBy="kunde") @MapKey
 	private Map<Integer,Bezahlmethode> Bezahlmethoden;
+	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, mappedBy="kunde") @MapKey
+	private Map<Integer,Schaden> Schaden;
+	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, mappedBy="kunde") @MapKey
+	private Map<Integer,Bewertung> Bewertungen;
+	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, mappedBy="kunde") @MapKey
+	private Map<Integer,Dreck> Dreck;
 
 	@ManyToOne(optional=false)
 	private FSA FSA;
@@ -97,13 +102,6 @@ public class Kunde implements Serializable {
 		Kplz = kplz;
 	}
 
-	public int getKid() {
-		return kid;
-	}
-
-	public void setKid(int kid) {
-		this.kid = kid;
-	}
 	
 	public String getKvorname() {
 		return Kvorname;
