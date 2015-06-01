@@ -1,7 +1,8 @@
 package de.autovermietung.entities;
 
 import java.io.Serializable;
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import javax.persistence.CascadeType;
@@ -11,7 +12,6 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.MapKey;
 import javax.persistence.OneToMany;
 
 
@@ -23,7 +23,7 @@ public class Auto implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 	@Id @GeneratedValue
-	private int Aid;
+	private int aid;
 	@Column(nullable=false)
 	private String position;
 	@Column(nullable=false)
@@ -31,14 +31,14 @@ public class Auto implements Serializable {
 	
 	@ManyToOne(optional=false)
 	private Autoart autoart;
-	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, mappedBy="auto") @MapKey
-	private Map<Integer,mieten> gemietet;
-	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, mappedBy="auto") @MapKey
-	private Map<Integer,Schaden> schaden;
-	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, mappedBy="auto") @MapKey
-	private Map<Integer,Bewertung> Bewertungen;
-	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, mappedBy="auto") @MapKey
-	private Map<Integer,Dreck> Dreck;
+	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, mappedBy="auto") 
+	private List<mieten> gemietet;
+	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, mappedBy="auto") 
+	private List<Schaden> schaden;
+	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, mappedBy="auto")
+	private List<Bewertung> bewertungen;
+	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, mappedBy="auto") 
+	private List<Dreck> dreck;
 	
 	public Auto(){
 		
@@ -46,12 +46,51 @@ public class Auto implements Serializable {
 	}
 	
 	
-	public Auto(int aid, String position, String bez, Autoart autoart) {
+	public Auto( String position, String bez, Autoart autoart) {
 		super();
 		this.position = position;
 		this.bez = bez;
 		this.autoart = autoart;
-		this.gemietet = new HashMap<>();
+		this.gemietet = new ArrayList<>();
+		this.schaden = new ArrayList<>();
+		this.bewertungen = new ArrayList<>();
+		this.dreck = new ArrayList<>();
+	}
+	
+	public void addMieten(mieten miet){
+		gemietet.add(miet);
+	}
+	public void addSchaden(Schaden schaden){
+		this.schaden.add(schaden);
+	}
+	public void addBewertung(Bewertung bewertung){
+		this.bewertungen.add(bewertung);
+	}
+	public void addDreck(Dreck dreck){
+		this.dreck.add(dreck);
+	}
+
+	
+
+
+
+	public String getPosition() {
+		return position;
+	}
+
+
+	public void setPosition(String position) {
+		this.position = position;
+	}
+
+
+	public String getBez() {
+		return bez;
+	}
+
+
+	public void setBez(String bez) {
+		this.bez = bez;
 	}
 
 
@@ -59,45 +98,54 @@ public class Auto implements Serializable {
 		return autoart;
 	}
 
+
 	public void setAutoart(Autoart autoart) {
 		this.autoart = autoart;
 	}
 
-	public Auto(String position,String bez)
-	{
-		this.position = position;
-		this.bez = bez;
+
+	public List<Schaden> getSchaden() {
+		return schaden;
 	}
 
-	public String getPosition() {
-		return position;
+
+	public void setSchaden(List<Schaden> schaden) {
+		this.schaden = schaden;
 	}
-	public void setPosition(String position) {
-		this.position = position;
+
+
+	public List<Bewertung> getBewertungen() {
+		return bewertungen;
 	}
-	public String getBez() {
-		return bez;
+
+
+	public void setBewertungen(List<Bewertung> bewertungen) {
+		this.bewertungen = bewertungen;
 	}
-	public void setBez(String bez) {
-		this.bez = bez;
+
+
+	public List<Dreck> getDreck() {
+		return dreck;
 	}
+
+
+	public void setDreck(List<Dreck> dreck) {
+		this.dreck = dreck;
+	}
+
 
 	public int getAid() {
-		return Aid;
+		return aid;
 	}
 
-	public void setAid(int aid) {
-		Aid = aid;
-	}
 
-	
-
-	public Map<Integer, mieten> getGemietet() {
-		return gemietet;
-	}
-
-	public void setGemietet(Map<Integer, mieten> gemietet) {
+	public void setGemietet(List<mieten> gemietet) {
 		this.gemietet = gemietet;
+	}
+
+
+	public List<mieten> getGemietet() {
+		return gemietet;
 	}
 
 	

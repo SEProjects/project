@@ -12,7 +12,7 @@ public class Bezahlmethode implements Serializable{
 	 * 
 	 */
 	@Id @GeneratedValue
-	private int BMid;
+	private int bmid;
 	private static final long serialVersionUID = 1L;
 	@ManyToOne(optional=false)
 	private Kunde kunde;
@@ -27,13 +27,6 @@ public class Bezahlmethode implements Serializable{
 		this.kunde = kunde;
 	}
 
-	public int getBMid() {
-		return BMid;
-	}
-
-	public void setBMid(int bMid) {
-		BMid = bMid;
-	}
 
 	public Kunde getKunde() {
 		return kunde;
@@ -41,6 +34,14 @@ public class Bezahlmethode implements Serializable{
 
 	public void setKunde(Kunde kunde) {
 		this.kunde = kunde;
+	}
+
+	public int getBmid() {
+		return bmid;
+	}
+
+	public void setBmid(int bmid) {
+		this.bmid = bmid;
 	}
 
 	

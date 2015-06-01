@@ -2,8 +2,8 @@ package de.autovermietung.entities;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -12,7 +12,6 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.MapKey;
 import javax.persistence.OneToMany;
 
 
@@ -25,21 +24,21 @@ public class Autoart implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 	@Id @GeneratedValue
-	private int Aaid;
+	private int aaid;
 	@Column(nullable=false)
-	private String Beschreibung;
-	private int PS;
-	private int Sitzanzahl;
-	private int Kofferraumvolumen;
-	private String Bildlink;
-	private double Kraftstoffverbrauch;
+	private String beschreibung;
+	private int ps;
+	private int sitzanzahl;
+	private int kofferraumvolumen;
+	private String bildlink;
+	private double kraftstoffverbrauch;
 	@Column(nullable=false)
-	private BigDecimal PJK; 
-	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, mappedBy="autoart") @MapKey
-	private Map<Integer,Auto> Autos;
+	private BigDecimal pjk; 
+	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, mappedBy="autoart") 
+	private List<Auto> autos;
 
 	@ManyToOne(optional = false)
-	private Kraftstoff KS;
+	private Kraftstoff ks;
 	@ManyToOne(optional = false)
 	private Marke marke;
 	
@@ -47,137 +46,111 @@ public class Autoart implements Serializable {
 	{
 		
 	}
-	
-	
-	public Autoart(String beschreibung, int pS, int sitzanzahl,
+
+	public Autoart(String beschreibung, int ps, int sitzanzahl,
 			int kofferraumvolumen, String bildlink, double kraftstoffverbrauch,
-			BigDecimal pJK,  Kraftstoff kS, Marke marke) {
+			BigDecimal pjk,  Kraftstoff ks, Marke marke) {
 		super();
-		Beschreibung = beschreibung;
-		PS = pS;
-		Sitzanzahl = sitzanzahl;
-		Kofferraumvolumen = kofferraumvolumen;
-		Bildlink = bildlink;
-		Kraftstoffverbrauch = kraftstoffverbrauch;
-		PJK = pJK;
-		Autos = new HashMap<>();
-		KS = kS;
+		this.beschreibung = beschreibung;
+		this.ps = ps;
+		this.sitzanzahl = sitzanzahl;
+		this.kofferraumvolumen = kofferraumvolumen;
+		this.bildlink = bildlink;
+		this.kraftstoffverbrauch = kraftstoffverbrauch;
+		this.pjk = pjk;
+		this.autos = new ArrayList<>();
+		this.ks = ks;
 		this.marke = marke;
 	}
+	public void addAuto(Auto auto){
+		autos.add(auto);
+	}
 
+	public String getBeschreibung() {
+		return beschreibung;
+	}
+
+	public void setBeschreibung(String beschreibung) {
+		this.beschreibung = beschreibung;
+	}
+
+	public int getPs() {
+		return ps;
+	}
+
+	public void setPs(int ps) {
+		this.ps = ps;
+	}
+
+	public int getSitzanzahl() {
+		return sitzanzahl;
+	}
+
+	public void setSitzanzahl(int sitzanzahl) {
+		this.sitzanzahl = sitzanzahl;
+	}
+
+	public int getKofferraumvolumen() {
+		return kofferraumvolumen;
+	}
+
+	public void setKofferraumvolumen(int kofferraumvolumen) {
+		this.kofferraumvolumen = kofferraumvolumen;
+	}
+
+	public String getBildlink() {
+		return bildlink;
+	}
+
+	public void setBildlink(String bildlink) {
+		this.bildlink = bildlink;
+	}
+
+	public double getKraftstoffverbrauch() {
+		return kraftstoffverbrauch;
+	}
+
+	public void setKraftstoffverbrauch(double kraftstoffverbrauch) {
+		this.kraftstoffverbrauch = kraftstoffverbrauch;
+	}
+
+	public BigDecimal getPjk() {
+		return pjk;
+	}
+
+	public void setPjk(BigDecimal pjk) {
+		this.pjk = pjk;
+	}
+
+
+	public Kraftstoff getKs() {
+		return ks;
+	}
+
+	public void setKs(Kraftstoff ks) {
+		this.ks = ks;
+	}
 
 	public Marke getMarke() {
 		return marke;
 	}
 
-
 	public void setMarke(Marke marke) {
 		this.marke = marke;
 	}
 
-
-	public BigDecimal getPJK() {
-		return PJK;
-	}
-
-
-	public void setPJK(BigDecimal pJK) {
-		PJK = pJK;
-	}
-
-
-	public String getBeschreibung() {
-		return Beschreibung;
-	}
-
-
-	public void setBeschreibung(String beschreibung) {
-		Beschreibung = beschreibung;
-	}
-
-
-	public int getPS() {
-		return PS;
-	}
-
-
-	public void setPS(int pS) {
-		PS = pS;
-	}
-
-
-	public int getSitzanzahl() {
-		return Sitzanzahl;
-	}
-
-
-	public void setSitzanzahl(int sitzanzahl) {
-		Sitzanzahl = sitzanzahl;
-	}
-
-
-	public int getKofferraumvolumen() {
-		return Kofferraumvolumen;
-	}
-
-
-	public void setKofferraumvolumen(int kofferraumvolumen) {
-		Kofferraumvolumen = kofferraumvolumen;
-	}
-
-
 	public int getAaid() {
-		return Aaid;
+		return aaid;
 	}
 
-
-	public void setAaid(int aaid) {
-		Aaid = aaid;
+	public List<Auto> getAutos() {
+		return autos;
 	}
 
-
-	public Map<Integer, Auto> getAutos() {
-		return Autos;
-	}
-
-
-	public void setAutos(Map<Integer, Auto> autos) {
-		Autos = autos;
-	}
-
-
-	public Kraftstoff getKS() {
-		return KS;
-	}
-
-
-	public void setKS(Kraftstoff kS) {
-		KS = kS;
-	}
-
-
-	
-
-
-	public String getBildlink() {
-		return Bildlink;
-	}
-
-
-	public void setBildlink(String bildlink) {
-		Bildlink = bildlink;
-	}
-
-
-	public double getKraftstoffverbrauch() {
-		return Kraftstoffverbrauch;
-	}
-
-
-	public void setKraftstoffverbrauch(double kraftstoffverbrauch) {
-		Kraftstoffverbrauch = kraftstoffverbrauch;
+	public void setAutos(List<Auto> autos) {
+		this.autos = autos;
 	}
 	
-
+	
 	
 }

@@ -13,49 +13,57 @@ public class Kreditkarte extends Bezahlmethode implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	@Column(nullable=false)
-	private String Kartentyp;
+	private String kartentyp;
 	@Column(nullable=false)
-	private int KKnummer;
+	private int kknummer;
 	@Column(nullable=false)
-	private int Ablaufdatum;
+	private int ablaufdatum;
 	@Column(nullable=false)
-	private int KPN;
+	private int kpn;
 	public Kreditkarte(){
 	
 	}
 	
 	public Kreditkarte(String kartentyp, int kKnummer, int ablaufdatum, int kPN,Kunde kunde) {
 		super(kunde);
-		Kartentyp = kartentyp;
-		KKnummer = kKnummer;
-		Ablaufdatum = ablaufdatum;
-		KPN = kPN;
+		this.kartentyp = kartentyp;
+		kknummer = kKnummer;
+		this.ablaufdatum = ablaufdatum;
+		kpn = kPN;
 	}
 
 	public String getKartentyp() {
-		return Kartentyp;
+		return kartentyp;
 	}
+
 	public void setKartentyp(String kartentyp) {
-		Kartentyp = kartentyp;
+		this.kartentyp = kartentyp;
 	}
-	public int getKKnummer() {
-		return KKnummer;
+
+	public int getKknummer() {
+		return kknummer;
 	}
-	public void setKKnummer(int kKnummer) {
-		KKnummer = kKnummer;
+
+	public void setKknummer(int kknummer) {
+		this.kknummer = kknummer;
 	}
+
 	public int getAblaufdatum() {
-		return Ablaufdatum;
+		return ablaufdatum;
 	}
+
 	public void setAblaufdatum(int ablaufdatum) {
-		Ablaufdatum = ablaufdatum;
-	}
-	public int getKPN() {
-		return KPN;
-	}
-	public void setKPN(int kPN) {
-		KPN = kPN;
+		this.ablaufdatum = ablaufdatum;
 	}
 
+	public int getKpn() {
+		return kpn;
+	}
 
+	public void setKpn(int kpn) {
+		this.kpn = kpn;
+	}
+	
+
+	
 }

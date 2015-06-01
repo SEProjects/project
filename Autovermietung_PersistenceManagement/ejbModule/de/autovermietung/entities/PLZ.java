@@ -1,14 +1,13 @@
 package de.autovermietung.entities;
 
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-
 import javax.persistence.Id;
 import javax.persistence.MapKey;
 import javax.persistence.OneToMany;
@@ -21,69 +20,32 @@ public class PLZ implements Serializable{
 	 */
 	private static final long serialVersionUID = 1L;
 	@Id 
-	private String PLZ;
+	private String plz;
 	@Column(nullable=false)
 	private String Wohnort;
-	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, mappedBy="Kplz") @MapKey
-	private Map<String,Kunde> Kunden;
+	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, mappedBy="kplz") @MapKey
+	private List<Kunde> kunden;
 	
 	public PLZ(){
 		
 	}
-
 	
 
-
-
-	public PLZ(String pLZ, String wohnort) {
+	public PLZ(String plz, String wohnort) {
 		super();
-		PLZ = pLZ;
+		this.plz = plz;
 		Wohnort = wohnort;
-		Kunden = new HashMap<>();
+		this.kunden = new ArrayList<>();
 	}
 
 
-
-
-
-	public String getPLZ() {
-		return PLZ;
+	public String getPlz() {
+		return plz;
 	}
 
-
-
-	public void setPLZ(String pLZ) {
-		PLZ = pLZ;
+	public void setPlz(String plz) {
+		this.plz = plz;
 	}
-
-
-
-
-
-	@Override
-	public String toString() {
-		return "PLZ [PLZ=" + PLZ + ", Wohnort=" + Wohnort + "]";
-	}
-
-
-
-
-
-	public Map<String, Kunde> getKunden() {
-		return Kunden;
-	}
-
-
-
-
-
-	public void setKunden(Map<String, Kunde> kunden) {
-		Kunden = kunden;
-	}
-
-
-
-
 
 	public String getWohnort() {
 		return Wohnort;
@@ -92,6 +54,22 @@ public class PLZ implements Serializable{
 	public void setWohnort(String wohnort) {
 		Wohnort = wohnort;
 	}
+
+	public List<Kunde> getKunden() {
+		return kunden;
+	}
+
+	public void setKunden(List< Kunde> kunden) {
+		this.kunden = kunden;
+	}
+	public void addKunde(Kunde kunde){
+		kunden.add(kunde);
+	}
+	
+
+	
+
+
 
 
 }

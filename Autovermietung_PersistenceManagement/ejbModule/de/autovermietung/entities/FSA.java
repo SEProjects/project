@@ -1,8 +1,8 @@
 package de.autovermietung.entities;
 
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -20,11 +20,11 @@ public class FSA implements Serializable{
 	 */
 	private static final long serialVersionUID = 1L;
 	@Id @GeneratedValue
-	private int FSA;
+	private int fsa;
 	@Column(nullable=false)
-	private String FSAName;
-	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, mappedBy="FSA") @MapKey
-	private Map<String,Kunde> Kunden;
+	private String fsaname;
+	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, mappedBy="fsa") @MapKey
+	private List<Kunde> kunden;
 	public FSA(){
 		
 	}
@@ -33,43 +33,43 @@ public class FSA implements Serializable{
 
 	public FSA(String fSAName) {
 		super();
-		FSAName = fSAName;
-		Kunden = new HashMap<>();
+		fsaname = fSAName;
+		kunden = new ArrayList<>();
+	}
+
+	public void addKunde(Kunde kunde){
+		kunden.add(kunde);
+	}
+
+	public String getFsaname() {
+		return fsaname;
 	}
 
 
 
-	public int getFSA() {
-		return FSA;
+	public void setFsaname(String fsaname) {
+		this.fsaname = fsaname;
 	}
 
 
 
-	public void setFSA(int fSA) {
-		FSA = fSA;
+	public List<Kunde> getKunden() {
+		return kunden;
 	}
 
 
 
-	public String getFSAName() {
-		return FSAName;
-	}
-
-	public void setFSAName(String fSAName) {
-		FSAName = fSAName;
+	public void setKunden(List<Kunde> kunden) {
+		this.kunden = kunden;
 	}
 
 
 
-	public Map<String, Kunde> getKunden() {
-		return Kunden;
+	public int getFsa() {
+		return fsa;
 	}
 
 
-
-	public void setKunden(Map<String, Kunde> kunden) {
-		Kunden = kunden;
-	}
 
 	
 

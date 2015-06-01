@@ -2,6 +2,7 @@ package de.autovermietung.entities;
 
 import java.io.Serializable;
 import java.sql.Date;
+import java.util.Calendar;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -16,30 +17,24 @@ public class Schaden implements Serializable{
 	 */
 	private static final long serialVersionUID = 1L;
 	@Id @GeneratedValue
-	private int Sid;
+	private int sid;
 	@ManyToOne(optional=false)
 	private Kunde kunde;
 	@ManyToOne(optional=false)
 	private Auto auto;
-	private String Beschreibung;
-	private Date Time;
+	private String beschreibung;
+	private Date time;
 	public Schaden(){
 		
 	}
-	
 	public Schaden(Kunde kunde, Auto auto, String beschreibung, Date time) {
 		super();
 		this.kunde = kunde;
 		this.auto = auto;
-		Beschreibung = beschreibung;
-		Time = time;
-	}
-
-	public int getSid() {
-		return Sid;
-	}
-	public void setSid(int sid) {
-		Sid = sid;
+		this.beschreibung = beschreibung;
+		Calendar currenttime = Calendar.getInstance();
+		this.time = new Date((currenttime.getTime()).getTime());
+	
 	}
 	public Kunde getKunde() {
 		return kunde;
@@ -54,16 +49,21 @@ public class Schaden implements Serializable{
 		this.auto = auto;
 	}
 	public String getBeschreibung() {
-		return Beschreibung;
+		return beschreibung;
 	}
 	public void setBeschreibung(String beschreibung) {
-		Beschreibung = beschreibung;
+		this.beschreibung = beschreibung;
 	}
 	public Date getTime() {
-		return Time;
+		return time;
 	}
 	public void setTime(Date time) {
-		Time = time;
+		this.time = time;
 	}
+	public int getSid() {
+		return sid;
+	}
+	
+	
 		
 }

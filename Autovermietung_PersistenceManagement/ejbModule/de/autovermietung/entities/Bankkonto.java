@@ -13,31 +13,30 @@ public class Bankkonto extends Bezahlmethode implements Serializable  {
 	private static final long serialVersionUID = 1L;
 
 	@Column(nullable=false)
-	private String IBan;
+	private String iban;
 	@Column(nullable=false)
-	private String BIC;
+	private String bic;
 	
 	public Bankkonto(){
 	
 	}
 	public Bankkonto(String iBan, String bIC,Kunde kunde) {
 		super(kunde);
-		IBan = iBan;
-		BIC = bIC;
+		iban = iBan;
+		bic = bIC;
 	}
-	public String getIBan() {
-		return IBan;
+	public String getIban() {
+		return iban;
 	}
-	public void setIBan(String iBan) {
-		IBan = iBan;
+	public void setIban(String iban) {
+		this.iban = iban;
 	}
-	public String getBIC() {
-		return BIC;
+	public String getBic() {
+		return bic;
 	}
-	public void setBIC(String bIC) {
-		BIC = bIC;
+	public void setBic(String bic) {
+		this.bic = bic;
 	}
-
 	
 
 }

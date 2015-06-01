@@ -1,8 +1,8 @@
 package de.autovermietung.entities;
 
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -19,43 +19,37 @@ public class Marke implements Serializable{
 	 */
 	private static final long serialVersionUID = 1L;
 	@Id @GeneratedValue
-	private int Markeid;
+	private int markeid;
 	@Column(nullable=false)
 	private String markenname;
 	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, mappedBy="marke") @MapKey
-	private Map<Integer,Autoart> Autoart;
+	private List<Autoart> autoart;
 	public Marke(){
 		
 	}
-
 	public Marke(String markenname) {
 		super();
 		this.markenname = markenname;
-		Autoart = new HashMap<>();
+		this.autoart = new ArrayList<>();
 	}
-
-	public int getMarkeid() {
-		return Markeid;
-	}
-
-	public void setMarkeid(int markeid) {
-		this.Markeid = markeid;
-	}
-
 	public String getMarkenname() {
 		return markenname;
 	}
-
 	public void setMarkenname(String markenname) {
 		this.markenname = markenname;
 	}
-
-	public Map<Integer, Autoart> getAutoart() {
-		return Autoart;
+	public List<Autoart> getAutoart() {
+		return autoart;
+	}
+	public void setAutoart(List<Autoart> autoart) {
+		this.autoart = autoart;
+	}
+	public int getMarkeid() {
+		return markeid;
+	}
+	public void addAutoart(Autoart aa){
+		autoart.add(aa);
 	}
 
-	public void setAutoart(Map<Integer, Autoart> autoart) {
-		Autoart = autoart;
-	}
 
 }

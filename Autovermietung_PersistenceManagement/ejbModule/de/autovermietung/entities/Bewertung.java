@@ -2,6 +2,7 @@ package de.autovermietung.entities;
 
 import java.io.Serializable;
 import java.sql.Date;
+import java.util.Calendar;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -16,29 +17,24 @@ public class Bewertung implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 	@Id @GeneratedValue
-	private int Bid;
+	private int bid;
 	@ManyToOne(optional=false)
 	private Kunde kunde;
 	@ManyToOne(optional=false)
 	private Auto auto;
-	private int Note;
-	private Date Time;
+	private int note;
+	private Date time;
 	public Bewertung(){
 		
 	}
-	public Bewertung(int bid, Kunde kunde, Auto auto, int note, Date time) {
+	public Bewertung(Kunde kunde, Auto auto, int note) {
 		super();
-		Bid = bid;
 		this.kunde = kunde;
 		this.auto = auto;
-		Note = note;
-		Time = time;
-	}
-	public int getBid() {
-		return Bid;
-	}
-	public void setBid(int bid) {
-		Bid = bid;
+		this.note = note;
+		Calendar currenttime = Calendar.getInstance();
+		  
+		this.time = new Date((currenttime.getTime()).getTime());
 	}
 	public Kunde getKunde() {
 		return kunde;
@@ -53,16 +49,19 @@ public class Bewertung implements Serializable {
 		this.auto = auto;
 	}
 	public int getNote() {
-		return Note;
+		return note;
 	}
 	public void setNote(int note) {
-		Note = note;
+		this.note = note;
 	}
 	public Date getTime() {
-		return Time;
+		return time;
 	}
 	public void setTime(Date time) {
-		Time = time;
+		this.time = time;
+	}
+	public int getBid() {
+		return bid;
 	}
 	
 }

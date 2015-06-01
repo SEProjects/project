@@ -1,8 +1,8 @@
 package de.autovermietung.entities;
 
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -20,37 +20,37 @@ public class Kraftstoff implements Serializable{
 	 */
 	private static final long serialVersionUID = 1L;
 	@Id @GeneratedValue
-	private int KSid;
+	private int ksid;
 	@Column(nullable=false)
-	private String KSBezeichnung;
-	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, mappedBy="KS") @MapKey
-	private Map<Integer,Autoart> Autoart;
+	private String ksbezeichnung;
+	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, mappedBy="ks") @MapKey
+	private List<Autoart> autoart;
 	public Kraftstoff(){
 	
 	}
-	
-	public Kraftstoff(String kSBezeichnung) {
+	public Kraftstoff(String ksbezeichnung) {
 		super();
-		KSBezeichnung = kSBezeichnung;
-		Autoart = new HashMap<>();
+		this.ksbezeichnung = ksbezeichnung;
+		this.autoart = new ArrayList<>();
 	}
-
-	public int getKSid() {
-		return KSid;
+	public void addAutoart(Autoart autoart){
+		this.autoart.add(autoart);
 	}
-	public void setKSid(int kSid) {
-		KSid = kSid;
+	public String getKsbezeichnung() {
+		return ksbezeichnung;
 	}
-	public String getKSBezeichnung() {
-		return KSBezeichnung;
+	public void setKsbezeichnung(String ksbezeichnung) {
+		this.ksbezeichnung = ksbezeichnung;
 	}
-	public void setKSBezeichnung(String kSBezeichnung) {
-		KSBezeichnung = kSBezeichnung;
+	public List<Autoart> getAutoart() {
+		return autoart;
 	}
-	public Map<Integer, Autoart> getAutoart() {
-		return Autoart;
+	public void setAutoart(List<Autoart> autoart) {
+		this.autoart = autoart;
 	}
-	public void setAutoart(Map<Integer, Autoart> autoart) {
-		Autoart = autoart;
+	public int getKsid() {
+		return ksid;
 	}
+	
+	
 }

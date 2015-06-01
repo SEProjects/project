@@ -37,8 +37,10 @@ public class Databuilder {
 			FSA newFSA = new FSA("Auto");
 			em.persist(newFSA);
 			logger.info(newFSA);
-		
-	
+			Kunde newKunde = new Kunde("asdf","asfd","asdf","adas","asds","asdf","asdf",true,false,newFSA,kplz);
+			newFSA.addKunde(newKunde);
+			kplz.addKunde(newKunde);
+			em.persist(newKunde);
 			
 		}
 

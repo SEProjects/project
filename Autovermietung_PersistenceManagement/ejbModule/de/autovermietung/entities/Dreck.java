@@ -2,6 +2,7 @@ package de.autovermietung.entities;
 
 import java.io.Serializable;
 import java.sql.Date;
+import java.util.Calendar;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,29 +12,24 @@ import javax.persistence.ManyToOne;
 public class Dreck implements Serializable{
 	private static final long serialVersionUID = 1L;
 	@Id @GeneratedValue
-	private int Did;
+	private int did;
 	@ManyToOne(optional=false)
 	private Kunde kunde;
 	@ManyToOne(optional=false)
 	private Auto auto;
-	private Date Time;
+	private Date time;
 	public Dreck() {
 		
 	}
-	
-	public Dreck(int did, Kunde kunde, Auto auto, Date time) {
+	public Dreck( Kunde kunde, Auto auto, Date time) {
 		super();
-		Did = did;
+		
 		this.kunde = kunde;
 		this.auto = auto;
-		Time = time;
-	}
-
-	public int getDid() {
-		return Did;
-	}
-	public void setDid(int did) {
-		Did = did;
+		Calendar currenttime = Calendar.getInstance();
+		 this.time = new Date((currenttime.getTime()).getTime());
+		
+		
 	}
 	public Kunde getKunde() {
 		return kunde;
@@ -47,11 +43,12 @@ public class Dreck implements Serializable{
 	public void setAuto(Auto auto) {
 		this.auto = auto;
 	}
+	public int getDid() {
+		return did;
+	}
 	public Date getTime() {
-		return Time;
+		return time;
 	}
-	public void setTime(Date time) {
-		Time = time;
-	}
+	
 	
 }
