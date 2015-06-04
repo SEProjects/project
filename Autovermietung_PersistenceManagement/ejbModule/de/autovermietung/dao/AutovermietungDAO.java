@@ -2,6 +2,9 @@ package de.autovermietung.dao;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
+import org.jboss.logging.Logger;
 
 import de.autovermietung.entities.Auto;
 import de.autovermietung.entities.Autoart;
@@ -18,18 +21,18 @@ import de.autovermietung.entities.mieten;
  * Session Bean implementation class AutovermietungDAO
  */
 @Stateless
-public class AutovermietungDAO implements AutovermietungDAOLocal,AutovermietungDAOAdminLocal {
-
+public class AutovermietungDAO implements AutovermietungDAOAdminLocal {
+	@PersistenceContext
 	private EntityManager em;
-    /**
-     * Default constructor. 
-     */
-    public AutovermietungDAO() {
-        // TODO Auto-generated constructor stub
-    }
+	private static final Logger logger = Logger.getLogger(Databuilder.class);
     public Kunde findKundebyEmail(String Email)
     {
-    	return em.find(Kunde.class, Email);
+ 
+    	logger.info(Email);
+		
+    	Kunde newKunde = em.find(Kunde.class,"Kevin");
+    	logger.info(newKunde);
+    	return newKunde;
     	
     	   }
     public Auto findAutobyID(int Aid)

@@ -9,5 +9,9 @@
             <dependent-object/>
             <dependency-type>uses</dependency-type>
         </dependent-module>
+        <dependent-module archiveName="Autovermietung_OS.jar" deploy-path="/" handle="module:/resource/Autovermietung_OS/Autovermietung_OS">
+            <dependent-object/>
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
     </wb-module>
 </project-modules>

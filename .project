@@ -5,6 +5,7 @@
 	<projects>
 		<project>Autovermietung_OnlineSystem</project>
 		<project>Autovermietung_PersistenceManagement</project>
+		<project>Autovermietung_OS</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

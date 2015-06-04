@@ -276,4 +276,17 @@ public class Kunde implements Serializable {
 	public void addDreck(Dreck dreck){
 		this.dreck.add(dreck);
 	}
+
+
+	@Override
+	public String toString() {
+		return "Kunde [email=" + email + ", kvorname=" + kvorname
+				+ ", knachname=" + knachname + ", kpassword=" + kpassword
+				+ ", fsnummer=" + fsnummer + ", pan=" + pan + ", strasse="
+				+ strasse + ", saf=" + saf + ", admin=" + admin + ", gemietet="
+				+ gemietet + ", rechnungen=" + rechnungen + ", bezahlmethoden="
+				+ bezahlmethoden + ", schaden=" + schaden + ", bewertungen="
+				+ bewertungen + ", dreck=" + dreck + ", fsa=" + fsa + ", kplz="
+				+ kplz + "]";
+	}
 }
