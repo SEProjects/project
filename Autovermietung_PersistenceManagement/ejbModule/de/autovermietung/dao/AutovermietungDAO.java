@@ -3,8 +3,14 @@ package de.autovermietung.dao;
 import java.util.List;
 
 import javax.ejb.Stateless;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.EntityManager;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
@@ -13,11 +19,14 @@ import org.jboss.logging.Logger;
 import de.autovermietung.entities.Auto;
 import de.autovermietung.entities.Autoart;
 import de.autovermietung.entities.Bankkonto;
+import de.autovermietung.entities.Bewertung;
+import de.autovermietung.entities.Dreck;
 import de.autovermietung.entities.FSA;
 import de.autovermietung.entities.Kunde;
 import de.autovermietung.entities.Marke;
 import de.autovermietung.entities.PLZ;
 import de.autovermietung.entities.Rechnung;
+import de.autovermietung.entities.Schaden;
 import de.autovermietung.entities.Session;
 import de.autovermietung.entities.mieten;
 
@@ -104,6 +113,27 @@ public class AutovermietungDAO implements AutovermietungDAOAdminLocal {
     	    return  query;
   
     }
+	public List<Object[]> getAllAutos(){
+   	 List query = em.createQuery("SELECT  A.aid, a.bez, a.autoart.beschreibung, a.autoart.marke.markenname, a.autoart.ks.ksbezeichnung FROM Auto a").getResultList();
+   	    return  query;
+ 
+   }
+	public List<Object[]> getAllMarken(){
+	   	 List query = em.createQuery("SELECT m.markeid, m.markenname FROM Marke m").getResultList();
+	   	    return  query;
+	 
+	   }
+	public Marke createMarke(String bezeichung){
+		Marke marke = new Marke(bezeichung);
+		em.persist(marke);
+		return marke;
+	}
+	public List<Object[]> getAllKS(){
+		 List query = em.createQuery("SELECT k.ksid, k.ksbezeichnung FROM Kraftstoff k").getResultList();
+	   	 return  query;
+	}
+
+	
 }
 
 

@@ -41,4 +41,8 @@ public interface AutovermietungDAOAdminLocal {
     public Bankkonto createBankkonto(String iBan, String bIC,Kunde kunde);
     public Session findSessionbyId(int Id);
     public List<Object[]> getAllKunden();
+    public List<Object[]> getAllAutos();
+	public List<Object[]> getAllMarken();
+	public Marke createMarke(String bezeichung);
+	public List<Object[]> getAllKS();
 }
