@@ -2,14 +2,15 @@ package de.autovermietung.entities;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.sql.Date;
-import java.util.Calendar;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @Entity
 public class mieten implements Serializable{
@@ -35,7 +36,9 @@ public class mieten implements Serializable{
 	@ManyToOne(optional=false)
 	private Rechnung rechnung;
 	
-	private Date zeit;
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP",nullable=false,updatable = false, insertable = false)
+	private Date timestamp;
 	
 	public mieten(){
 		
@@ -50,9 +53,7 @@ public class mieten implements Serializable{
 		this.auto = auto;
 		this.kunde = kunde;
 	
-		Calendar currenttime = Calendar.getInstance();
-	    this.zeit = new Date((currenttime.getTime()).getTime());
-
+		
 	}
 
 
@@ -159,10 +160,10 @@ public class mieten implements Serializable{
 
 
 
-	public Date getZeit() {
-		return zeit;
+	
+	
+	public Date getTimestamp() {
+		return timestamp;
 	}
-	
-	
 	
 }

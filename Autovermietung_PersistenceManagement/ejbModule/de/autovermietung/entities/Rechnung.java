@@ -2,9 +2,10 @@ package de.autovermietung.entities;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.sql.Date;
+import java.util.Date;
+
 import java.util.ArrayList;
-import java.util.Calendar;
+
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -15,6 +16,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 @Entity
 public class Rechnung implements Serializable{
 
@@ -27,8 +30,9 @@ public class Rechnung implements Serializable{
 	private int rid;
 	@Column(nullable=false)
 	private BigDecimal gesamtpreis;
-	@Column(nullable=false)
-	private Date zeit;
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP",nullable=false,updatable = false, insertable = false)
+	private Date timestamp;
 	@Column(nullable=false)
 	private BigDecimal mwst;
 	
@@ -50,8 +54,7 @@ public class Rechnung implements Serializable{
 		this.mwst = mwst;
 		this.kunde = kunde;
 		rechnungspositionen = new ArrayList<>();
-		Calendar currenttime = Calendar.getInstance();
-		   this.zeit = new Date((currenttime.getTime()).getTime());
+	
 	}
 	public void addRechnungsposition(mieten miet){
 		rechnungspositionen.add(miet);
@@ -100,7 +103,9 @@ public class Rechnung implements Serializable{
 	public int getRid() {
 		return rid;
 	}
-
+	public Date getTimestamp() {
+		return timestamp;
+	}
 	
 	
 }

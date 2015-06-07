@@ -1,4 +1,6 @@
 package de.autovermietung.dao;
+import java.util.List;
+
 import javax.ejb.Local;
 
 import de.autovermietung.entities.Auto;
@@ -9,6 +11,7 @@ import de.autovermietung.entities.Kunde;
 import de.autovermietung.entities.Marke;
 import de.autovermietung.entities.PLZ;
 import de.autovermietung.entities.Rechnung;
+import de.autovermietung.entities.Session;
 import de.autovermietung.entities.mieten;
 
 @Local
@@ -25,7 +28,9 @@ public interface AutovermietungDAOAdminLocal {
     public Rechnung findRechnungbyID(int Rid);
   
     public Marke findMarkebyID(int Mid);
+    public Session createSession(Kunde kunde);
     
+    public void deleteSession(Session session);
     public Kunde createKunde(String kvorname, String knachname, String email,
 			String kpassword, String fSnummer, String pAN, String strasse,
 			boolean sAF, FSA fSA, PLZ kplz);
@@ -34,6 +39,6 @@ public interface AutovermietungDAOAdminLocal {
 	
 	
     public Bankkonto createBankkonto(String iBan, String bIC,Kunde kunde);
-   
-
+    public Session findSessionbyId(int Id);
+    public List<Object[]> getAllKunden();
 }

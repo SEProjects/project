@@ -6,18 +6,21 @@ public class KundenLoginResponse extends ReturncodeResponse {
 
 	private static final long serialVersionUID = -3173158310918408228L;
 
-	private int sessionId;
+	private int session;
 	
 	public KundenLoginResponse(){
 		
 	}
 
-	public int getSessionId() {
-		return sessionId;
+	public int getSession() {
+		return session;
 	}
 
-	public void setSessionId(int sessionId) {
-		this.sessionId = sessionId;
+	public void setSession(int session) {
+		this.session = session;
 	}
+
+
+
 
 }

@@ -19,7 +19,7 @@ import de.autovermietung.entities.PLZ;
  * Session Bean implementation class Databuilder
  */
 
-
+@Startup
 @Singleton
 @LocalBean
 public class Databuilder {
@@ -29,18 +29,19 @@ public class Databuilder {
 		EntityManager em;
 		
 		
-		
+
+		@PostConstruct
 		private void init() { 
-			Kunde customer1 = em.find(Kunde.class, "Kevin");
+			Kunde customer1 = em.find(Kunde.class, "Kevin@web.de");
 			if (customer1 == null) {
 				boolean admin = false;
 				PLZ kplz = new PLZ("48153","Münster");
 				em.persist(kplz);
 				logger.info(kplz);
-				FSA newFSA = new FSA("Auto");
+				FSA newFSA = new FSA("LKW");
 				em.persist(newFSA);
 				logger.info(newFSA);
-				Kunde newKunde = new Kunde("Kevin","asfd","asdf","adas","asds","asdf","asdf",true,false,newFSA,kplz);
+				Kunde newKunde = new Kunde("Kevin@web.de","asfd","asdf","1234","asds","asdf","asdf",true,false,newFSA,kplz);
 				newFSA.addKunde(newKunde);
 				kplz.addKunde(newKunde);
 				em.persist(newKunde);

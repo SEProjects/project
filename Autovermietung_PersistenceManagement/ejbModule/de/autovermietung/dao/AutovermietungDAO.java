@@ -1,8 +1,12 @@
 package de.autovermietung.dao;
 
+import java.util.List;
+
 import javax.ejb.Stateless;
+import javax.persistence.Column;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 import org.jboss.logging.Logger;
 
@@ -14,6 +18,7 @@ import de.autovermietung.entities.Kunde;
 import de.autovermietung.entities.Marke;
 import de.autovermietung.entities.PLZ;
 import de.autovermietung.entities.Rechnung;
+import de.autovermietung.entities.Session;
 import de.autovermietung.entities.mieten;
 
 
@@ -28,10 +33,10 @@ public class AutovermietungDAO implements AutovermietungDAOAdminLocal {
     public Kunde findKundebyEmail(String Email)
     {
  
-    	logger.info(Email);
+    	
 		
-    	Kunde newKunde = em.find(Kunde.class,"Kevin");
-    	logger.info(newKunde);
+    	Kunde newKunde = em.find(Kunde.class,Email);
+    	
     	return newKunde;
     	
     	   }
@@ -81,5 +86,24 @@ public class AutovermietungDAO implements AutovermietungDAOAdminLocal {
     		em.persist(newBankkonto);
     		return newBankkonto;
     }
+    public Session createSession(Kunde kunde){
+    	Session session = new Session(kunde);
+    	em.persist(session);
+    	return session;
+    
+    }
+    public void deleteSession(Session session){
+    	em.remove(session);
+    }
+    public Session findSessionbyId(int Id){
+    	return em.find(Session.class, Id);
+    }
 
+	public List<Object[]> getAllKunden(){
+    	 List query = em.createQuery("SELECT  k.email,  k.kvorname, k.knachname, k.strasse, k.kplz.Wohnort , k.kplz.plz FROM Kunde k").getResultList();
+    	    return  query;
+  
+    }
 }
+
+
