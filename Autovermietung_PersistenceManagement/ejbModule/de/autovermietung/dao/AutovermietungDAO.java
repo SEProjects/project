@@ -38,14 +38,10 @@ public class AutovermietungDAO implements AutovermietungDAOAdminLocal {
 	private static final Logger logger = Logger.getLogger(Databuilder.class);
     public Kunde findKundebyEmail(String Email)
     {
- 
-    	
-		
     	Kunde newKunde = em.find(Kunde.class,Email);
-    	
     	return newKunde;
     	
-    	   }
+    }
     public Auto findAutobyID(int Aid)
     {
     	return em.find(Auto.class, Aid);
