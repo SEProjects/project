@@ -111,7 +111,7 @@ public class AutovermietungDAO implements AutovermietungDAOAdminLocal {
   
     }
 	public List<Object[]> getAllAutos(){
-   	 List query = em.createQuery("SELECT  A.aid, a.bez, a.autoart.beschreibung, a.autoart.marke.markenname, a.autoart.ks.ksbezeichnung FROM Auto a").getResultList();
+   	 List query = em.createQuery("SELECT  A.aid, a.bez, a.autoart.beschreibung, a.autoart.marke.markenname, a.autoart.ks.ksbezeichnung, a.position FROM Auto a").getResultList();
    	    return  query;
  
    }
@@ -152,7 +152,7 @@ public class AutovermietungDAO implements AutovermietungDAOAdminLocal {
 		return aa;
 	}
 	public Auto createAuto(String bez,Autoart aa){
-		Auto auto = new Auto("",bez,aa);
+		Auto auto = new Auto("51.961749, 7.626028",bez,aa);
 		em.persist(auto);
 		return auto;
 	}
