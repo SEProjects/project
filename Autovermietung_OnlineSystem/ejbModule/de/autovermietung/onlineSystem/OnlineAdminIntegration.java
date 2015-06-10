@@ -2,6 +2,7 @@ package de.autovermietung.onlineSystem;
 
 
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -19,16 +20,24 @@ import de.autovermietung.dao.Databuilder;
 import de.autovermietung.dto.AlleAutosResponse;
 import de.autovermietung.dto.AlleKundenResponse;
 import de.autovermietung.dto.AlleMarkenResponse;
-import de.autovermietung.dto.InsertException;
+import de.autovermietung.dto.AutoArtResponse;
+import de.autovermietung.dto.AutoResponse;
+import de.autovermietung.dto.GetAllResponse;
+import de.autovermietung.dto.KSResponse;
 import de.autovermietung.dto.KundeEditResponse;
 import de.autovermietung.dto.KundeResponse;
 import de.autovermietung.dto.KundenLoginResponse;
 import de.autovermietung.dto.MarkeResponse;
 import de.autovermietung.dto.UpdateResponse;
 import de.autovermietung.dto.neueMarkeResponse;
+import de.autovermietung.dto.neuerEintragResponse;
+import de.autovermietung.entities.Auto;
+import de.autovermietung.entities.Autoart;
+import de.autovermietung.entities.Kraftstoff;
 import de.autovermietung.entities.Kunde;
 import de.autovermietung.entities.Marke;
 import de.autovermietung.entities.Session;
+import de.autovermietung.exceptions.InsertException;
 import de.autovermietung.exceptions.InvalidLoginException;
 import de.autovermietung.exceptions.KeineAutosException;
 import de.autovermietung.exceptions.KeineKundenException;
@@ -92,11 +101,12 @@ public class OnlineAdminIntegration {
 	   else
 	   {
 		   Date created  = session.getTimestamp();
-		   long startTime = created.getTime() * 1000000;;
-		   long estimatedTime = System.nanoTime() - startTime;
-		   double seconds = (double)estimatedTime / 1000000000.0;
+		   long startTime = created.getTime();
+			long jetzt = new Date().getTime();
+			long seconds=jetzt-startTime;
 		   
-		   if(seconds > 300){
+		   logger.info(seconds*0.001);
+		   if(seconds > 300000){
 			   dao.deleteSession(session);
 			   throw new SessionabgelaufenException("Ihre Session ist leider abgelaufen. Bitte loggen sie sich erneurt ein");
 		   }		   
@@ -327,5 +337,345 @@ public class OnlineAdminIntegration {
 		   
 	  return ur;
   }
-
+  public GetAllResponse getAllKS(@WebParam(name="Sessionid") int session){
+  	
+	  GetAllResponse  agr = new  GetAllResponse();
+  	try {
+  		Session Nsession = getSession(session);
+			List<Object[]> ks = this.dao.getAllKS();	
+	
+			if (ks.isEmpty() == false) {
+				agr.setDatensaetze(ks);
+			}
+			else {
+				
+				throw new NichtVorhandenException("Es sind noch keine Kraftstoffarten vorhanden");
+			}
+		}
+		catch (OnlineIntegrationExceptions e) {
+			agr.setReturnCode(e.getErrorCode());
+			agr.setMessage(e.getMessage());
+		}
+  	 	
+  	
+  	
+  	
+  	return agr;
+  }
+ public neuerEintragResponse createKS(@WebParam(name="Sessionid") int session,@WebParam(name="KS") String KS){
+	 neuerEintragResponse ner = new neuerEintragResponse();
+	   try {
+ 		Session Nsession = getSession(session);
+ 		Kraftstoff ks = dao.createKS(KS);
+			
+			if (ks != null) {
+				ner.setSuccessful(true);
+			}
+			else {
+				ner.setSuccessful(false);
+				throw new InsertException("Einfügen der Krafststoffart ist fehlgeschlagen");
+			}
+		}
+		catch (OnlineIntegrationExceptions e) {
+			ner.setReturnCode(e.getErrorCode());
+			ner.setMessage(e.getMessage());
+		}
+	   
+	   
+	   
+	   
+	   
+	   return ner;  
+	   
+	   
+ }
+public KSResponse getKS(@WebParam(name="Sessionid") int session,@WebParam(name="KSId") int Id){
+	  KSResponse kr = new KSResponse();
+	  
+	   try {
+	   		Session Nsession = getSession(session);
+	   		Kraftstoff ks = dao.findKsbyId(Id);
+			
+				if (ks != null) {
+					kr.setKsid(Id);
+					kr.setBezeichnung(ks.getKsbezeichnung());
+				}
+				else {
+					
+					throw new NichtVorhandenException("Die Marke ist nicht vorhanden");
+				}
+			}
+			catch (OnlineIntegrationExceptions e) {
+				kr.setReturnCode(e.getErrorCode());
+				kr.setMessage(e.getMessage());
+			}
+		   
+	  
+	  
+	  return kr;
+}
+public UpdateResponse saveKS(@WebParam(name="Sessionid") int session,@WebParam(name="KSId") int Id,@WebParam(name="KSbezeichnung") String bezeichnung){
+	  UpdateResponse ur = new UpdateResponse();
+	  try {
+	   		Session Nsession = getSession(session);
+	   		Kraftstoff ks = dao.findKsbyId(Id);
+				
+	   		if (ks != null) {
+	   				ks.setKsbezeichnung(bezeichnung);
+	   				ur.setSuccessful(true);
+				}
+				else {
+					ur.setSuccessful(false);
+					throw new NichtVorhandenException("Die Marke ist nicht vorhanden");
+				}
+			}
+			catch (OnlineIntegrationExceptions e) {
+				ur.setReturnCode(e.getErrorCode());
+				ur.setMessage(e.getMessage());
+				ur.setSuccessful(false);
+			}
+		   
+	  return ur;
+		}
+	public GetAllResponse getAllAA(@WebParam(name="Sessionid") int session){
+	
+	  GetAllResponse  agr = new  GetAllResponse();
+	  	try {
+	  		Session Nsession = getSession(session);
+				List<Object[]> ks = this.dao.getAllAA();	
+		
+				if (ks.isEmpty() == false) {
+					agr.setDatensaetze(ks);
+				}
+				else {
+					
+					throw new NichtVorhandenException("Es sind noch keine Kraftstoffarten vorhanden");
+				}
+			}
+			catch (OnlineIntegrationExceptions e) {
+				agr.setReturnCode(e.getErrorCode());
+				agr.setMessage(e.getMessage());
+			}
+	  	 	
+	  	
+	  	
+	  	
+	  	return agr;
+	
+	}
+	public AutoArtResponse getAA(@WebParam(name="Sessionid") int session,@WebParam(name="AAid") int aaid){
+		AutoArtResponse aar = new AutoArtResponse(); 
+		 try {
+		   		Session Nsession = getSession(session);
+		   		Autoart aa = dao.findAutoartbyID(aaid);
+				
+					if (aa != null) {
+						aar=dto.makeDTO(aa);
+					}
+					else {
+						
+						throw new NichtVorhandenException("Die Marke ist nicht vorhanden");
+					}
+				}
+				catch (OnlineIntegrationExceptions e) {
+					aar.setReturnCode(e.getErrorCode());
+					aar.setMessage(e.getMessage());
+				}
+			   
+		return aar;
+	}
+	public UpdateResponse saveAA(@WebParam(name="Sessionid") int session,@WebParam(name="AAid") int Id,@WebParam(name="beschreibung") String beschreibung,@WebParam(name="bildlink") String bildlink,@WebParam(name="kofferraumvolumen") int kofferraumvolumen,@WebParam(name="kraftstoffverbrauch") String kraftstoffverbrauch, @WebParam(name="ks") int ksid,@WebParam(name="marke") int markenid,@WebParam(name="pjk") double pjk,@WebParam(name="ps") int ps,@WebParam(name="sitzanzahl") int sitzanzahl){
+		  UpdateResponse ur = new UpdateResponse();
+		  try {
+			 
+		   		Session Nsession = getSession(session);
+		   		Autoart aa = dao.findAutoartbyID(Id);
+					
+		   		if (aa != null) {
+		   			    BigDecimal pjk2 = new BigDecimal(pjk);
+		   			    Marke marke = dao.findMarkebyID(markenid);
+		   			    if(marke !=null){
+			   			    Kraftstoff ks = dao.findKsbyId(ksid);
+			   			    if(ks !=null){
+			   			    double zahl = Double.parseDouble(kraftstoffverbrauch);
+			   				aa.setBeschreibung(beschreibung);
+			   				aa.setBildlink(bildlink);
+			   				aa.setKofferraumvolumen(kofferraumvolumen);
+			   				aa.setKraftstoffverbrauch(zahl);
+			   				aa.setPjk(pjk2);
+			   				aa.setPs(ps);
+			   				aa.setSitzanzahl(sitzanzahl);
+			   				aa.setMarke(marke);
+			   				aa.setKs(ks);
+			   				ur.setSuccessful(true);
+			   			    }
+			   			    else 
+			   			    {
+								ur.setSuccessful(false);
+								throw new NichtVorhandenException("Kraftstoff ist nicht vorhanden");
+							}
+		   				}
+		   			    else
+		   			    {
+							ur.setSuccessful(false);
+							throw new NichtVorhandenException("Die Marke ist nicht vorhanden");
+						}
+					}
+					else {
+						ur.setSuccessful(false);
+						throw new NichtVorhandenException("Die Autoart ist nicht vorhanden");
+					}
+				}
+				catch (OnlineIntegrationExceptions e) {
+					ur.setReturnCode(e.getErrorCode());
+					ur.setMessage(e.getMessage());
+					ur.setSuccessful(false);
+				}
+			   
+		  return ur;
+			}
+	public neuerEintragResponse createAA(@WebParam(name="Sessionid") int session,@WebParam(name="beschreibung") String beschreibung,@WebParam(name="bildlink") String bildlink,@WebParam(name="kofferraumvolumen") int kofferraumvolumen,@WebParam(name="kraftstoffverbrauch") String kraftstoffverbrauch, @WebParam(name="ks") int ksid,@WebParam(name="marke") int markenid,@WebParam(name="pjk") double pjk,@WebParam(name="ps") int ps,@WebParam(name="sitzanzahl") int sitzanzahl){
+		 neuerEintragResponse ner = new neuerEintragResponse();
+		   try {
+	 		Session Nsession = getSession(session);
+	 		
+				
+					Marke marke = dao.findMarkebyID(markenid);
+	   			    if(marke !=null){
+		   			    Kraftstoff ks = dao.findKsbyId(ksid);
+		   			    if(ks !=null){
+		   			    	double zahl = Double.parseDouble(kraftstoffverbrauch);
+		   			    	Autoart aa = dao.createAA(beschreibung, bildlink, kofferraumvolumen, zahl, ks, marke, pjk, ps, sitzanzahl);
+		   			    ner.setSuccessful(true);
+		   			    }
+		   			    else 
+		   			    {
+							ner.setSuccessful(false);
+							
+							throw new NichtVorhandenException("Kraftstoff ist nicht vorhanden");
+						}
+	   				}
+	   			    else
+	   			    {
+						ner.setSuccessful(false);
+						throw new NichtVorhandenException("Die Marke ist nicht vorhanden");
+					}
+					
+				
+				
+			}
+			catch (OnlineIntegrationExceptions e) {
+				ner.setReturnCode(e.getErrorCode());
+				ner.setMessage(e.getMessage());
+			}
+		   
+		   
+		   
+		   
+		   
+		   return ner;  
+		   
+		   
+	 }
+	public AutoResponse getAuto(@WebParam(name="Sessionid") int session,@WebParam(name="Autoid") int autoid){
+		AutoResponse ar = new AutoResponse();
+		
+		 try {
+		   		Session Nsession = getSession(session);
+		   		Auto auto = dao.findAutobyID(autoid);
+				
+					if (auto != null) {
+						ar.setAid(auto.getAid());
+						ar.setBez(auto.getBez());
+						ar.setAa(auto.getAutoart().getAaid());
+					}
+					else {
+						
+						throw new NichtVorhandenException("Auto ist nicht vorhanden");
+					}
+				}
+				catch (OnlineIntegrationExceptions e) {
+					ar.setReturnCode(e.getErrorCode());
+					ar.setMessage(e.getMessage());
+				}
+			   
+		  
+		  
+		  return ar;
+		
+		
+	}
+	public UpdateResponse saveAuto(@WebParam(name="Sessionid") int session,@WebParam(name="Autoid") int Id,@WebParam(name="bez") String bez,@WebParam(name="AAid") int AAid){
+		UpdateResponse ur = new UpdateResponse();
+		  try {
+			 
+		   		Session Nsession = getSession(session);
+		   		Auto auto = dao.findAutobyID(Id);
+					
+		   		if (auto != null) {
+		   			   
+		   			    Autoart aa  = dao.findAutoartbyID(AAid);
+		   			    if(aa !=null){
+			   			   auto.setAutoart(aa);
+			   			   auto.setBez(bez);
+			   			   
+			   				ur.setSuccessful(true);
+			   			 }	   			  
+		   				
+		   			    else
+		   			    {
+							ur.setSuccessful(false);
+							throw new NichtVorhandenException("Die Autoart ist nicht vorhanden");
+						}
+					}
+					else {
+						ur.setSuccessful(false);
+						throw new NichtVorhandenException("Auto ist nicht vorhanden");
+					}
+				}
+				catch (OnlineIntegrationExceptions e) {
+					ur.setReturnCode(e.getErrorCode());
+					ur.setMessage(e.getMessage());
+					ur.setSuccessful(false);
+				}
+			   
+		  return ur;
+			}
+	public neuerEintragResponse createAuto(@WebParam(name="Sessionid") int session,@WebParam(name="bez") String bez,@WebParam(name="AAid") int AAid){
+		 neuerEintragResponse ner = new neuerEintragResponse();
+		   try {
+	 		Session Nsession = getSession(session);
+	 		
+				
+	 		 
+		  Autoart aa  = dao.findAutoartbyID(AAid);
+			    if(aa !=null){
+			    	
+   			   Auto auto = dao.createAuto(bez, aa);
+   				ner.setSuccessful(true);
+   			 }	   			  
+				
+			    else
+			    {
+				ner.setSuccessful(false);
+				throw new NichtVorhandenException("Die Autoart ist nicht vorhanden");
+			}
+				
+				
+			}
+			catch (OnlineIntegrationExceptions e) {
+				ner.setReturnCode(e.getErrorCode());
+				ner.setMessage(e.getMessage());
+			}
+		   
+		   
+		   
+		   
+		   
+		   return ner;  
+		   
+		   
+	 }
+	
+	 
 }

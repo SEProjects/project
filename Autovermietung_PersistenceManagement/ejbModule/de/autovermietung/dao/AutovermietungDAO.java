@@ -1,32 +1,29 @@
 package de.autovermietung.dao;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import javax.ejb.Stateless;
+import javax.jws.WebParam;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.EntityManager;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 
 import org.jboss.logging.Logger;
 
 import de.autovermietung.entities.Auto;
 import de.autovermietung.entities.Autoart;
 import de.autovermietung.entities.Bankkonto;
-import de.autovermietung.entities.Bewertung;
-import de.autovermietung.entities.Dreck;
 import de.autovermietung.entities.FSA;
+import de.autovermietung.entities.Kraftstoff;
 import de.autovermietung.entities.Kunde;
 import de.autovermietung.entities.Marke;
 import de.autovermietung.entities.PLZ;
 import de.autovermietung.entities.Rechnung;
-import de.autovermietung.entities.Schaden;
 import de.autovermietung.entities.Session;
 import de.autovermietung.entities.mieten;
 
@@ -133,6 +130,32 @@ public class AutovermietungDAO implements AutovermietungDAOAdminLocal {
 	   	 return  query;
 	}
 
+	public Kraftstoff findKsbyId(int id){
+		return em.find(Kraftstoff.class,id);
+	}
+	public Kraftstoff createKS(String beschreibung){
+		Kraftstoff ks = new Kraftstoff(beschreibung);
+		em.persist(ks);
+		return ks;
+	}
+	public List<Object[]> getAllAA(){
+		 List query = em.createQuery("SELECT a.aaid,a.beschreibung,a.ps,a.sitzanzahl,a.kofferraumvolumen,a.bildlink,a.kraftstoffverbrauch,a.pjk,ks.ksbezeichnung,a.marke.markenname FROM Autoart a").getResultList();
+	   	 return  query;
+	}
+	public Autoart createAA(String beschreibung, String bildlink,int kofferraumvolumen, double kraftstoffverbrauch,Kraftstoff ks,Marke marke,double pjk,int ps, int sitzanzahl)
+	{
+		BigDecimal pjk2 = new BigDecimal(pjk);
+		Autoart aa = new Autoart(beschreibung,ps, sitzanzahl,
+				kofferraumvolumen,bildlink, kraftstoffverbrauch,
+				 pjk2, ks,marke);
+		em.persist(aa);
+		return aa;
+	}
+	public Auto createAuto(String bez,Autoart aa){
+		Auto auto = new Auto("",bez,aa);
+		em.persist(auto);
+		return auto;
+	}
 	
 }
 
