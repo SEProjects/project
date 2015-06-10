@@ -11,6 +11,7 @@ public class AutoResponse extends ReturncodeResponse {
 	private String position;
 	private String bez;
 	private int aa;
+
 	public AutoResponse(){
 		
 	}

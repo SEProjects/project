@@ -588,6 +588,7 @@ public UpdateResponse saveKS(@WebParam(name="Sessionid") int session,@WebParam(n
 						ar.setAid(auto.getAid());
 						ar.setBez(auto.getBez());
 						ar.setAa(auto.getAutoart().getAaid());
+						ar.setPosition(auto.getPosition());
 					}
 					else {
 						
