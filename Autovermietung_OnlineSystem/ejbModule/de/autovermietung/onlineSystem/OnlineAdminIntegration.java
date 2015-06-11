@@ -70,7 +70,7 @@ public class OnlineAdminIntegration {
         // TODO Auto-generated constructor stub
     }
     
-    public KundenLoginResponse Adminlogin(@WebParam(name="email") String email, @WebParam(name="password") String password)   {
+    public KundenLoginResponse Adminlogin(@WebParam(name = "email") String email, @WebParam(name="password") String password)   {
        
     	KundenLoginResponse klr = new KundenLoginResponse();
     	
