@@ -40,6 +40,6 @@ public class Auto {
 	}
 	
 	public String getSchaden(){
-		if(schaden == 0){return 'Einwandfrei'}
+		if(schaden == 0){return "Einwandfrei";}
 	}
 }
