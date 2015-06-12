@@ -9,7 +9,7 @@ import javax.xml.ws.WebServiceContext;
 
 import org.jboss.logging.Logger;
 
-import de.autovermietung.dao.AutovermietungDAOLocal;
+import de.autovermietung.dao.AutovermietungDAOAdminLocal;
 import de.autovermietung.dao.Databuilder;
 import de.autovermietung.dto.KundenLoginResponse;
 import de.autovermietung.entities.Kunde;
@@ -24,8 +24,8 @@ import de.autovermietung.util.DtoAssembler;
 @WebService
 public class OnlineIntegration {
 
-	@EJB(beanName = "AutovermietungDAOUser", beanInterface = de.autovermietung.dao.AutovermietungDAOLocal.class)
-	private AutovermietungDAOLocal dao;
+	@EJB(beanName = "AutovermietungDAO", beanInterface = de.autovermietung.dao.AutovermietungDAOAdminLocal.class)
+	private AutovermietungDAOAdminLocal dao;
 	@Resource
 	private WebServiceContext wsContext;
 	@EJB
