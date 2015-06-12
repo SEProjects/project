@@ -33,13 +33,27 @@ public class mieten implements Serializable{
 	@ManyToOne(optional=false)
 	private Kunde kunde;
 	
+	public boolean isAbgerechnet() {
+		return abgerechnet;
+	}
+
+
+
+	public void setAbgerechnet(boolean abgerechnet) {
+		this.abgerechnet = abgerechnet;
+	}
+
+
+
+
+
 	@ManyToOne(optional=false)
 	private Rechnung rechnung;
 	
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP",nullable=false,updatable = false, insertable = false)
 	private Date timestamp;
-	
+	private boolean abgerechnet;
 	public mieten(){
 		
 	}

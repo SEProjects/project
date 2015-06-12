@@ -30,7 +30,8 @@ public class Autoart implements Serializable {
 	private int ps;
 	private int sitzanzahl;
 	private int kofferraumvolumen;
-	private String bildlink;
+	@Column(length=50000000)
+	private String bild;
 	private double kraftstoffverbrauch;
 	@Column(nullable=false)
 	private BigDecimal pjk; 
@@ -48,20 +49,30 @@ public class Autoart implements Serializable {
 	}
 
 	public Autoart(String beschreibung, int ps, int sitzanzahl,
-			int kofferraumvolumen, String bildlink, double kraftstoffverbrauch,
+			int kofferraumvolumen, double kraftstoffverbrauch,
 			BigDecimal pjk,  Kraftstoff ks, Marke marke) {
 		super();
 		this.beschreibung = beschreibung;
 		this.ps = ps;
 		this.sitzanzahl = sitzanzahl;
 		this.kofferraumvolumen = kofferraumvolumen;
-		this.bildlink = bildlink;
+	
 		this.kraftstoffverbrauch = kraftstoffverbrauch;
 		this.pjk = pjk;
 		this.autos = new ArrayList<>();
 		this.ks = ks;
 		this.marke = marke;
 	}
+
+
+	public String getBild() {
+		return bild;
+	}
+
+	public void setBild(String bild) {
+		this.bild = bild;
+	}
+
 	public void addAuto(Auto auto){
 		autos.add(auto);
 	}
@@ -98,13 +109,7 @@ public class Autoart implements Serializable {
 		this.kofferraumvolumen = kofferraumvolumen;
 	}
 
-	public String getBildlink() {
-		return bildlink;
-	}
-
-	public void setBildlink(String bildlink) {
-		this.bildlink = bildlink;
-	}
+	
 
 	public double getKraftstoffverbrauch() {
 		return kraftstoffverbrauch;

@@ -20,6 +20,7 @@ import de.autovermietung.dao.Databuilder;
 import de.autovermietung.dto.AlleAutosResponse;
 import de.autovermietung.dto.AlleKundenResponse;
 import de.autovermietung.dto.AlleMarkenResponse;
+import de.autovermietung.dto.AutoArtBildResponse;
 import de.autovermietung.dto.AutoArtResponse;
 import de.autovermietung.dto.AutoResponse;
 import de.autovermietung.dto.GetAllResponse;
@@ -499,7 +500,7 @@ public UpdateResponse saveKS(@WebParam(name="Sessionid") int session,@WebParam(n
 			   			    if(ks !=null){
 			   			    double zahl = Double.parseDouble(kraftstoffverbrauch);
 			   				aa.setBeschreibung(beschreibung);
-			   				aa.setBildlink(bildlink);
+			   				
 			   				aa.setKofferraumvolumen(kofferraumvolumen);
 			   				aa.setKraftstoffverbrauch(zahl);
 			   				aa.setPjk(pjk2);
@@ -534,7 +535,7 @@ public UpdateResponse saveKS(@WebParam(name="Sessionid") int session,@WebParam(n
 			   
 		  return ur;
 			}
-	public neuerEintragResponse createAA(@WebParam(name="Sessionid") int session,@WebParam(name="beschreibung") String beschreibung,@WebParam(name="bildlink") String bildlink,@WebParam(name="kofferraumvolumen") int kofferraumvolumen,@WebParam(name="kraftstoffverbrauch") String kraftstoffverbrauch, @WebParam(name="ks") int ksid,@WebParam(name="marke") int markenid,@WebParam(name="pjk") double pjk,@WebParam(name="ps") int ps,@WebParam(name="sitzanzahl") int sitzanzahl){
+	public neuerEintragResponse createAA(@WebParam(name="Sessionid") int session,@WebParam(name="beschreibung") String beschreibung,@WebParam(name="kofferraumvolumen") int kofferraumvolumen,@WebParam(name="kraftstoffverbrauch") String kraftstoffverbrauch, @WebParam(name="ks") int ksid,@WebParam(name="marke") int markenid,@WebParam(name="pjk") double pjk,@WebParam(name="ps") int ps,@WebParam(name="sitzanzahl") int sitzanzahl){
 		 neuerEintragResponse ner = new neuerEintragResponse();
 		   try {
 	 		Session Nsession = getSession(session);
@@ -545,7 +546,7 @@ public UpdateResponse saveKS(@WebParam(name="Sessionid") int session,@WebParam(n
 		   			    Kraftstoff ks = dao.findKsbyId(ksid);
 		   			    if(ks !=null){
 		   			    	double zahl = Double.parseDouble(kraftstoffverbrauch);
-		   			    	Autoart aa = dao.createAA(beschreibung, bildlink, kofferraumvolumen, zahl, ks, marke, pjk, ps, sitzanzahl);
+		   			    	Autoart aa = dao.createAA(beschreibung,  kofferraumvolumen, zahl, ks, marke, pjk, ps, sitzanzahl);
 		   			    ner.setSuccessful(true);
 		   			    }
 		   			    else 
@@ -677,6 +678,79 @@ public UpdateResponse saveKS(@WebParam(name="Sessionid") int session,@WebParam(n
 		   
 		   
 	 }
+	public GetAllResponse getAllRechungen(@WebParam(name="Sessionid") int session){
+		
+		  GetAllResponse  agr = new  GetAllResponse();
+		  	try {
+		  		Session Nsession = getSession(session);
+					List<Object[]> ks = this.dao.getAllRechnungen();	
+			
+					if (ks.isEmpty() == false) {
+						agr.setDatensaetze(ks);
+					}
+					else {
+						
+						throw new NichtVorhandenException("Es sind noch keine Rechnungen vorhanden");
+					}
+				}
+				catch (OnlineIntegrationExceptions e) {
+					agr.setReturnCode(e.getErrorCode());
+					agr.setMessage(e.getMessage());
+				}
+		  	 	
+		  	
+		  	
+		  	
+		  	return agr;
+		
+		}
+	public UpdateResponse saveAABild(@WebParam(name="Sessionid") int session,@WebParam(name="AAid") int Id,@WebParam(name="Bild") String bild){
+		UpdateResponse ur = new UpdateResponse();
+		  try {
+			 
+		   		Session Nsession = getSession(session);
+		   		Autoart aa = dao.findAutoartbyID(Id);
+					
+		   		if (aa != null) {
+		   			   
+		   			    
+			   			aa.setBild(bild);
+			   			ur.setSuccessful(true);
+					}
+					else {
+						ur.setSuccessful(false);
+						throw new NichtVorhandenException("AutoArt ist nicht vorhanden");
+					}
+				}
+				catch (OnlineIntegrationExceptions e) {
+					ur.setReturnCode(e.getErrorCode());
+					ur.setMessage(e.getMessage());
+					ur.setSuccessful(false);
+				}
+			   
+		  return ur;
+			}
+	public AutoArtBildResponse getAABild(@WebParam(name="Sessionid") int session,@WebParam(name="AAid") int aaid){
+		AutoArtBildResponse aar = new AutoArtBildResponse(); 
+		 try {
+		   		Session Nsession = getSession(session);
+		   		Autoart aa = dao.findAutoartbyID(aaid);
+				
+					if (aa != null) {
+						aar.setBild(aa.getBild());
+					}
+					else {
+						
+						throw new NichtVorhandenException("Die Autoart ist nicht vorhanden");
+					}
+				}
+				catch (OnlineIntegrationExceptions e) {
+					aar.setReturnCode(e.getErrorCode());
+					aar.setMessage(e.getMessage());
+				}
+			   
+		return aar;
+	}
 	
 	 
 }

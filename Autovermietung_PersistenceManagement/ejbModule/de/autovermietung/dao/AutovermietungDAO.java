@@ -1,6 +1,7 @@
 package de.autovermietung.dao;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -12,6 +13,8 @@ import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import org.jboss.logging.Logger;
 
@@ -135,14 +138,14 @@ public class AutovermietungDAO implements AutovermietungDAOAdminLocal {
 		return ks;
 	}
 	public List<Object[]> getAllAA(){
-		 List query = em.createQuery("SELECT a.aaid,a.beschreibung,a.ps,a.sitzanzahl,a.kofferraumvolumen,a.bildlink,a.kraftstoffverbrauch,a.pjk,ks.ksbezeichnung,a.marke.markenname FROM Autoart a").getResultList();
+		 List query = em.createQuery("SELECT a.aaid,a.beschreibung,a.ps,a.sitzanzahl,a.kofferraumvolumen,a.kraftstoffverbrauch,a.pjk,ks.ksbezeichnung,a.marke.markenname FROM Autoart a").getResultList();
 	   	 return  query;
 	}
-	public Autoart createAA(String beschreibung, String bildlink,int kofferraumvolumen, double kraftstoffverbrauch,Kraftstoff ks,Marke marke,double pjk,int ps, int sitzanzahl)
+	public Autoart createAA(String beschreibung, int kofferraumvolumen, double kraftstoffverbrauch,Kraftstoff ks,Marke marke,double pjk,int ps, int sitzanzahl)
 	{
 		BigDecimal pjk2 = new BigDecimal(pjk);
 		Autoart aa = new Autoart(beschreibung,ps, sitzanzahl,
-				kofferraumvolumen,bildlink, kraftstoffverbrauch,
+				kofferraumvolumen, kraftstoffverbrauch,
 				 pjk2, ks,marke);
 		em.persist(aa);
 		return aa;
@@ -152,7 +155,21 @@ public class AutovermietungDAO implements AutovermietungDAOAdminLocal {
 		em.persist(auto);
 		return auto;
 	}
-	
+	public List<Object[]> getAllRechnungen(){
+		 List query = em.createQuery("SELECT r.rid, r.gesamtpreis, r.timestamp, r.kunde.email, r.abgerechnet FROM Rechung r").getResultList();
+	   	 return  query;
+	}
+	public void createAllRechnungen(){
+		
+		List query = em.createQuery("SELECT m.mid mieten m where m.endkm is not null and m.abgerechnet = false").getResultList();
+		if(query.isEmpty()){
+			logger.info("keine rechnungen vorhanden");
+		}
+		else{
+			logger.info("rechnungen vorhanden");
+		}
+	}
+
 }
 
 

@@ -45,7 +45,7 @@ public class Databuilder {
 				Kraftstoff ks = new Kraftstoff("Diesel");
 				em.persist(ks);
 				BigDecimal pjk = new BigDecimal(3.5);
-				Autoart autoart = new Autoart("VW Kombi", 90, 4,60,"VWKombi",9.8,pjk,ks,marke);
+				Autoart autoart = new Autoart("VW Kombi", 90, 4,60,9.8,pjk,ks,marke);
 				em.persist(autoart);
 				Auto auto2 = new Auto("51.955206, 7.627572","Auto2",autoart);
 				marke.addAutoart(autoart);

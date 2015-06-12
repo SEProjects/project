@@ -50,5 +50,6 @@ public interface AutovermietungDAOAdminLocal {
 	public Kraftstoff createKS(String beschreibung);
 	public List<Object[]> getAllAA();
 	public Auto createAuto(String bez,Autoart aa);
-	public Autoart createAA(String beschreibung, String bildlink,int kofferraumvolumen, double kraftstoffverbrauch,Kraftstoff ks,Marke marke,double pjk,int ps, int sitzanzahl);
+	public List<Object[]> getAllRechnungen();
+	public Autoart createAA(String beschreibung,int kofferraumvolumen, double kraftstoffverbrauch,Kraftstoff ks,Marke marke,double pjk,int ps, int sitzanzahl);
 }

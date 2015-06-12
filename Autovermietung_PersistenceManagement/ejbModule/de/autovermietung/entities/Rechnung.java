@@ -41,8 +41,18 @@ public class Rechnung implements Serializable{
 	
 	@ManyToOne(optional=false)
 	private Kunde kunde;
+	private boolean abgerechnet;
 	
-	
+	public boolean isAbgerechnet() {
+		return abgerechnet;
+	}
+
+
+	public void setAbgerechnet(boolean abgerechnet) {
+		this.abgerechnet = abgerechnet;
+	}
+
+
 	public Rechnung(){
 		
 	}

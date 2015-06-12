@@ -29,7 +29,7 @@ public class DtoAssembler {
 		  AutoArtResponse aar = new AutoArtResponse(); 
 		  aar.setAaid(aa.getAaid());
 		  aar.setBeschreibung(aa.getBeschreibung());
-		  aar.setBildlink(aa.getBildlink());
+		
 		  aar.setKofferraumvolumen(aa.getKofferraumvolumen());
 		  aar.setKraftstoffverbrauch(aa.getKraftstoffverbrauch());
 		  aar.setKs(aa.getKs().getKsid());
