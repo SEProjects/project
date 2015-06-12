@@ -1,5 +1,7 @@
 package de.autovermietung.onlineSystem;
 
+import java.util.Date;
+
 import javax.annotation.Resource;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -18,8 +20,10 @@ import de.autovermietung.entities.Auto;
 import de.autovermietung.entities.Kunde;
 import de.autovermietung.entities.Session;
 import de.autovermietung.exceptions.InvalidLoginException;
+import de.autovermietung.exceptions.KeineSessioException;
 import de.autovermietung.exceptions.NichtVorhandenException;
 import de.autovermietung.exceptions.OnlineIntegrationExceptions;
+import de.autovermietung.exceptions.SessionabgelaufenException;
 import de.autovermietung.util.DtoAssembler;
 
 /**
@@ -69,6 +73,7 @@ public class OnlineIntegration {
 		AutoResponse ar = new AutoResponse();
 		
 		 try {
+			 Session Nsession = getSession(session);
 		   		
 		   		Auto auto = dao.findAutobyID(autoid);
 				
@@ -94,4 +99,30 @@ public class OnlineIntegration {
 		
 		
 	}
+    private Session getSession(int Id) throws SessionabgelaufenException, KeineSessioException{
+ 	   Session session = dao.findSessionbyId(Id);
+ 	   if(session == null )
+ 		   throw new KeineSessioException("Bitte loggen Sie sich zuerst ein.");
+ 	   else
+ 	   {
+ 		   Date created  = session.getTimestamp();
+ 		   long startTime = created.getTime();
+ 			long jetzt = new Date().getTime();
+ 			long seconds=jetzt-startTime;
+ 		   
+ 		   logger.info(seconds*0.001);
+ 		   if(seconds > 300000){
+ 			   dao.deleteSession(session);
+ 			   throw new SessionabgelaufenException("Ihre Session ist leider abgelaufen. Bitte loggen sie sich erneurt ein");
+ 		   }		   
+ 		   else
+ 		   {
+ 		   
+ 			   session.updateTimestamp();
+ 			   return session;
+ 		   }
+ 	      
+ 	   }
+    }
+     
 }

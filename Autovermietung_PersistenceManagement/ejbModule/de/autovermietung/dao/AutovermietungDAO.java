@@ -1,20 +1,11 @@
 package de.autovermietung.dao;
 
 import java.math.BigDecimal;
-import java.util.Date;
 import java.util.List;
 
 import javax.ejb.Stateless;
-import javax.jws.WebParam;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
 import javax.persistence.EntityManager;
-import javax.persistence.FetchType;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 import org.jboss.logging.Logger;
 
@@ -38,7 +29,7 @@ import de.autovermietung.entities.mieten;
 public class AutovermietungDAO implements AutovermietungDAOAdminLocal,AutovermietungDAOLocal {
 	@PersistenceContext
 	private EntityManager em;
-	private static final Logger logger = Logger.getLogger(Databuilder.class);
+	private static final Logger logger = Logger.getLogger(AutovermietungDAO.class);
     public Kunde findKundebyEmail(String Email)
     {
     	Kunde newKunde = em.find(Kunde.class,Email);
@@ -135,6 +126,7 @@ public class AutovermietungDAO implements AutovermietungDAOAdminLocal,Autovermie
 	public Kraftstoff createKS(String beschreibung){
 		Kraftstoff ks = new Kraftstoff(beschreibung);
 		em.persist(ks);
+		
 		return ks;
 	}
 	public List<Object[]> getAllAA(){
