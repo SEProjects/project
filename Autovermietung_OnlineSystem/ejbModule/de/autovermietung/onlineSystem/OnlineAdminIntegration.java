@@ -751,6 +751,31 @@ public UpdateResponse saveKS(@WebParam(name="Sessionid") int session,@WebParam(n
 			   
 		return aar;
 	}
+	public neuerEintragResponse createAllRechungen(@WebParam(name="Sessionid") int session,@WebParam(name="bez") String bez,@WebParam(name="AAid") int AAid){
+		 neuerEintragResponse ner = new neuerEintragResponse();
+		   try {
+	 		Session Nsession = getSession(session);
+	 		
+				
+	 		 
+	 			dao.createAllRechnungen();
+	 			ner.setSuccessful(true);
+				
+			}
+			catch (OnlineIntegrationExceptions e) {
+				ner.setReturnCode(e.getErrorCode());
+				ner.setMessage(e.getMessage());
+				ner.setSuccessful(false);
+			}
+		   
+		   
+		   
+		   
+		   
+		   return ner;  
+		   
+		   
+	 }
 	
 	 
 }

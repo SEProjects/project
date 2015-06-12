@@ -35,7 +35,7 @@ import de.autovermietung.entities.mieten;
  * Session Bean implementation class AutovermietungDAO
  */
 @Stateless
-public class AutovermietungDAO implements AutovermietungDAOAdminLocal {
+public class AutovermietungDAO implements AutovermietungDAOAdminLocal,AutovermietungDAOLocal {
 	@PersistenceContext
 	private EntityManager em;
 	private static final Logger logger = Logger.getLogger(Databuilder.class);

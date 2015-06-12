@@ -11,10 +11,14 @@ import org.jboss.logging.Logger;
 
 import de.autovermietung.dao.AutovermietungDAOAdminLocal;
 import de.autovermietung.dao.Databuilder;
+import de.autovermietung.dto.AutoResponse;
 import de.autovermietung.dto.KundenLoginResponse;
+import de.autovermietung.entities.Auto;
 import de.autovermietung.entities.Kunde;
 import de.autovermietung.entities.Session;
 import de.autovermietung.exceptions.InvalidLoginException;
+import de.autovermietung.exceptions.NichtVorhandenException;
+import de.autovermietung.exceptions.OnlineIntegrationExceptions;
 import de.autovermietung.util.DtoAssembler;
 
 /**
@@ -60,5 +64,33 @@ public class OnlineIntegration {
 		return klr;
 	    
     }
-
+    public AutoResponse getAuto(@WebParam(name="Sessionid") int session,@WebParam(name="Autoid") int autoid){
+		AutoResponse ar = new AutoResponse();
+		
+		 try {
+		   		
+		   		Auto auto = dao.findAutobyID(autoid);
+				
+					if (auto != null) {
+						ar.setAid(auto.getAid());
+						ar.setBez(auto.getBez());
+						ar.setAa(auto.getAutoart().getAaid());
+						ar.setPosition(auto.getPosition());
+					}
+					else {
+						
+						throw new NichtVorhandenException("Auto ist nicht vorhanden");
+					}
+				}
+				catch (OnlineIntegrationExceptions e) {
+					ar.setReturnCode(e.getErrorCode());
+					ar.setMessage(e.getMessage());
+				}
+			   
+		  
+		  
+		  return ar;
+		
+		
+	}
 }

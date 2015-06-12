@@ -18,6 +18,7 @@ import de.autovermietung.entities.Kraftstoff;
 import de.autovermietung.entities.Kunde;
 import de.autovermietung.entities.Marke;
 import de.autovermietung.entities.PLZ;
+import de.autovermietung.entities.mieten;
 
 
 
@@ -57,6 +58,7 @@ public class Databuilder {
 				
 			
 			}
+		
 			Kunde customer1 = em.find(Kunde.class, "Kevin@web.de");
 			if (customer1 == null) {
 				boolean admin = false;
@@ -79,6 +81,16 @@ public class Databuilder {
 					em.persist(newKunde2);
 				
 				}
+				
+			
+			}
+			mieten m = em.find(mieten.class, 1);
+			if (m== null) {
+				
+				mieten m1 = new mieten(2000,auto,customer1);
+				m1.setEndkm(2500);
+			
+			
 				
 			
 			}

@@ -52,4 +52,5 @@ public interface AutovermietungDAOAdminLocal {
 	public Auto createAuto(String bez,Autoart aa);
 	public List<Object[]> getAllRechnungen();
 	public Autoart createAA(String beschreibung,int kofferraumvolumen, double kraftstoffverbrauch,Kraftstoff ks,Marke marke,double pjk,int ps, int sitzanzahl);
+	public void createAllRechnungen();
 }
