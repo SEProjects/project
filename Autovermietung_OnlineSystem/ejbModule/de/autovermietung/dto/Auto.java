@@ -1,45 +1,117 @@
 package de.autovermietung.dto;
-/*
- * Author: Carlo Eefting
- */
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
-public class Auto {
-	public int aID;
-	public String bezeichnung;
-	public char position;
-	public int autoArt;
-	public int schaden; 
-	/*
-	 * Schadensstufen:
-	 *  0= Zustand Gut
-	 *  1= Zustand Kratzer
-	 *  2= Zustand Blechschäden
-	 *  3= Zustand total Schaden
+public class Auto implements Serializable {
+	/**
+	 * 
 	 */
+	private static final long serialVersionUID = 1L;
+	
+	private int aid;
+	private String position;
+	private String bez;
+	private Autoart autoart;
+	private List<mieten> gemietet;
+	private List<Schaden> schaden;
+	private List<Bewertung> bewertungen;
+	private List<Dreck> dreck;
+	
+	public Auto(){
+		
+	
+	}
+	
+	
+	public Auto( String position, String bez, Autoart autoart) {
+		super();
+		this.position = position;
+		this.bez = bez;
+		this.autoart = autoart;
+		this.gemietet = new ArrayList<>();
+		this.schaden = new ArrayList<>();
+		this.bewertungen = new ArrayList<>();
+		this.dreck = new ArrayList<>();
+	}
+	
+	public void addMieten(mieten miet){
+		gemietet.add(miet);
+	}
+	public void addSchaden(Schaden schaden){
+		this.schaden.add(schaden);
+	}
+	public void addBewertung(Bewertung bewertung){
+		this.bewertungen.add(bewertung);
+	}
+	public void addDreck(Dreck dreck){
+		this.dreck.add(dreck);
+	}
 
-	public Auto(int aID, String bez, char pos, int autoArt){ 
-		schaden = 0;
-		this.aID = aID;
-		this.bezeichnung = bez;
-		this.position = pos;
-		this.autoArt = autoArt;
+	public String getPosition() {
+		return position;
 	}
+
+	public void setPosition(String position) {
+		this.position = position;
+	}
+
+	public String getBez() {
+		return bez;
+	}
+
+	public void setBez(String bez) {
+		this.bez = bez;
+	}
+
+	public Autoart getAutoart() {
+		return autoart;
+	}
+
+	public void setAutoart(Autoart autoart) {
+		this.autoart = autoart;
+	}
+
+	public List<Schaden> getSchaden() {
+		return schaden;
+	}
+
+	public void setSchaden(List<Schaden> schaden) {
+		this.schaden = schaden;
+	}
+
+	public List<Bewertung> getBewertungen() {
+		return bewertungen;
+	}
+
+	public void setBewertungen(List<Bewertung> bewertungen) {
+		this.bewertungen = bewertungen;
+	}
+
+	public List<Dreck> getDreck() {
+		return dreck;
+	}
+
+	public void setDreck(List<Dreck> dreck) {
+		this.dreck = dreck;
+	}
+
+
+	public int getAid() {
+		return aid;
+	}
+
+
+	public void setGemietet(List<mieten> gemietet) {
+		this.gemietet = gemietet;
+	}
+
+
+	public List<mieten> getGemietet() {
+		return gemietet;
+	}
+
 	
-	public void setPosition(char pos){
-		this.position = pos;
-	}
 	
-	public void setSchaden(int zustand){
-		if(zustand >3 | zustand <0){
-			setSchaden(zustand);
-		}
-		else{ 
-			this.schaden = zustand;
-		}
-	}
-	
-	public String getSchaden(){
-		if(schaden == 0){return "Einwandfrei";}
-	}
 }
