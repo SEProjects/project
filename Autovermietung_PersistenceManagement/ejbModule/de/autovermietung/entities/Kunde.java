@@ -43,6 +43,7 @@ public class Kunde implements Serializable {
 	private boolean admin;
 	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, mappedBy="kunde") @MapKey
 	private List<mieten> gemietet;
+	
 	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, mappedBy="kunde") @MapKey
 	private List<Rechnung> rechnungen;
 	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, mappedBy="kunde") @MapKey
@@ -135,7 +136,7 @@ public class Kunde implements Serializable {
 	}
 
 
-	public void setFsnummer(String fsnummer) {
+	public void kunde(String fsnummer) {
 		this.fsnummer = fsnummer;
 	}
 
@@ -288,5 +289,10 @@ public class Kunde implements Serializable {
 				+ bezahlmethoden + ", schaden=" + schaden + ", bewertungen="
 				+ bewertungen + ", dreck=" + dreck + ", fsa=" + fsa + ", kplz="
 				+ kplz + "]";
+	}
+
+
+	public void setFsnummer(String fsnummer) {
+		this.fsnummer = fsnummer;
 	}
 }

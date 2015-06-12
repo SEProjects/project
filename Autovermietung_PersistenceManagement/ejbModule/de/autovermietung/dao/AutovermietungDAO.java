@@ -1,7 +1,16 @@
 package de.autovermietung.dao;
 
+import java.math.BigDecimal;
+import java.util.List;
+
 import javax.ejb.Stateless;
+import javax.jws.WebParam;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.EntityManager;
+import javax.persistence.FetchType;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.PersistenceContext;
 
 import org.jboss.logging.Logger;
@@ -10,10 +19,12 @@ import de.autovermietung.entities.Auto;
 import de.autovermietung.entities.Autoart;
 import de.autovermietung.entities.Bankkonto;
 import de.autovermietung.entities.FSA;
+import de.autovermietung.entities.Kraftstoff;
 import de.autovermietung.entities.Kunde;
 import de.autovermietung.entities.Marke;
 import de.autovermietung.entities.PLZ;
 import de.autovermietung.entities.Rechnung;
+import de.autovermietung.entities.Session;
 import de.autovermietung.entities.mieten;
 
 
@@ -27,14 +38,10 @@ public class AutovermietungDAO implements AutovermietungDAOAdminLocal {
 	private static final Logger logger = Logger.getLogger(Databuilder.class);
     public Kunde findKundebyEmail(String Email)
     {
- 
-    	logger.info(Email);
-		
-    	Kunde newKunde = em.find(Kunde.class,"Kevin");
-    	logger.info(newKunde);
+    	Kunde newKunde = em.find(Kunde.class,Email);
     	return newKunde;
     	
-    	   }
+    }
     public Auto findAutobyID(int Aid)
     {
     	return em.find(Auto.class, Aid);
@@ -81,5 +88,71 @@ public class AutovermietungDAO implements AutovermietungDAOAdminLocal {
     		em.persist(newBankkonto);
     		return newBankkonto;
     }
+    public Session createSession(Kunde kunde){
+    	Session session = new Session(kunde);
+    	em.persist(session);
+    	return session;
+    
+    }
+    public void deleteSession(Session session){
+    	em.remove(session);
+    }
+    public Session findSessionbyId(int Id){
+    	return em.find(Session.class, Id);
+    }
 
+	public List<Object[]> getAllKunden(){
+    	 List query = em.createQuery("SELECT  k.email,  k.kvorname, k.knachname, k.strasse, k.kplz.Wohnort , k.kplz.plz FROM Kunde k").getResultList();
+    	    return  query;
+  
+    }
+	public List<Object[]> getAllAutos(){
+   	 List query = em.createQuery("SELECT  A.aid, a.bez, a.autoart.beschreibung, a.autoart.marke.markenname, a.autoart.ks.ksbezeichnung, a.position FROM Auto a").getResultList();
+   	    return  query;
+ 
+   }
+	public List<Object[]> getAllMarken(){
+	   	 List query = em.createQuery("SELECT m.markeid, m.markenname FROM Marke m").getResultList();
+	   	    return  query;
+	 
+	   }
+	public Marke createMarke(String bezeichung){
+		Marke marke = new Marke(bezeichung);
+		em.persist(marke);
+		return marke;
+	}
+	public List<Object[]> getAllKS(){
+		 List query = em.createQuery("SELECT k.ksid, k.ksbezeichnung FROM Kraftstoff k").getResultList();
+	   	 return  query;
+	}
+
+	public Kraftstoff findKsbyId(int id){
+		return em.find(Kraftstoff.class,id);
+	}
+	public Kraftstoff createKS(String beschreibung){
+		Kraftstoff ks = new Kraftstoff(beschreibung);
+		em.persist(ks);
+		return ks;
+	}
+	public List<Object[]> getAllAA(){
+		 List query = em.createQuery("SELECT a.aaid,a.beschreibung,a.ps,a.sitzanzahl,a.kofferraumvolumen,a.bildlink,a.kraftstoffverbrauch,a.pjk,ks.ksbezeichnung,a.marke.markenname FROM Autoart a").getResultList();
+	   	 return  query;
+	}
+	public Autoart createAA(String beschreibung, String bildlink,int kofferraumvolumen, double kraftstoffverbrauch,Kraftstoff ks,Marke marke,double pjk,int ps, int sitzanzahl)
+	{
+		BigDecimal pjk2 = new BigDecimal(pjk);
+		Autoart aa = new Autoart(beschreibung,ps, sitzanzahl,
+				kofferraumvolumen,bildlink, kraftstoffverbrauch,
+				 pjk2, ks,marke);
+		em.persist(aa);
+		return aa;
+	}
+	public Auto createAuto(String bez,Autoart aa){
+		Auto auto = new Auto("51.961749, 7.626028",bez,aa);
+		em.persist(auto);
+		return auto;
+	}
+	
 }
+
+
