@@ -4,6 +4,7 @@ import javax.ejb.Local;
 
 import de.autovermietung.entities.Auto;
 import de.autovermietung.entities.Kunde;
+import de.autovermietung.entities.Rechnung;
 import de.autovermietung.entities.Session;
 
 @Local
@@ -15,4 +16,5 @@ public interface AutovermietungDAOLocal {
 	  public Auto findAutobyID(int Aid);
 	  public Session findSessionbyId(int Id);
 	    public void deleteSession(Session session);
+	    public Rechnung findRechnungbyId(int rid);
 }

@@ -15,9 +15,12 @@ import de.autovermietung.dao.AutovermietungDAOAdminLocal;
 import de.autovermietung.dao.AutovermietungDAOLocal;
 import de.autovermietung.dao.Databuilder;
 import de.autovermietung.dto.AutoResponse;
+import de.autovermietung.dto.KundeResponse;
 import de.autovermietung.dto.KundenLoginResponse;
+import de.autovermietung.dto.RechnungsResponse;
 import de.autovermietung.entities.Auto;
 import de.autovermietung.entities.Kunde;
+import de.autovermietung.entities.Rechnung;
 import de.autovermietung.entities.Session;
 import de.autovermietung.exceptions.InvalidLoginException;
 import de.autovermietung.exceptions.KeineSessioException;
@@ -99,6 +102,7 @@ public class OnlineIntegration {
 		
 		
 	}
+    
     private Session getSession(int Id) throws SessionabgelaufenException, KeineSessioException{
  	   Session session = dao.findSessionbyId(Id);
  	   if(session == null )
@@ -123,6 +127,37 @@ public class OnlineIntegration {
  		   }
  	      
  	   }
+  	   
     }
      
+    public RechnungsResponse rechnung(@WebParam(name="Sessionid") int session,@WebParam(name="Rechnungsid") int rid){
+		RechnungsResponse rechung = new RechnungsResponse();
+		
+		 try {
+			 Session Nsession = getSession(session);
+		   		
+		   		Rechnung rechn = dao.findRechnungbyId(rid);
+				
+					if (rechn != null) {
+						rechung.setGesamtpreis(rechn.getGesamtpreis());
+						rechung.setMwst(rechn.getMwst());
+						rechung.setRechnungspositionen(rechn.getRechnungspositionen());
+						rechung.setKunde(rechn.getKunde());
+					}
+					else {
+						
+						throw new NichtVorhandenException("Rechnung ist nicht vorhanden");
+					}
+				}
+				catch (OnlineIntegrationExceptions e) {
+					rechung.setReturnCode(e.getErrorCode());
+					rechung.setMessage(e.getMessage());
+				}
+			   
+		  
+		  
+		  return rechung;
+		
+		
+	}
 }
