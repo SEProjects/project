@@ -35,12 +35,46 @@ public class Rechnung implements Serializable{
 	private Date timestamp;
 	@Column(nullable=false)
 	private BigDecimal mwst;
+	private BigDecimal vorpreis;
+	private BigDecimal rabatt;
 	
 	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, mappedBy="rechnung") 
 	private List<mieten> rechnungspositionen;
-	
+	@ManyToOne
+	private Bezahlmethode bezahlmethode;
 	@ManyToOne(optional=false)
 	private Kunde kunde;
+	public BigDecimal getVorpreis() {
+		return vorpreis;
+	}
+
+
+	public void setVorpreis(BigDecimal vorpreis) {
+		this.vorpreis = vorpreis;
+	}
+
+
+	public BigDecimal getRabatt() {
+		return rabatt;
+	}
+
+
+	public void setRabatt(BigDecimal rabatt) {
+		this.rabatt = rabatt;
+		gesamtpreis = vorpreis.multiply(new BigDecimal(1).subtract(rabatt.divide(new BigDecimal(100))));
+		this.mwst = gesamtpreis.multiply(new BigDecimal(0.19));
+	}
+
+
+	public boolean isBezahlt() {
+		return bezahlt;
+	}
+
+
+	public void setBezahlt(boolean bezahlt) {
+		this.bezahlt = bezahlt;
+	}
+	private boolean bezahlt;
 	private boolean abgerechnet;
 	
 	public boolean isAbgerechnet() {
@@ -58,10 +92,9 @@ public class Rechnung implements Serializable{
 	}
 
 
-	public Rechnung(BigDecimal gesamtpreis, BigDecimal mwst, Kunde kunde) {
+	public Rechnung(Kunde kunde) {
 		super();
-		this.gesamtpreis = gesamtpreis;
-		this.mwst = mwst;
+	
 		this.kunde = kunde;
 		rechnungspositionen = new ArrayList<>();
 	

@@ -23,19 +23,40 @@ public class mieten implements Serializable{
 	@Column(nullable=false)
 	private double anfangskm;
 	private double endkm;
-	private BigDecimal vorpreis;
-	private BigDecimal rabatt;
-	private BigDecimal endpreis;
+	
 	
 	@ManyToOne(optional=false)
 	private Auto auto;
 	
 	@ManyToOne(optional=false)
 	private Kunde kunde;
+
+
+
+
+
+	@ManyToOne()
+	private Rechnung rechnung;
+	private BigDecimal diff;
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP",nullable=false,updatable = false, insertable = false)
+	private Date timestamp;
+	private boolean abgerechnet;
 	
 	public boolean isAbgerechnet() {
 		return abgerechnet;
 	}
+	public BigDecimal getDiff() {
+		return diff;
+	}
+
+
+
+	public void setDiff(BigDecimal diff) {
+		this.diff = diff;
+	}
+
 
 
 
@@ -47,13 +68,7 @@ public class mieten implements Serializable{
 
 
 
-	@ManyToOne(optional=false)
-	private Rechnung rechnung;
-	
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP",nullable=false,updatable = false, insertable = false)
-	private Date timestamp;
-	private boolean abgerechnet;
+
 	public mieten(){
 		
 	}
@@ -92,43 +107,11 @@ public class mieten implements Serializable{
 
 	public void setEndkm(double endkm) {
 		this.endkm = endkm;
+		this.diff = new BigDecimal(endkm).subtract(new BigDecimal(anfangskm));
+	
+		
 	}
 
-
-
-	public BigDecimal getVorpreis() {
-		return vorpreis;
-	}
-
-
-
-	public void setVorpreis(BigDecimal vorpreis) {
-		this.vorpreis = vorpreis;
-	}
-
-
-
-	public BigDecimal getRabatt() {
-		return rabatt;
-	}
-
-
-
-	public void setRabatt(BigDecimal rabatt) {
-		this.rabatt = rabatt;
-	}
-
-
-
-	public BigDecimal getEndpreis() {
-		return endpreis;
-	}
-
-
-
-	public void setEndpreis(BigDecimal endpreis) {
-		this.endpreis = endpreis;
-	}
 
 
 

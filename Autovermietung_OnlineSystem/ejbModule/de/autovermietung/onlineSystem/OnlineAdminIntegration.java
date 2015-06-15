@@ -29,6 +29,8 @@ import de.autovermietung.dto.KundeEditResponse;
 import de.autovermietung.dto.KundeResponse;
 import de.autovermietung.dto.KundenLoginResponse;
 import de.autovermietung.dto.MarkeResponse;
+import de.autovermietung.dto.RechnungsResponse;
+import de.autovermietung.dto.RechnungsrabattResponse;
 import de.autovermietung.dto.UpdateResponse;
 import de.autovermietung.dto.neueMarkeResponse;
 import de.autovermietung.dto.neuerEintragResponse;
@@ -37,6 +39,7 @@ import de.autovermietung.entities.Autoart;
 import de.autovermietung.entities.Kraftstoff;
 import de.autovermietung.entities.Kunde;
 import de.autovermietung.entities.Marke;
+import de.autovermietung.entities.Rechnung;
 import de.autovermietung.entities.Session;
 import de.autovermietung.exceptions.InsertException;
 import de.autovermietung.exceptions.InvalidLoginException;
@@ -678,7 +681,7 @@ public UpdateResponse saveKS(@WebParam(name="Sessionid") int session,@WebParam(n
 		   
 		   
 	 }
-	public GetAllResponse getAllRechungen(@WebParam(name="Sessionid") int session){
+	public GetAllResponse getAllRechnungen(@WebParam(name="Sessionid") int session){
 		
 		  GetAllResponse  agr = new  GetAllResponse();
 		  	try {
@@ -751,7 +754,7 @@ public UpdateResponse saveKS(@WebParam(name="Sessionid") int session,@WebParam(n
 			   
 		return aar;
 	}
-	public neuerEintragResponse createAllRechungen(@WebParam(name="Sessionid") int session,@WebParam(name="bez") String bez,@WebParam(name="AAid") int AAid){
+	public neuerEintragResponse createAllRechungen(@WebParam(name="Sessionid") int session){
 		 neuerEintragResponse ner = new neuerEintragResponse();
 		   try {
 	 		Session Nsession = getSession(session);
@@ -776,6 +779,144 @@ public UpdateResponse saveKS(@WebParam(name="Sessionid") int session,@WebParam(n
 		   
 		   
 	 }
+	public UpdateResponse saveRechnung(@WebParam(name="Sessionid") int session,@WebParam(name="Rechnungsid") int Id,@WebParam(name="Rabatt") String bild){
+		UpdateResponse ur = new UpdateResponse();
+		  try {
+			 
+		   		Session Nsession = getSession(session);
+		   		Autoart aa = dao.findAutoartbyID(Id);
+					
+		   		if (aa != null) {
+		   			   
+		   			    
+			   			aa.setBild(bild);
+			   			ur.setSuccessful(true);
+					}
+					else {
+						ur.setSuccessful(false);
+						throw new NichtVorhandenException("AutoArt ist nicht vorhanden");
+					}
+				}
+				catch (OnlineIntegrationExceptions e) {
+					ur.setReturnCode(e.getErrorCode());
+					ur.setMessage(e.getMessage());
+					ur.setSuccessful(false);
+				}
+			   
+		  return ur;
+			}
+	public UpdateResponse Zahlungbestaetigen(@WebParam(name="Sessionid") int session,@WebParam(name="Rechnungsid") int Id){
+		UpdateResponse ur = new UpdateResponse();
+		  try {
+			 
+		   		Session Nsession = getSession(session);
+		   		Rechnung rechnung= dao.findRechnungbyID(Id);
+					
+		   		if (rechnung != null) {
+		   			   
+		   			    
+			   			rechnung.setAbgerechnet(true);
+			   			ur.setSuccessful(true);
+					}
+					else {
+						ur.setSuccessful(false);
+						throw new NichtVorhandenException("AutoArt ist nicht vorhanden");
+					}
+				}
+				catch (OnlineIntegrationExceptions e) {
+					ur.setReturnCode(e.getErrorCode());
+					ur.setMessage(e.getMessage());
+					ur.setSuccessful(false);
+				}
+			   
+		  return ur;
+			}
+	public RechnungsrabattResponse getRechnungsRabatt(@WebParam(name="Sessionid") int session,@WebParam(name="Rechnungsid") int id){
+		RechnungsrabattResponse rrr = new RechnungsrabattResponse(); 
+		 try {
+			 
+		   		Session Nsession = getSession(session);
+		   		Rechnung rechnung= dao.findRechnungbyID(id);
+					
+		   		if (rechnung != null) {
+		   			   rrr.setRabatt(rechnung.getRabatt());
+		   			    
+			   			
+			   			
+					}
+					else {
+						
+						throw new NichtVorhandenException("AutoArt ist nicht vorhanden");
+					}
+				}
+				catch (OnlineIntegrationExceptions e) {
+					rrr.setReturnCode(e.getErrorCode());
+					rrr.setMessage(e.getMessage());
+				
+				}
+			   
+		  return rrr;
+			}
+	public UpdateResponse saveRechnungsRabatt(@WebParam(name="Sessionid") int session,@WebParam(name="Rechnungsid") int Id,@WebParam(name="Rabatt") double rabatt){
+		UpdateResponse ur = new UpdateResponse();
+		  try {
+			 
+		   		Session Nsession = getSession(session);
+		   		Rechnung rechnung= dao.findRechnungbyID(Id);
+					
+		   		if (rechnung != null) {
+		   			   
+		   			    
+			   			rechnung.setRabatt(new BigDecimal(rabatt));
+			   			ur.setSuccessful(true);
+					}
+					else {
+						ur.setSuccessful(false);
+						throw new NichtVorhandenException("AutoArt ist nicht vorhanden");
+					}
+				}
+				catch (OnlineIntegrationExceptions e) {
+					ur.setReturnCode(e.getErrorCode());
+					ur.setMessage(e.getMessage());
+					ur.setSuccessful(false);
+				}
+			   
+		  return ur;
+			}
+	
+	public RechnungsResponse getRechnung(@WebParam(name="Sessionid") int session,@WebParam(name="Rechnungsid") int id){
+		RechnungsResponse rr = new RechnungsResponse();
+		
+		 try {
+		   		Session Nsession = getSession(session);
+		   		Rechnung rechnung = dao.findRechnungbyID(id);
+				
+					if (rechnung != null) {
+						rr.setGesamtpreis(rechnung.getGesamtpreis());
+						rr.setKunde(rechnung.getKunde().getEmail());
+						rr.setMwst(rechnung.getMwst());
+						rr.setRabatt(rechnung.getRabatt());
+						rr.setRid(rechnung.getRid());
+						rr.setTimestamp(rechnung.getTimestamp());
+						rr.setVorpreis(rechnung.getVorpreis());
+						rr.setDatensaetze(dao.getAllRechnungenposition(id));
+					}
+					else {
+						
+						throw new NichtVorhandenException("Auto ist nicht vorhanden");
+					}
+				}
+				catch (OnlineIntegrationExceptions e) {
+					rr.setReturnCode(e.getErrorCode());
+					rr.setMessage(e.getMessage());
+				}
+			   
+		  
+		  
+		  return rr;
+		
+		
+	}
 	
 	 
 }

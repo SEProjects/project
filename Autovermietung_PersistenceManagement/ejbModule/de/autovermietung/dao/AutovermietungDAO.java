@@ -1,11 +1,18 @@
 package de.autovermietung.dao;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 import javax.ejb.Stateless;
+import javax.persistence.Column;
 import javax.persistence.EntityManager;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import org.jboss.logging.Logger;
 
@@ -148,17 +155,58 @@ public class AutovermietungDAO implements AutovermietungDAOAdminLocal,Autovermie
 		return auto;
 	}
 	public List<Object[]> getAllRechnungen(){
-		 List query = em.createQuery("SELECT r.rid, r.gesamtpreis, r.timestamp, r.kunde.email, r.abgerechnet FROM Rechung r").getResultList();
+		 List query = em.createQuery("SELECT r.rid, r.gesamtpreis, r.timestamp, r.kunde.email, r.abgerechnet, r.bezahlt FROM Rechnung r").getResultList();
 	   	 return  query;
 	}
+	public List<Object[]> getAllRechnungenposition(int id){
+		 List query = em.createQuery("SELECT m.mid, m.anfangskm, m.endkm, m.auto.autoart.beschreibung, m.auto.autoart.pjk, m.diff, m.timestamp FROM mieten m where m.rechnung.rid = '" + id + "'").getResultList();
+	   	 return  query;
+	 
+	}
 	public void createAllRechnungen(){
-		
-		List query = em.createQuery("SELECT m.mid mieten m where m.endkm is not null and m.abgerechnet = false").getResultList();
+		List query = em.createQuery("SELECT m.kunde.email from mieten m where m.endkm is not null and m.abgerechnet = false group by m.kunde.email").getResultList();
+		List query2 = em.createQuery("SELECT m.mid from mieten m where m.endkm is not null and m.abgerechnet = false").getResultList();
 		if(query.isEmpty()){
 			logger.info("keine rechnungen vorhanden");
 		}
 		else{
-			logger.info("rechnungen vorhanden");
+			for(int i=0;i<query.size();i++){
+				logger.info(query.get(i));
+				
+				List query3 = em.createQuery("SELECT m.mid from mieten m where m.endkm is not null and m.abgerechnet = false and m.kunde.email = '" + query.get(i) + "'").getResultList();
+				BigDecimal summe = new BigDecimal(0);
+				Kunde kunde = em.find(Kunde.class,query.get(i));
+				Rechnung rechnung = new Rechnung(kunde);
+			
+				for(int j=0;j<query3.size();j++){
+				
+
+				
+					mieten miet = em.find(mieten.class,query3.get(j));
+					rechnung.addRechnungsposition(miet);
+					
+					BigDecimal zsumme = miet.getDiff();
+				
+					zsumme=zsumme.multiply(miet.getAuto().getAutoart().getPjk());
+					
+					summe=summe.add(zsumme);
+					miet.setAbgerechnet(true);
+					miet.setRechnung(rechnung);
+					
+				}
+				rechnung.setGesamtpreis(summe);
+				rechnung.setVorpreis(summe);
+				rechnung.setRabatt(new BigDecimal(0));
+				
+				BigDecimal mwst = summe;
+				mwst.multiply(new BigDecimal(0.19));
+				rechnung.setMwst(mwst);
+				em.persist(rechnung);
+				
+				logger.info(rechnung.getGesamtpreis());
+				
+			}
+			
 		}
 	}
 
