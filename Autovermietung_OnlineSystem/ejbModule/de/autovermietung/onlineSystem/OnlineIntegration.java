@@ -11,12 +11,10 @@ import javax.xml.ws.WebServiceContext;
 
 import org.jboss.logging.Logger;
 
-import de.autovermietung.dao.AutovermietungDAOAdminLocal;
 import de.autovermietung.dao.AutovermietungDAOLocal;
 import de.autovermietung.dao.Databuilder;
 import de.autovermietung.dto.AutoResponse;
 import de.autovermietung.dto.EditResponse;
-import de.autovermietung.dto.KundeResponse;
 import de.autovermietung.dto.KundenLoginResponse;
 import de.autovermietung.dto.RechnungsResponse;
 import de.autovermietung.entities.Auto;
