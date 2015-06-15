@@ -29,6 +29,7 @@ import de.autovermietung.dto.KundeEditResponse;
 import de.autovermietung.dto.KundeResponse;
 import de.autovermietung.dto.KundenLoginResponse;
 import de.autovermietung.dto.MarkeResponse;
+import de.autovermietung.dto.RechnungsAResponse;
 import de.autovermietung.dto.RechnungsResponse;
 import de.autovermietung.dto.RechnungsrabattResponse;
 import de.autovermietung.dto.UpdateResponse;
@@ -884,8 +885,8 @@ public UpdateResponse saveKS(@WebParam(name="Sessionid") int session,@WebParam(n
 		  return ur;
 			}
 	
-	public RechnungsResponse getRechnung(@WebParam(name="Sessionid") int session,@WebParam(name="Rechnungsid") int id){
-		RechnungsResponse rr = new RechnungsResponse();
+	public RechnungsAResponse getRechnung(@WebParam(name="Sessionid") int session,@WebParam(name="Rechnungsid") int id){
+		RechnungsAResponse rr = new RechnungsAResponse();
 		
 		 try {
 		   		Session Nsession = getSession(session);

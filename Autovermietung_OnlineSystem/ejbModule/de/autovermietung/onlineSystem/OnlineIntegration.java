@@ -15,9 +15,14 @@ import de.autovermietung.dao.AutovermietungDAOAdminLocal;
 import de.autovermietung.dao.AutovermietungDAOLocal;
 import de.autovermietung.dao.Databuilder;
 import de.autovermietung.dto.AutoResponse;
+import de.autovermietung.dto.EditResponse;
+import de.autovermietung.dto.KundeResponse;
 import de.autovermietung.dto.KundenLoginResponse;
+import de.autovermietung.dto.RechnungsResponse;
 import de.autovermietung.entities.Auto;
 import de.autovermietung.entities.Kunde;
+import de.autovermietung.entities.PLZ;
+import de.autovermietung.entities.Rechnung;
 import de.autovermietung.entities.Session;
 import de.autovermietung.exceptions.InvalidLoginException;
 import de.autovermietung.exceptions.KeineSessioException;
@@ -33,7 +38,7 @@ import de.autovermietung.util.DtoAssembler;
 @WebService
 public class OnlineIntegration {
 
-	@EJB(beanName = "AutovermietungDAO", beanInterface = de.autovermietung.dao.AutovermietungDAOAdminLocal.class)
+	@EJB(beanName = "AutovermietungDAO", beanInterface = de.autovermietung.dao.AutovermietungDAOLocal.class)
 	private AutovermietungDAOLocal dao;
 	@Resource
 	private WebServiceContext wsContext;
@@ -99,6 +104,7 @@ public class OnlineIntegration {
 		
 		
 	}
+    
     private Session getSession(int Id) throws SessionabgelaufenException, KeineSessioException{
  	   Session session = dao.findSessionbyId(Id);
  	   if(session == null )
@@ -123,6 +129,72 @@ public class OnlineIntegration {
  		   }
  	      
  	   }
+  	   
     }
      
+    public RechnungsResponse rechnung(@WebParam(name="Sessionid") int session,@WebParam(name="Rechnungsid") int rid){
+		RechnungsResponse rechung = new RechnungsResponse();
+		
+		 try {
+			 Session Nsession = getSession(session);
+		   		
+		   		Rechnung rechn = dao.findRechnungbyID(rid);
+				
+					if (rechn != null) {
+						rechung.setGesamtpreis(rechn.getGesamtpreis());
+						rechung.setMwst(rechn.getMwst());
+						rechung.setRechnungspositionen(rechn.getRechnungspositionen());
+						rechung.setKunde(rechn.getKunde());
+					}
+					else {
+						
+						throw new NichtVorhandenException("Rechnung ist nicht vorhanden");
+					}
+				}
+				catch (OnlineIntegrationExceptions e) {
+					rechung.setReturnCode(e.getErrorCode());
+					rechung.setMessage(e.getMessage());
+				}
+			   
+		  
+		  
+		  return rechung;
+		
+		
+	}
+    public EditResponse updateKunde(@WebParam(name="Sessionid") int session,@WebParam(name="email") String Email,
+    		@WebParam(name="Passwort") String kpassword,
+    		@WebParam(name="Nachname")String knachname,
+    		@WebParam(name="Strasse")String strasse,
+    		@WebParam(name="PLZ")PLZ plz){
+		EditResponse up = new EditResponse();
+		
+		 try {
+			 Session Nsession = getSession(session);
+		   		
+		   		Kunde k = dao.findKundebyEmail(Email);
+				
+					if (k != null) {
+						k.setKpassword(kpassword);
+						k.setKnachname(knachname);
+						k.setStrasse(strasse);
+						k.setKplz(plz);
+						up.setSuccessful(true);
+					}
+					else {
+						
+						throw new NichtVorhandenException("Kunde ist nicht vorhanden");
+					}
+				}
+				catch (OnlineIntegrationExceptions e) {
+					up.setReturnCode(e.getErrorCode());
+					up.setMessage(e.getMessage());
+				}
+			   
+		  
+		  
+		  return up;
+		
+		
+	}
 }
