@@ -2,10 +2,8 @@ package de.autovermietung.entities;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Date;
-
 import java.util.ArrayList;
-
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -18,6 +16,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.xml.bind.annotation.XmlType;
+@XmlType(name="Rechnung2")
 @Entity
 public class Rechnung implements Serializable{
 

@@ -15,6 +15,7 @@ import javax.xml.ws.WebServiceContext;
 
 import org.jboss.logging.Logger;
 
+import de.autovermietung.Output.OutputRequesterBean;
 import de.autovermietung.dao.AutovermietungDAOAdminLocal;
 import de.autovermietung.dao.Databuilder;
 import de.autovermietung.dto.AlleAutosResponse;
@@ -30,7 +31,6 @@ import de.autovermietung.dto.KundeResponse;
 import de.autovermietung.dto.KundenLoginResponse;
 import de.autovermietung.dto.MarkeResponse;
 import de.autovermietung.dto.RechnungsAResponse;
-import de.autovermietung.dto.RechnungsResponse;
 import de.autovermietung.dto.RechnungsrabattResponse;
 import de.autovermietung.dto.UpdateResponse;
 import de.autovermietung.dto.neueMarkeResponse;
@@ -68,6 +68,10 @@ public class OnlineAdminIntegration {
 	private AutovermietungDAOAdminLocal dao;
 	@Resource
 	private WebServiceContext wsContext;
+	
+	//@EJB
+	//private OutputRequesterBean outputRequester;
+	
 	@EJB
 	private DtoAssembler dto;
 	private static final Logger logger = Logger.getLogger(Databuilder.class);
@@ -870,7 +874,9 @@ public UpdateResponse saveKS(@WebParam(name="Sessionid") int session,@WebParam(n
 		   			    
 			   			rechnung.setRabatt(new BigDecimal(rabatt));
 			   			ur.setSuccessful(true);
-					}
+			   		//	outputRequester.sendMessage("Ihre Rechnung wurde ein Rabatt gewährt", rechnung.getKunde());
+			   			//logger.info(outputRequester.getMessage(rechnung.getKunde()));		
+			   			}
 					else {
 						ur.setSuccessful(false);
 						throw new NichtVorhandenException("AutoArt ist nicht vorhanden");
@@ -880,6 +886,9 @@ public UpdateResponse saveKS(@WebParam(name="Sessionid") int session,@WebParam(n
 					ur.setReturnCode(e.getErrorCode());
 					ur.setMessage(e.getMessage());
 					ur.setSuccessful(false);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
 			   
 		  return ur;
