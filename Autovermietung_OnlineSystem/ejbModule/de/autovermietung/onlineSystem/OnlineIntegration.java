@@ -15,6 +15,7 @@ import de.autovermietung.dao.AutovermietungDAOLocal;
 import de.autovermietung.dao.Databuilder;
 import de.autovermietung.dto.AutoResponse;
 import de.autovermietung.dto.EditResponse;
+import de.autovermietung.dto.KundeResponse;
 import de.autovermietung.dto.KundenLoginResponse;
 import de.autovermietung.dto.RechnungsResponse;
 import de.autovermietung.entities.Auto;
@@ -24,6 +25,7 @@ import de.autovermietung.entities.Rechnung;
 import de.autovermietung.entities.Session;
 import de.autovermietung.exceptions.InvalidLoginException;
 import de.autovermietung.exceptions.KeineSessioException;
+import de.autovermietung.exceptions.KundeNichtVorhandenException;
 import de.autovermietung.exceptions.NichtVorhandenException;
 import de.autovermietung.exceptions.OnlineIntegrationExceptions;
 import de.autovermietung.exceptions.SessionabgelaufenException;
@@ -72,6 +74,31 @@ public class OnlineIntegration {
 		return klr;
 	    
     }
+    
+    public KundeResponse getKunde(@WebParam(name="Sessionid") int session,@WebParam(name="Kundeemail") String email){
+        KundeResponse kr = new KundeResponse();
+     	try {
+     		Session sessionId = getSession(session);
+ 			Kunde kunde = dao.findKundebyEmail(email);	
+ 			
+ 			if (kunde != null) {
+ 				kr = dto.makeDTO(kunde);
+ 			}
+ 			else {
+ 				
+ 				throw new KundeNichtVorhandenException("Kunde nicht vorhanden");
+ 			}
+ 		}
+ 		catch (OnlineIntegrationExceptions e) {
+ 			kr.setReturnCode(e.getErrorCode());
+ 			kr.setMessage(e.getMessage());
+ 		}
+     	
+     	
+     	return kr;
+     
+     }
+    
     public AutoResponse getAuto(@WebParam(name="Sessionid") int session,@WebParam(name="Autoid") int autoid){
 		AutoResponse ar = new AutoResponse();
 		
