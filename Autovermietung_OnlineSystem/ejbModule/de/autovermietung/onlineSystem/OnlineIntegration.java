@@ -18,6 +18,7 @@ import de.autovermietung.dto.EditResponse;
 import de.autovermietung.dto.KundeResponse;
 import de.autovermietung.dto.KundenLoginResponse;
 import de.autovermietung.dto.RechnungsResponse;
+import de.autovermietung.dto.ReturncodeResponse;
 import de.autovermietung.entities.Auto;
 import de.autovermietung.entities.Kunde;
 import de.autovermietung.entities.PLZ;
@@ -74,6 +75,23 @@ public class OnlineIntegration {
 		return klr;
 	    
     }
+    
+    public ReturncodeResponse logout(@WebParam(name="sessionId") int sessionId) {
+    	Session session;
+		try {
+			session = getSession(sessionId);
+			dao.deleteSession(session);
+		} catch (SessionabgelaufenException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (KeineSessioException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		ReturncodeResponse response = new ReturncodeResponse();
+		logger.info("Logout erfolgreich. Session=" + sessionId);
+		return response;
+	}
     
     public KundeResponse getKunde(@WebParam(name="Sessionid") int session,@WebParam(name="Kundeemail") String email){
         KundeResponse kr = new KundeResponse();

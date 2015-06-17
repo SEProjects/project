@@ -10,7 +10,6 @@ public class KundenLoginResponse extends ReturncodeResponse {
 
 	private int session;
 	
-	
 	public KundenLoginResponse(){
 		
 		
