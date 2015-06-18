@@ -22,6 +22,7 @@ import de.autovermietung.dto.KundenLoginResponse;
 import de.autovermietung.dto.RechnungsResponse;
 import de.autovermietung.dto.ReturncodeResponse;
 import de.autovermietung.entities.Auto;
+import de.autovermietung.entities.Bezahlmethode;
 import de.autovermietung.entities.Kunde;
 import de.autovermietung.entities.PLZ;
 import de.autovermietung.entities.Rechnung;
@@ -244,6 +245,59 @@ public class OnlineIntegration {
 		  
 		  
 		  return up;
+		
+		
+	}
+    public EditResponse rechnungBezahlen(@WebParam(name="Sessionid") int session,@WebParam(name="Rechnungsid") int rid){
+    	EditResponse response = new EditResponse();
+		 try {
+			 Session Nsession = getSession(session);
+		   		
+		   		Rechnung rechn = dao.findRechnungbyID(rid);
+				
+					if (rechn != null) {
+						rechn.setAbgerechnet(true);
+						response.setSuccessful(true);
+						
+					}
+					else {
+						
+						throw new NichtVorhandenException("Rechnung ist nicht vorhanden");
+					}
+				}
+				catch (OnlineIntegrationExceptions e) {
+					response.setReturnCode(e.getErrorCode());
+					response.setMessage(e.getMessage());
+				}
+		  
+		  return response;
+	
+	}
+    public EditResponse addBezahlmethode(@WebParam(name="Sessionid") int session,@WebParam(name="email") String email,
+    		@WebParam(name="addBezmeth") Bezahlmethode bezmeth){
+		EditResponse edit = new EditResponse();
+		
+		 try {
+			 Session Nsession = getSession(session);
+		   		
+		   		Kunde kunde = dao.findKundebyEmail(email);
+				
+					if (kunde != null) {
+						kunde.addBezahlmethoden(bezmeth);
+						edit.setSuccessful(true);
+						
+					}
+					else {
+						
+						throw new NichtVorhandenException("Kunde ist nicht vorhanden");
+					}
+				}
+				catch (OnlineIntegrationExceptions e) {
+					edit.setReturnCode(e.getErrorCode());
+					edit.setMessage(e.getMessage());
+				}
+	 	  
+		  return edit;
 		
 		
 	}
