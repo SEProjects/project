@@ -15,7 +15,7 @@ import javax.xml.ws.WebServiceContext;
 
 import org.jboss.logging.Logger;
 
-//import de.autovermietung.Output.OutputRequesterBean;
+
 import de.autovermietung.dao.AutovermietungDAOAdminLocal;
 import de.autovermietung.dao.Databuilder;
 import de.autovermietung.dto.AlleAutosResponse;
@@ -69,8 +69,8 @@ public class OnlineAdminIntegration {
 	@Resource
 	private WebServiceContext wsContext;
 	
-	//@EJB
-	//private OutputRequesterBean outputRequester;
+	@EJB
+	private OutputRequesterBean outputRequester;
 	
 	@EJB
 	private DtoAssembler dto;
@@ -874,8 +874,10 @@ public UpdateResponse saveKS(@WebParam(name="Sessionid") int session,@WebParam(n
 		   			    
 			   			rechnung.setRabatt(new BigDecimal(rabatt));
 			   			ur.setSuccessful(true);
-			   		//	outputRequester.sendMessage("Ihre Rechnung wurde ein Rabatt gewährt", rechnung.getKunde());
-			   			//logger.info(outputRequester.getMessage(rechnung.getKunde()));		
+			   			logger.info("!");
+			   			outputRequester.sendMessage(rechnung);
+			   			
+			   				
 			   			}
 					else {
 						ur.setSuccessful(false);

@@ -37,10 +37,11 @@ public class Kunde implements Serializable {
 	
 	@Column(nullable=false)
 	private String strasse;
-
+	private String link;
 
 	private boolean saf;
 	private boolean admin;
+	private boolean aktive;
 	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, mappedBy="kunde") @MapKey
 	private List<mieten> gemietet;
 	
@@ -88,6 +89,161 @@ public class Kunde implements Serializable {
 		this.dreck = new ArrayList<>();
 		this.fsa = fsa;
 		this.kplz = kplz;
+		this.link = Integer.toString(this.hashCode());
+	}
+
+
+	public String getLink() {
+		return link;
+	}
+
+
+	public void setLink(String link) {
+		this.link = link;
+	}
+
+
+	public boolean isAktive() {
+		return aktive;
+	}
+
+
+	public void setAktive(boolean aktive) {
+		this.aktive = aktive;
+	}
+
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (admin ? 1231 : 1237);
+		result = prime * result + (aktive ? 1231 : 1237);
+		result = prime * result
+				+ ((bewertungen == null) ? 0 : bewertungen.hashCode());
+		result = prime * result
+				+ ((bezahlmethoden == null) ? 0 : bezahlmethoden.hashCode());
+		result = prime * result + ((dreck == null) ? 0 : dreck.hashCode());
+		result = prime * result + ((email == null) ? 0 : email.hashCode());
+		result = prime * result + ((fsa == null) ? 0 : fsa.hashCode());
+		result = prime * result
+				+ ((fsnummer == null) ? 0 : fsnummer.hashCode());
+		result = prime * result
+				+ ((gemietet == null) ? 0 : gemietet.hashCode());
+		result = prime * result
+				+ ((knachname == null) ? 0 : knachname.hashCode());
+		result = prime * result
+				+ ((kpassword == null) ? 0 : kpassword.hashCode());
+		result = prime * result + ((kplz == null) ? 0 : kplz.hashCode());
+		result = prime * result
+				+ ((kvorname == null) ? 0 : kvorname.hashCode());
+		result = prime * result + ((link == null) ? 0 : link.hashCode());
+		result = prime * result + ((pan == null) ? 0 : pan.hashCode());
+		result = prime * result
+				+ ((rechnungen == null) ? 0 : rechnungen.hashCode());
+		result = prime * result + (saf ? 1231 : 1237);
+		result = prime * result + ((schaden == null) ? 0 : schaden.hashCode());
+		result = prime * result + ((strasse == null) ? 0 : strasse.hashCode());
+		return result;
+	}
+
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Kunde other = (Kunde) obj;
+		if (admin != other.admin)
+			return false;
+		if (aktive != other.aktive)
+			return false;
+		if (bewertungen == null) {
+			if (other.bewertungen != null)
+				return false;
+		} else if (!bewertungen.equals(other.bewertungen))
+			return false;
+		if (bezahlmethoden == null) {
+			if (other.bezahlmethoden != null)
+				return false;
+		} else if (!bezahlmethoden.equals(other.bezahlmethoden))
+			return false;
+		if (dreck == null) {
+			if (other.dreck != null)
+				return false;
+		} else if (!dreck.equals(other.dreck))
+			return false;
+		if (email == null) {
+			if (other.email != null)
+				return false;
+		} else if (!email.equals(other.email))
+			return false;
+		if (fsa == null) {
+			if (other.fsa != null)
+				return false;
+		} else if (!fsa.equals(other.fsa))
+			return false;
+		if (fsnummer == null) {
+			if (other.fsnummer != null)
+				return false;
+		} else if (!fsnummer.equals(other.fsnummer))
+			return false;
+		if (gemietet == null) {
+			if (other.gemietet != null)
+				return false;
+		} else if (!gemietet.equals(other.gemietet))
+			return false;
+		if (knachname == null) {
+			if (other.knachname != null)
+				return false;
+		} else if (!knachname.equals(other.knachname))
+			return false;
+		if (kpassword == null) {
+			if (other.kpassword != null)
+				return false;
+		} else if (!kpassword.equals(other.kpassword))
+			return false;
+		if (kplz == null) {
+			if (other.kplz != null)
+				return false;
+		} else if (!kplz.equals(other.kplz))
+			return false;
+		if (kvorname == null) {
+			if (other.kvorname != null)
+				return false;
+		} else if (!kvorname.equals(other.kvorname))
+			return false;
+		if (link == null) {
+			if (other.link != null)
+				return false;
+		} else if (!link.equals(other.link))
+			return false;
+		if (pan == null) {
+			if (other.pan != null)
+				return false;
+		} else if (!pan.equals(other.pan))
+			return false;
+		if (rechnungen == null) {
+			if (other.rechnungen != null)
+				return false;
+		} else if (!rechnungen.equals(other.rechnungen))
+			return false;
+		if (saf != other.saf)
+			return false;
+		if (schaden == null) {
+			if (other.schaden != null)
+				return false;
+		} else if (!schaden.equals(other.schaden))
+			return false;
+		if (strasse == null) {
+			if (other.strasse != null)
+				return false;
+		} else if (!strasse.equals(other.strasse))
+			return false;
+		return true;
 	}
 
 
