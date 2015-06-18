@@ -1,5 +1,7 @@
 package de.autovermietung.dao;
 
+import java.util.List;
+
 import javax.ejb.Local;
 
 import de.autovermietung.entities.Auto;
@@ -17,5 +19,6 @@ public interface AutovermietungDAOLocal {
 	public Session findSessionbyId(int Id);
 	public void deleteSession(Session session);
 	public Rechnung findRechnungbyID(int Rid);
+	public List<Object[]> getAllAutos();
 	  
 }
