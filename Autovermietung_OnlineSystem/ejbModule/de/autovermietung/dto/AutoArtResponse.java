@@ -23,11 +23,10 @@ public class AutoArtResponse extends ReturncodeResponse {
 	private double kraftstoffverbrauch;
 	
 	private BigDecimal pjk; 
-	private int ks;
 	private int marke;
-	public AutoArtResponse(){
-		
-	}
+	private int ks;
+	
+	public AutoArtResponse() {	}
 	public int getAaid() {
 		return aaid;
 	}
