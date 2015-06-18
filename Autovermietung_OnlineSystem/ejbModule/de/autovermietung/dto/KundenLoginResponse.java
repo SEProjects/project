@@ -1,5 +1,7 @@
 package de.autovermietung.dto;
 
+import de.autovermietung.entities.Kunde;
+
 
 
 public class KundenLoginResponse extends ReturncodeResponse {

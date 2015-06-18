@@ -366,7 +366,10 @@ public class Kunde implements Serializable {
 		this.bezahlmethoden = bezahlmethoden;
 	}
 
-
+	public void addBezahlmethoden(Bezahlmethode bezmeth){
+		bezahlmethoden.add(bezmeth);
+	}
+	
 	public List<Schaden> getSchaden() {
 		return schaden;
 	}

@@ -12,21 +12,20 @@ public class KundeResponse extends ReturncodeResponse {
 	
 	private String knachname;
 	
-	
-
 	private String fsnummer;
 	
 	private String pan;
-
+	private String straße;
 
 	private boolean saf;
 	private boolean admin;
+	//Objekt FSA
+	private String fsaName;
+	//Objekt PLZ
+	private String plz;
+	private String wohnort;
 
-
-
-	public KundeResponse(){
-		
-	}
+	public KundeResponse() { }
 	public String getEmail() {
 		return email;
 	}
@@ -58,6 +57,14 @@ public class KundeResponse extends ReturncodeResponse {
 	public void setPan(String pan) {
 		this.pan = pan;
 	}
+	
+	public String getStraße() {
+		return this.straße;
+	}
+	
+	public void setStraße(String straße) {
+		this.straße = straße;
+	}
 
 	public boolean isSaf() {
 		return saf;
@@ -71,7 +78,26 @@ public class KundeResponse extends ReturncodeResponse {
 	public void setAdmin(boolean admin) {
 		this.admin = admin;
 	}
-
 	
+	public String getFsaName() {
+		return this.fsaName;
+	}
+	
+	public void setFsaName(String fsaName) {
+		this.fsaName = fsaName;
+	}
 
+	public String getPlz() {
+		return this.plz;
+	}
+	public void setPlz(String plz) {
+		this.plz = plz;
+	}
+	
+	public String getWohnort() {
+		return this.wohnort;
+	}
+	public void setWohnort(String wohnort) {
+		this.wohnort = wohnort;
+	}
 }

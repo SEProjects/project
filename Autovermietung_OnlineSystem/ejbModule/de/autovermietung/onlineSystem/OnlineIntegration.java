@@ -1,6 +1,8 @@
 package de.autovermietung.onlineSystem;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.annotation.Resource;
 import javax.ejb.EJB;
@@ -10,20 +12,28 @@ import javax.jws.WebService;
 import javax.xml.ws.WebServiceContext;
 
 import org.jboss.logging.Logger;
+import org.jboss.logging.Logger.Level;
 
 import de.autovermietung.dao.AutovermietungDAOLocal;
 import de.autovermietung.dao.Databuilder;
+import de.autovermietung.dto.AlleAutosResponse;
+import de.autovermietung.dto.AutoListResponse;
 import de.autovermietung.dto.AutoResponse;
 import de.autovermietung.dto.EditResponse;
+import de.autovermietung.dto.KundeResponse;
 import de.autovermietung.dto.KundenLoginResponse;
 import de.autovermietung.dto.RechnungsResponse;
+import de.autovermietung.dto.ReturncodeResponse;
 import de.autovermietung.entities.Auto;
+import de.autovermietung.entities.Bezahlmethode;
 import de.autovermietung.entities.Kunde;
 import de.autovermietung.entities.PLZ;
 import de.autovermietung.entities.Rechnung;
 import de.autovermietung.entities.Session;
 import de.autovermietung.exceptions.InvalidLoginException;
+import de.autovermietung.exceptions.KeineAutosException;
 import de.autovermietung.exceptions.KeineSessioException;
+import de.autovermietung.exceptions.KundeNichtVorhandenException;
 import de.autovermietung.exceptions.NichtVorhandenException;
 import de.autovermietung.exceptions.OnlineIntegrationExceptions;
 import de.autovermietung.exceptions.SessionabgelaufenException;
@@ -50,6 +60,28 @@ public class OnlineIntegration {
         // TODO Auto-generated constructor stub
     }
     
+    private Session getSession(int Id) throws SessionabgelaufenException, KeineSessioException{
+  	   Session session = dao.findSessionbyId(Id);
+  	   if(session == null)
+  		   throw new KeineSessioException("Bitte loggen Sie sich zuerst ein.");
+  	   else {
+  		   Date created  = session.getTimestamp();
+  		   long startTime = created.getTime();
+  			long jetzt = new Date().getTime();
+  			long seconds=jetzt-startTime;
+  		   
+  		   logger.info(seconds*0.001);
+  		   if(seconds > 300000){
+  			   dao.deleteSession(session);
+  			   throw new SessionabgelaufenException("Ihre Session ist leider abgelaufen. Bitte loggen sie sich erneurt ein");
+  		   } else {
+  		   
+  			   session.updateTimestamp();
+  			   return session;
+  		   }  
+  	   }
+     }
+    
     public KundenLoginResponse login(@WebParam(name="email") String email, @WebParam(name="password") String password)   {
         
     	KundenLoginResponse klr = new KundenLoginResponse();
@@ -72,64 +104,91 @@ public class OnlineIntegration {
 		return klr;
 	    
     }
-    public AutoResponse getAuto(@WebParam(name="Sessionid") int session,@WebParam(name="Autoid") int autoid){
-		AutoResponse ar = new AutoResponse();
-		
-		 try {
-			 Session Nsession = getSession(session);
-		   		
-		   		Auto auto = dao.findAutobyID(autoid);
-				
-					if (auto != null) {
-						ar.setAid(auto.getAid());
-						ar.setBez(auto.getBez());
-						ar.setAa(auto.getAutoart().getAaid());
-						ar.setPosition(auto.getPosition());
-					}
-					else {
-						
-						throw new NichtVorhandenException("Auto ist nicht vorhanden");
-					}
-				}
-				catch (OnlineIntegrationExceptions e) {
-					ar.setReturnCode(e.getErrorCode());
-					ar.setMessage(e.getMessage());
-				}
-			   
-		  
-		  
-		  return ar;
-		
-		
+    
+    public ReturncodeResponse logout(@WebParam(name="sessionId") int sessionId) {
+    	Session session;
+		try {
+			session = getSession(sessionId);
+			dao.deleteSession(session);
+		} catch (SessionabgelaufenException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (KeineSessioException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		ReturncodeResponse response = new ReturncodeResponse();
+		logger.info("Logout erfolgreich. Session=" + sessionId);
+		return response;
 	}
     
-    private Session getSession(int Id) throws SessionabgelaufenException, KeineSessioException{
- 	   Session session = dao.findSessionbyId(Id);
- 	   if(session == null )
- 		   throw new KeineSessioException("Bitte loggen Sie sich zuerst ein.");
- 	   else
- 	   {
- 		   Date created  = session.getTimestamp();
- 		   long startTime = created.getTime();
- 			long jetzt = new Date().getTime();
- 			long seconds=jetzt-startTime;
- 		   
- 		   logger.info(seconds*0.001);
- 		   if(seconds > 300000){
- 			   dao.deleteSession(session);
- 			   throw new SessionabgelaufenException("Ihre Session ist leider abgelaufen. Bitte loggen sie sich erneurt ein");
- 		   }		   
- 		   else
- 		   {
- 		   
- 			   session.updateTimestamp();
- 			   return session;
- 		   }
- 	      
- 	   }
-  	   
+    public KundeResponse getKunde(@WebParam(name="Sessionid") int session,@WebParam(name="Kundeemail") String email){
+        KundeResponse kr = new KundeResponse();
+     	try {
+     		Session sessionId = getSession(session);
+ 			Kunde kunde = dao.findKundebyEmail(email);
+ 			if (kunde != null) {
+ 				kr = dto.makeDTO(kunde);
+ 			} else {
+ 				throw new KundeNichtVorhandenException("Kunde nicht vorhanden");
+ 			}
+ 		}
+ 		catch (OnlineIntegrationExceptions e) {
+ 			kr.setReturnCode(e.getErrorCode());
+ 			kr.setMessage(e.getMessage());
+ 		}
+     	return kr;
+     }
+    /**
+     * ########## For Auto Use-Cases
+     */
+    /**
+     * 
+     * @param session
+     * @param autoid
+     * @return AutoResponse
+     */
+    
+    public AutoResponse getAuto(@WebParam(name="Sessionid") int session,@WebParam(name="Autoid") int autoid){
+		AutoResponse ar = new AutoResponse();
+		try {
+			Session Nsession = getSession(session);
+		   	Auto auto = dao.findAutobyID(autoid);	
+			if (auto != null) {
+				ar.setAid(auto.getAid());
+				ar.setBez(auto.getBez());
+				ar.setAa(auto.getAutoart().getAaid());
+				ar.setPosition(auto.getPosition());
+			} else {						
+				throw new NichtVorhandenException("Auto ist nicht vorhanden");
+			}
+		} catch (OnlineIntegrationExceptions e) {
+			ar.setReturnCode(e.getErrorCode());
+			ar.setMessage(e.getMessage());
+		}  
+		return ar;
+	}
+    
+    public AutoListResponse getAllAutos(@WebParam(name="Sessionid") int session){	
+    	AutoListResponse aar = new AutoListResponse();
+    	try {
+    		Session sessionId = getSession(session);
+    		//logger.info("Test" + dao.getAllAutos().get(0).getClass().getName());
+    		List<Integer> aId = dao.getAllAutosA();
+    		List<Auto> autoList = new ArrayList<>();
+    		for(int i = 0; i < aId.size(); i++) {
+    			Auto auto = dao.findAutobyID(aId.get(i));
+    			autoList.add(auto);
+    		}
+    		aar.setAutoList(dto.makeDTO(autoList));
+		} catch (OnlineIntegrationExceptions e) {
+			//logger.info("Test" + dao.getAllAutos().get(0).getClass().getName());
+			aar.setReturnCode(e.getErrorCode());
+			aar.setMessage(e.getMessage());
+		}
+    	return aar;
     }
-     
+    
     public RechnungsResponse rechnung(@WebParam(name="Sessionid") int session,@WebParam(name="Rechnungsid") int rid){
 		RechnungsResponse rechung = new RechnungsResponse();
 		
@@ -192,6 +251,55 @@ public class OnlineIntegration {
 		  
 		  
 		  return up;
+		
+		
+	}
+    public EditResponse rechnungBezahlen(@WebParam(name="Sessionid") int session,@WebParam(name="Rechnungsid") int rid){
+    	EditResponse response = new EditResponse();
+		 try {
+			 Session Nsession = getSession(session);
+		   		
+		   		Rechnung rechn = dao.findRechnungbyID(rid);
+				
+					if (rechn != null) {
+						rechn.setAbgerechnet(true);
+						response.setSuccessful(true);
+						
+					}
+					else {
+						
+						throw new NichtVorhandenException("Rechnung ist nicht vorhanden");
+					}
+				}
+				catch (OnlineIntegrationExceptions e) {
+					response.setReturnCode(e.getErrorCode());
+					response.setMessage(e.getMessage());
+				}
+		  
+		  return response;
+	
+	}
+    public EditResponse addBezahlmethode(@WebParam(name="Sessionid") int session,@WebParam(name="email") String email,
+    		@WebParam(name="addBezmeth") Bezahlmethode bezmeth){
+		EditResponse edit = new EditResponse();
+		
+		 try {
+			 Session Nsession = getSession(session);
+		   		Kunde kunde = dao.findKundebyEmail(email);
+					if (kunde != null) {
+						kunde.addBezahlmethoden(bezmeth);
+						edit.setSuccessful(true);
+					}
+					else {
+						throw new NichtVorhandenException("Kunde ist nicht vorhanden");
+					}
+				}
+				catch (OnlineIntegrationExceptions e) {
+					edit.setReturnCode(e.getErrorCode());
+					edit.setMessage(e.getMessage());
+				}
+	 	  
+		  return edit;
 		
 		
 	}

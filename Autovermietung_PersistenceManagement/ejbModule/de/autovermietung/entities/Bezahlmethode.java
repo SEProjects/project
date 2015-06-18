@@ -44,5 +44,6 @@ public class Bezahlmethode implements Serializable{
 		this.bmid = bmid;
 	}
 
+
 	
 }
