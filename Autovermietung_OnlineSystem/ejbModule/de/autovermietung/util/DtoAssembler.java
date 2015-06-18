@@ -2,12 +2,18 @@ package de.autovermietung.util;
 
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.ejb.Stateless;
 
 import de.autovermietung.dto.AutoArtResponse;
+import de.autovermietung.dto.AutoResponse;
 import de.autovermietung.dto.KundeResponse;
+import de.autovermietung.entities.Auto;
 import de.autovermietung.entities.Autoart;
 import de.autovermietung.entities.Kunde;
+
 
 
 @Stateless
@@ -27,6 +33,14 @@ public class DtoAssembler {
 		  kr.setWohnort(kunde.getKplz().getWohnort());
 		  return kr;
 	  }
+	  public AutoResponse makeDTO(Auto auto) {
+		  AutoResponse autoR = new AutoResponse();
+		  autoR.setAid(auto.getAid());
+		  autoR.setBez(auto.getBez());
+		  autoR.setPosition(auto.getPosition());
+		  autoR.setAa(auto.getAutoart().getAaid());
+		  return autoR;
+	  }
 	  public AutoArtResponse makeDTO(Autoart aa){
 		  AutoArtResponse aar = new AutoArtResponse(); 
 		  aar.setAaid(aa.getAaid());
@@ -41,5 +55,12 @@ public class DtoAssembler {
 		  aar.setSitzanzahl(aa.getSitzanzahl());
 		  
 		  return aar;
+	  }
+	  public List<AutoResponse> makeDTO(List<Auto> auto) {
+		  ArrayList<AutoResponse> dtoList = new ArrayList<>();
+		  for (Auto a : auto) {
+			  dtoList.add(this.makeDTO(a));
+		  }
+		  return dtoList;
 	  }
 }

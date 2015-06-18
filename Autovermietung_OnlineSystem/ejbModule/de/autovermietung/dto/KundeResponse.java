@@ -25,9 +25,7 @@ public class KundeResponse extends ReturncodeResponse {
 	private String plz;
 	private String wohnort;
 
-	public KundeResponse(){
-		
-	}
+	public KundeResponse() { }
 	public String getEmail() {
 		return email;
 	}

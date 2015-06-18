@@ -1,5 +1,6 @@
 package de.autovermietung.onlineSystem;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -11,10 +12,12 @@ import javax.jws.WebService;
 import javax.xml.ws.WebServiceContext;
 
 import org.jboss.logging.Logger;
+import org.jboss.logging.Logger.Level;
 
 import de.autovermietung.dao.AutovermietungDAOLocal;
 import de.autovermietung.dao.Databuilder;
 import de.autovermietung.dto.AlleAutosResponse;
+import de.autovermietung.dto.AutoListResponse;
 import de.autovermietung.dto.AutoResponse;
 import de.autovermietung.dto.EditResponse;
 import de.autovermietung.dto.KundeResponse;
@@ -166,17 +169,20 @@ public class OnlineIntegration {
 		return ar;
 	}
     
-    public AlleAutosResponse getAllAutos(@WebParam(name="Sessionid") int session){	
-    	AlleAutosResponse aar = new AlleAutosResponse();
+    public AutoListResponse getAllAutos(@WebParam(name="Sessionid") int session){	
+    	AutoListResponse aar = new AutoListResponse();
     	try {
     		Session sessionId = getSession(session);
-			List<Object[]> autos = this.dao.getAllAutos();	
-			if (autos.isEmpty() == false) {
-				aar.setAutos(autos);
-			} else {
-				throw new KeineAutosException("Es sind noch keine Autos vorhanden");
-			}
+    		//logger.info("Test" + dao.getAllAutos().get(0).getClass().getName());
+    		List<Integer> aId = dao.getAllAutosA();
+    		List<Auto> autoList = new ArrayList<>();
+    		for(int i = 0; i < aId.size(); i++) {
+    			Auto auto = dao.findAutobyID(aId.get(i));
+    			autoList.add(auto);
+    		}
+    		aar.setAutoList(dto.makeDTO(autoList));
 		} catch (OnlineIntegrationExceptions e) {
+			//logger.info("Test" + dao.getAllAutos().get(0).getClass().getName());
 			aar.setReturnCode(e.getErrorCode());
 			aar.setMessage(e.getMessage());
 		}
@@ -279,16 +285,12 @@ public class OnlineIntegration {
 		
 		 try {
 			 Session Nsession = getSession(session);
-		   		
 		   		Kunde kunde = dao.findKundebyEmail(email);
-				
 					if (kunde != null) {
 						kunde.addBezahlmethoden(bezmeth);
 						edit.setSuccessful(true);
-						
 					}
 					else {
-						
 						throw new NichtVorhandenException("Kunde ist nicht vorhanden");
 					}
 				}

@@ -1,9 +1,7 @@
 package de.autovermietung.dto;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import de.autovermietung.entities.Kunde;
 
 public class AlleKundenResponse extends ReturncodeResponse {
 

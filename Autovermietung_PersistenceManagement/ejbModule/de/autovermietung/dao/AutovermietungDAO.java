@@ -112,6 +112,10 @@ public class AutovermietungDAO implements AutovermietungDAOAdminLocal,Autovermie
    	    return  query;
  
    }
+	public List<Integer> getAllAutosA(){
+	   	 List query = em.createQuery("SELECT A.aid FROM Auto a").getResultList();
+	   	 return  query;
+	   }
 	public List<Object[]> getAllMarken(){
 	   	 List query = em.createQuery("SELECT m.markeid, m.markenname FROM Marke m").getResultList();
 	   	    return  query;

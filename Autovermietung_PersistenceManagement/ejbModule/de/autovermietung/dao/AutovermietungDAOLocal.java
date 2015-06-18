@@ -19,6 +19,6 @@ public interface AutovermietungDAOLocal {
 	public Session findSessionbyId(int Id);
 	public void deleteSession(Session session);
 	public Rechnung findRechnungbyID(int Rid);
+	public List<Integer> getAllAutosA();
 	public List<Object[]> getAllAutos();
-	  
 }
