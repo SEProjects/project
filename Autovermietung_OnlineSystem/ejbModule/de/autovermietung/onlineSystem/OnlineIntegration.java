@@ -366,4 +366,47 @@ public class OnlineIntegration {
 		
 		
 	}
+    public EditResponse regisKunde(@WebParam(name="Sessionid") int session,
+    		@WebParam(name="email") String Email,
+    		@WebParam(name="Passwort") String kpassword,
+    		@WebParam(name="Nachname")String knachname,
+    		@WebParam(name="Vorname")String kvorname,
+    		@WebParam(name="Strasse")String strasse,
+    		@WebParam(name="PLZ")PLZ kplz,
+    		@WebParam(name="fsn")String fsn,
+    		@WebParam(name="pan")String pan){
+		EditResponse up = new EditResponse();
+		
+		 try {
+			 Session Nsession = getSession(session);
+		   		
+		   		Kunde k = dao.findKundebyEmail(Email);
+				
+					if (k == null) {
+						k = new Kunde();
+						k.setEmail(Email);
+						k.setKpassword(kpassword);
+						k.setKvorname(kvorname);
+						k.setKnachname(knachname);
+						k.setStrasse(strasse);
+						k.setKplz(kplz);
+						k.setFsnummer(fsn);
+						k.setPan(pan);
+						up.setSuccessful(true);
+					}
+					else {
+						
+						throw new NichtVorhandenException("Kunde ist nicht vorhanden");
+					}
+				}
+				catch (OnlineIntegrationExceptions e) {
+					up.setReturnCode(e.getErrorCode());
+					up.setMessage(e.getMessage());
+				}
+			   
+		  
+		  
+		  return up;
+    }
+    
 }
