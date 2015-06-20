@@ -22,21 +22,28 @@ import de.autovermietung.entities.mieten;
 
 
 
+// TODO: Auto-generated Javadoc
 /**
- * Session Bean implementation class Databuilder
+ * Session Bean implementation class Databuilder.
  */
 
 @Startup
 @Singleton
 @LocalBean
 public class Databuilder {
+	
+	/** The Constant logger. */
 	private static final Logger logger = Logger.getLogger(Databuilder.class);
 
+		/** The em. */
 		@PersistenceContext
 		EntityManager em;
 		
 		
 
+		/**
+		 * Inits the.
+		 */
 		@PostConstruct
 		private void init() { 
 			
@@ -55,12 +62,14 @@ public class Databuilder {
 				kplz.addKunde(newKunde);
 				em.persist(newKunde);
 				Kunde customer3 = em.find(Kunde.class, "test@web.de");
+				logger.info(newKunde);
 				if (customer3 == null) {
 					
 					Kunde newKunde2 = new Kunde("test@web.de","asss","asss","1234","asdsaa","avs","aaf",true,false,newFSA,kplz);
 					newFSA.addKunde(newKunde2);
 					kplz.addKunde(newKunde2);
 					em.persist(newKunde2);
+					logger.info(newKunde2);
 				
 				}
 						

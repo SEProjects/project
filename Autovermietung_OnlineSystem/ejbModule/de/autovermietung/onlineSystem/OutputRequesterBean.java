@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package de.autovermietung.onlineSystem;
 
 import java.math.BigDecimal;
@@ -25,23 +28,31 @@ import de.autovermietung.entities.Kunde;
 import de.autovermietung.entities.Rechnung;
 import de.autovermietung.entities.mieten;
 
+// TODO: Auto-generated Javadoc
 /**
- * Session Bean implementation class OutputRequesterBean
+ * Session Bean für die Übergabe der Strings an die MessageDrivenBean
  */
 @Stateless
 @LocalBean
 public class OutputRequesterBean {
+	
+	/** jms factory für die Connection. */
 	@Resource(mappedName="java:/JmsXA")
 	private ConnectionFactory jmsFactory;
-	 @Resource(mappedName="java:jboss/exported/jms/queue/OnlineSystemOut")
+	 
+ 	/** Output queue für alle allgemeinen Nachrichten. */
+ 	@Resource(mappedName="java:jboss/exported/jms/queue/OnlineSystemOut")
 	  private Queue outputQueue;
-	 @Resource(mappedName="java:jboss/exported/jms/queue/RechnungsSystemOut")
+	 
+ 	/** Rechnungs queue für Alle Rechnungen. */
+ 	@Resource(mappedName="java:jboss/exported/jms/queue/RechnungsSystemOut")
 	  private Queue RechnungsQueue;
 	 
+	/** The Constant logger. */
 	private static final Logger logger = Logger.getLogger(Databuilder.class);
 	
-	//@Resource(mappedName="java:/queue/OnlineSystemOut")
-	//private Queue outputQueue;
+	
+	/** The connection. */
 	private Connection connection;
     /**
      * Default constructor. 
@@ -49,6 +60,12 @@ public class OutputRequesterBean {
     public OutputRequesterBean() {
         // TODO Auto-generated constructor stub
     }
+    
+    /**
+     * Versendet Rechnungen an den Nutzer per Email.
+     *
+     * @param r Rechnung die Übergeben werden soll
+     */
     public void sendMessage(Rechnung r){
     	try{
     
@@ -72,11 +89,17 @@ public class OutputRequesterBean {
     		e.printStackTrace();
     	}
     }
+    
+    /**
+     * Sendet Kundenregisteriung an die Kunden mit Bestätigungslink.
+     *
+     * @param k registierter Kunde
+     */
     public void sendMessage(Kunde k){
     	try{
     
     		
-    		String content = "Hallo " + k.getKvorname() + " " +k.getKnachname() +  ",<br>Danke das du dich bei  unsere Autovermietung registiert hast.<br>Bitte best&auml;tige deine Email unter folgendem Link:<br> <a href='localhost:7777/kunde/hash/"+ k.getLink() +"'>Klick Mich!!</a><br>Solltest du dich nicht bei uns registiert haben, kannst du diese Email ignorieren.<br>Bei weiteren Fragen kannst du mich gerne unter folgender Email Kontaktieren:<br> <a href='mailto:Kevin.haase.kh@googlemail.com'>Kevin.haase.kh@googlemail.com</a><br>Mit freundlichen Grü&szlig;en<br>Kevin Haase";
+    		String content = "Hallo " + k.getKvorname() + " " +k.getKnachname() +  ",<br>Danke das du dich bei  unsere Autovermietung registiert hast.<br>Bitte best&auml;tige deine Email unter folgendem Link:<br> <a href='http://localhost:3000/users/hash/"+ k.getLink() +"'>KlickMich!!</a> <br>Solltest du dich nicht bei uns registiert haben, kannst du diese Email ignorieren.<br>Bei weiteren Fragen kannst du mich gerne unter folgender Email Kontaktieren:<br> <a href='mailto:Kevin.haase.kh@googlemail.com'>Kevin.haase.kh@googlemail.com</a><br>Mit freundlichen Grü&szlig;en<br>Kevin Haase";
     		JMSContext context = jmsFactory.createContext(JMSContext.AUTO_ACKNOWLEDGE);
     		TextMessage message = context.createTextMessage();
     		

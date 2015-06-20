@@ -1127,6 +1127,7 @@ public UpdateResponse saveKS(@WebParam(name="Sessionid") int session,@WebParam(n
 			   			ur.setSuccessful(true);
 			   			logger.info("!");
 			   			outputRequester.sendMessage(rechnung);
+			   			outputRequester.sendMessage(Nsession.getKunde());
 			   			
 			   				
 			   			}
@@ -1186,6 +1187,31 @@ public UpdateResponse saveKS(@WebParam(name="Sessionid") int session,@WebParam(n
 		  return rr;
 		
 		
+	}
+	
+	public UpdateResponse  emailbestaetigen(@WebParam(name = "Hash") String Hash){
+		UpdateResponse ur = new UpdateResponse();
+		
+		try {
+	   		
+	   		Kunde kunde = dao.getKundeByHash(Hash);
+			
+				if (kunde != null) {
+					kunde.setLink("true");
+					ur.setSuccessful(true);
+				}
+				else {
+					ur.setSuccessful(false);
+					throw new NichtVorhandenException("Kunde ist nicht vorhanden");
+				}
+			}
+			catch (OnlineIntegrationExceptions e) {
+				ur.setReturnCode(e.getErrorCode());
+				ur.setMessage(e.getMessage());
+			}
+		
+		
+		return ur;
 	}
 	
 	 

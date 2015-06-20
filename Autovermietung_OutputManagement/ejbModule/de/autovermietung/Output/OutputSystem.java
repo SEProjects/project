@@ -36,7 +36,7 @@ private Session session;
 	public void onMessage(Message message) {
        try {
     	  TextMessage msg = (TextMessage) message;
-          logger.info("Received message from queue/BankingOutput: " + msg.getText());
+
        // Recipient's email ID needs to be mentioned.
           
         

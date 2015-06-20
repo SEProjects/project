@@ -31,8 +31,9 @@ import org.jboss.logging.Logger;
 
 
 
+// TODO: Auto-generated Javadoc
 /**
- * Message-Driven Bean implementation class for: OutputSystem
+ * Message-Driven Bean  für den Rechnungsversand in der Nacht + Druck in der Nacht
  */
 @MessageDriven(
 		activationConfig = {  
@@ -44,10 +45,15 @@ import org.jboss.logging.Logger;
 				      propertyValue = "java:jboss/exported/jms/queue/RechnungsSystemOut")})
 public class OutputSystem implements MessageListener {
 
+/** The Constant logger. */
 private static final Logger logger = Logger.getLogger(OutputSystem.class);
 
+/** anmeldung für den Googlemailserver */
 @Resource(name = "java:jboss/mail/gmail")
 private Session session;
+	/**
+	 * Messages werden aus der Queue abgerufen und als Email zum Kunden versendet.
+	 */
 	@Override
 	public void onMessage(Message message) {
        try {
