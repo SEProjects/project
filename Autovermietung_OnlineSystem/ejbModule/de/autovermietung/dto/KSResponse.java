@@ -4,14 +4,20 @@ import javax.persistence.Column;
 
 // TODO: Auto-generated Javadoc
 /**
- * The Class KSResponse.
+  * @author Kevin Haase
+ *  Responseklasse für den Aufruf  {@link de.autovermietung.onlineSystem.OnlineAdminIntegration#getKS(int, int) getKS}
  */
 public class KSResponse extends ReturncodeResponse {
 	
-	/** The ksid. */
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/** KraftstoffID. */
 	private int ksid;
 	
-	/** The bezeichnung. */
+	/** Kraftstoffbezeichnung. */
 	private String bezeichnung;
 	
 	/**
@@ -22,36 +28,36 @@ public class KSResponse extends ReturncodeResponse {
 	}
 	
 	/**
-	 * Gets the ksid.
+	 * Gets KraftstoffID.
 	 *
-	 * @return the ksid
+	 * @return ksid
 	 */
 	public int getKsid() {
 		return ksid;
 	}
 	
 	/**
-	 * Sets the ksid.
+	 * Sets ksid in der Response.
 	 *
-	 * @param ksid the new ksid
+	 * @param ksid neue ksid
 	 */
 	public void setKsid(int ksid) {
 		this.ksid = ksid;
 	}
 	
 	/**
-	 * Gets the bezeichnung.
+	 * Gets Kraftstoffbezeichnung.
 	 *
-	 * @return the bezeichnung
+	 * @return bezeichnung
 	 */
 	public String getBezeichnung() {
 		return bezeichnung;
 	}
 	
 	/**
-	 * Sets the bezeichnung.
+	 * Sets  Kraftstoffbezeichnung in der Response.
 	 *
-	 * @param bezeichnung the new bezeichnung
+	 * @param bezeichnung  bezeichnung
 	 */
 	public void setBezeichnung(String bezeichnung) {
 		this.bezeichnung = bezeichnung;

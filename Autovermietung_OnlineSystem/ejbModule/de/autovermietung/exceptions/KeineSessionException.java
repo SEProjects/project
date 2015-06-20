@@ -3,20 +3,21 @@ package de.autovermietung.exceptions;
 
 // TODO: Auto-generated Javadoc
 /**
- * The Class KeineSessionException.
+ * @author Kevin Haase
+ * Wird von Allen Methoden  geworfen wenn keine Session vorhanden
  */
 public class KeineSessionException extends OnlineIntegrationExceptions{
 	
-	/** The Constant serialVersionUID. */
+	/** SerialVersionUID. */
 	private static final long serialVersionUID = 8759021636475023682L;
 	
-	/** The Constant errorCode. */
+	/** ErrorCode. */
 	private static final int errorCode = 10;
 
 	/**
 	 * Instantiates a new keine session exception.
 	 *
-	 * @param message the message
+	 * @param message Nachricht an den Benutzer
 	 */
 	public KeineSessionException(String message) {
 		super(errorCode,message);

@@ -5,44 +5,45 @@ import de.autovermietung.entities.PLZ;
 
 // TODO: Auto-generated Javadoc
 /**
- * The Class KundeResponse.
+ * @author Kevin Haase
+ *  Responseklasse für den Aufruf  {@link de.autovermietung.onlineSystem.OnlineAdminIntegration#getKunde(int, String) getKunde}
  */
 public class KundeResponse extends ReturncodeResponse {
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -3173158310918408228L;
 	
-	/** The email. */
+	/** Kundenemail */
 	private String email;
 		
-	/** The kvorname. */
+	/** Kundenvorname. */
 	private String kvorname;
 	
-	/** The knachname. */
+	/** Kundennachname. */
 	private String knachname;
 	
-	/** The fsnummer. */
+	/** Fuehrerscheinnummer. */
 	private String fsnummer;
 	
-	/** The pan. */
+	/** Personalausweissnummer */
 	private String pan;
 	
-	/** The straße. */
+	/** Straße. */
 	private String straße;
 
 	/** The saf. */
 	private boolean saf;
 	
-	/** The admin. */
+	/** adminrechte */
 	private boolean admin;
 	//Objekt FSA
-	/** The fsa name. */
+	/** Fueherscheinname. */
 	private String fsaName;
 	//Objekt PLZ
-	/** The plz. */
+	/** PLZ */
 	private String plz;
 	
-	/** The wohnort. */
+	/** Wohnort. */
 	private String wohnort;
 
 	/**
@@ -51,7 +52,7 @@ public class KundeResponse extends ReturncodeResponse {
 	public KundeResponse() { }
 	
 	/**
-	 * Gets the email.
+	 * Gets Kundenemail.
 	 *
 	 * @return the email
 	 */
@@ -60,72 +61,72 @@ public class KundeResponse extends ReturncodeResponse {
 	}
 	
 	/**
-	 * Sets the email.
+	 * Sets Kundenemail in der Response.
 	 *
-	 * @param email the new email
+	 * @param email neue email
 	 */
 	public void setEmail(String email) {
 		this.email = email;
 	}
 	
 	/**
-	 * Gets the kvorname.
+	 * Gets Kundenvorname.
 	 *
-	 * @return the kvorname
+	 * @return kvorname
 	 */
 	public String getKvorname() {
 		return kvorname;
 	}
 	
 	/**
-	 * Sets the kvorname.
+	 * Sets Kundenvorname in der Response.
 	 *
-	 * @param kvorname the new kvorname
+	 * @param kvorname neuer kvorname
 	 */
 	public void setKvorname(String kvorname) {
 		this.kvorname = kvorname;
 	}
 	
 	/**
-	 * Gets the knachname.
+	 * Gets Kundennachname.
 	 *
-	 * @return the knachname
+	 * @return knachname
 	 */
 	public String getKnachname() {
 		return knachname;
 	}
 	
 	/**
-	 * Sets the knachname.
+	 * Sets Kundennachname in der Response.
 	 *
-	 * @param knachname the new knachname
+	 * @param knachname neuer knachname
 	 */
 	public void setKnachname(String knachname) {
 		this.knachname = knachname;
 	}
 
 	/**
-	 * Gets the fsnummer.
+	 * Gets Führerscheinnummer.
 	 *
-	 * @return the fsnummer
+	 * @return fsnummer
 	 */
 	public String getFsnummer() {
 		return fsnummer;
 	}
 	
 	/**
-	 * Sets the fsnummer.
+	 * Sets fsnummer in der Response .
 	 *
-	 * @param fsnummer the new fsnummer
+	 * @param fsnummer neue fsnummer
 	 */
 	public void setFsnummer(String fsnummer) {
 		this.fsnummer = fsnummer;
 	}
 	
 	/**
-	 * Gets the pan.
+	 * Gets Personalausweißnummer.
 	 *
-	 * @return the pan
+	 * @return pan
 	 */
 	public String getPan() {
 		return pan;
@@ -141,18 +142,18 @@ public class KundeResponse extends ReturncodeResponse {
 	}
 	
 	/**
-	 * Gets the straße.
+	 * Gets Strasse.
 	 *
-	 * @return the straße
+	 * @return strasse
 	 */
 	public String getStraße() {
 		return this.straße;
 	}
 	
 	/**
-	 * Sets the straße.
+	 * Sets straße in der Response .
 	 *
-	 * @param straße the new straße
+	 * @param straße neue straße
 	 */
 	public void setStraße(String straße) {
 		this.straße = straße;
@@ -195,7 +196,7 @@ public class KundeResponse extends ReturncodeResponse {
 	}
 	
 	/**
-	 * Gets the fsa name.
+	 * Gets Fueherscheinartbezeichung.
 	 *
 	 * @return the fsa name
 	 */
@@ -204,45 +205,45 @@ public class KundeResponse extends ReturncodeResponse {
 	}
 	
 	/**
-	 * Sets the fsa name.
+	 * Sets fsa name in der Response.
 	 *
-	 * @param fsaName the new fsa name
+	 * @param fsaName neuer fsa name
 	 */
 	public void setFsaName(String fsaName) {
 		this.fsaName = fsaName;
 	}
 
 	/**
-	 * Gets the plz.
+	 * Gets  plz.
 	 *
-	 * @return the plz
+	 * @return plz
 	 */
 	public String getPlz() {
 		return this.plz;
 	}
 	
 	/**
-	 * Sets the plz.
+	 * Sets  plz in der Response.
 	 *
-	 * @param plz the new plz
+	 * @param plz neuer plz
 	 */
 	public void setPlz(String plz) {
 		this.plz = plz;
 	}
 	
 	/**
-	 * Gets the wohnort.
+	 * Gets  wohnort.
 	 *
-	 * @return the wohnort
+	 * @return wohnort
 	 */
 	public String getWohnort() {
 		return this.wohnort;
 	}
 	
 	/**
-	 * Sets the wohnort.
+	 * Sets wohnort in der Response.
 	 *
-	 * @param wohnort the new wohnort
+	 * @param wohnort neuer wohnort
 	 */
 	public void setWohnort(String wohnort) {
 		this.wohnort = wohnort;

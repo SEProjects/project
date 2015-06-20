@@ -4,11 +4,12 @@ import java.math.BigDecimal;
 
 // TODO: Auto-generated Javadoc
 /**
- * The Class RechnungsrabattResponse.
+* @author Kevin Haase
+ *  Responseklasse für den Aufruf  {@link de.autovermietung.onlineSystem.OnlineAdminIntegration#getRechnungsRabatt(int, int) getRechnungsRabatt}
  */
 public class RechnungsrabattResponse extends ReturncodeResponse {
 
-	/** The rabatt. */
+	/** Rabatt in Prozent*/	
 	private BigDecimal rabatt;
 	
 	/**
@@ -19,18 +20,18 @@ public class RechnungsrabattResponse extends ReturncodeResponse {
 	}
 
 	/**
-	 * Gets the rabatt.
+	 * Gets  rabatt.
 	 *
-	 * @return the rabatt
+	 * @return rabatt
 	 */
 	public BigDecimal getRabatt() {
 		return rabatt;
 	}
 
 	/**
-	 * Sets the rabatt.
+	 * Sets rabatt in der Response.
 	 *
-	 * @param rabatt the new rabatt
+	 * @param rabatt neuer rabatt
 	 */
 	public void setRabatt(BigDecimal rabatt) {
 		this.rabatt = rabatt;

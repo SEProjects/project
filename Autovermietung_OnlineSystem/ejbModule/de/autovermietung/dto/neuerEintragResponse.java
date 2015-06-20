@@ -2,8 +2,14 @@ package de.autovermietung.dto;
 
 // TODO: Auto-generated Javadoc
 /**
- * The Class neuerEintragResponse.
- */
+ * @author Kevin Haase
+ *  Responseklasse für den Aufrufe mit Create
+ * @see  de.autovermietung.onlineSystem.OnlineAdminIntegration#createAllRechungen(int)
+ * @see  de.autovermietung.onlineSystem.OnlineAdminIntegration#createAuto(int, String, int)
+ * @see  de.autovermietung.onlineSystem.OnlineAdminIntegration#createKS(int, String)
+ * @see  de.autovermietung.onlineSystem.OnlineAdminIntegration#createMarke(int, String)
+ *  @see  de.autovermietung.onlineSystem.OnlineAdminIntegration#createAA(int, String, int, String, int, int, double, int, int)
+    */
 public class neuerEintragResponse extends ReturncodeResponse {
 	
 	/** The Constant serialVersionUID. */

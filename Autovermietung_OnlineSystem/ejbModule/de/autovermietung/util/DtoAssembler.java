@@ -16,9 +16,21 @@ import de.autovermietung.entities.Kunde;
 
 
 
+// TODO: Auto-generated Javadoc
+/**
+ * @author Kevin Haase
+ * DTOAssembler erstellt größere DTOs
+ */
 @Stateless
 public class DtoAssembler {
-	  public KundeResponse makeDTO(Kunde kunde) {
+	  
+  	/**
+  	 * Make dto.
+  	 *
+  	 * @param kunde Kunde der geparsed werden soll
+  	 * @return KundeRespnse fertiges DTO
+  	 */
+  	public KundeResponse makeDTO(Kunde kunde) {
 		  KundeResponse kr = new KundeResponse();
 		  kr.setEmail(kunde.getEmail());
 		  kr.setKvorname(kunde.getKvorname());
@@ -33,7 +45,14 @@ public class DtoAssembler {
 		  kr.setWohnort(kunde.getKplz().getWohnort());
 		  return kr;
 	  }
-	  public AutoResponse makeDTO(Auto auto) {
+	  
+	/**
+  	 * Make dto.
+  	 *
+  	 * @param auto Auto der geparsed werden soll
+  	 * @return AutoResponse fertiges DTO
+  	 */
+  	public AutoResponse makeDTO(Auto auto) {
 		  AutoResponse autoR = new AutoResponse();
 		  autoR.setAid(auto.getAid());
 		  autoR.setBez(auto.getBez());
@@ -41,7 +60,14 @@ public class DtoAssembler {
 		  autoR.setAa(auto.getAutoart().getAaid());
 		  return autoR;
 	  }
-	  public AutoArtResponse makeDTO(Autoart aa){
+	  
+  	/**
+  	 * Make dto.
+  	 *
+  	 * @param aa Autoart der geparsed werden soll
+  	 * @return AutoArtResponse fertiges DTO
+  	 */
+  	public AutoArtResponse makeDTO(Autoart aa){
 		  AutoArtResponse aar = new AutoArtResponse(); 
 		  aar.setAaid(aa.getAaid());
 		  aar.setBeschreibung(aa.getBeschreibung());
@@ -56,7 +82,14 @@ public class DtoAssembler {
 		  
 		  return aar;
 	  }
-	  public List<AutoResponse> makeDTO(List<Auto> auto) {
+	  
+  	/**
+  	 * Make dto.
+  	 *
+  	 * @param auto the auto
+  	 * @return the list
+  	 */
+  	public List<AutoResponse> makeDTO(List<Auto> auto) {
 		  ArrayList<AutoResponse> dtoList = new ArrayList<>();
 		  for (Auto a : auto) {
 			  dtoList.add(this.makeDTO(a));

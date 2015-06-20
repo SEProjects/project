@@ -2,22 +2,23 @@ package de.autovermietung.dto;
 
 import java.io.Serializable;
 
-// TODO: Auto-generated Javadoc
+
 /**
- * The Class ReturncodeResponse.
+* @author Kevin Haase
+ *  Responseklasse für alle Aufrufe
  */
 public class ReturncodeResponse implements Serializable {
 
-	/** The Constant serialVersionUID. */
+	/**  Constant serialVersionUID. */
 	private static final long serialVersionUID = 3397348747136795401L;
 	
-	/** The Constant CODE_OK. */
+	/** Constant CODE_OK standard falls erfolgreich */
 	private static final int CODE_OK = 0;
 	
-	/** The return code. */
+	/** Fehlercode */
 	private int returnCode;
 	
-	/** The message. */
+	/** Fehlermessage. */
 	private String message;
 	
 	/**
@@ -28,34 +29,34 @@ public class ReturncodeResponse implements Serializable {
 	}
 
 	/**
-	 * Gets the return code.
+	 * Gets return code.
 	 *
-	 * @return the return code
+	 * @return return code
 	 */
 	public int getReturnCode() {
 		return returnCode;
 	}
 
 	/**
-	 * Sets the return code.
+	 * Sets return code  in allen Responses.
 	 *
-	 * @param returnCode the new return code
+	 * @param returnCode neuer return code
 	 */
 	public void setReturnCode(int returnCode) {
 		this.returnCode = returnCode;
 	}
 
 	/**
-	 * Gets the message.
+	 * Gets message.
 	 *
-	 * @return the message
+	 * @return  message
 	 */
 	public String getMessage() {
 		return message;
 	}
 
 	/**
-	 * Sets the message.
+	 * Sets message in Allen Responses.
 	 *
 	 * @param message the new message
 	 */

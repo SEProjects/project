@@ -6,14 +6,15 @@ import de.autovermietung.entities.Kunde;
 
 // TODO: Auto-generated Javadoc
 /**
- * The Class KundenLoginResponse.
+  * @author Kevin Haase
+ *  Responseklasse für den Aufruf  {@link de.autovermietung.onlineSystem.OnlineAdminIntegration#Adminlogin(String, String) Adminlogin}
  */
 public class KundenLoginResponse extends ReturncodeResponse {
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -3173158310918408228L;
 
-	/** The session. */
+	/** Sessionid */
 	private int session;
 	
 	/**
@@ -25,7 +26,7 @@ public class KundenLoginResponse extends ReturncodeResponse {
 	}
 
 	/**
-	 * Gets the session.
+	 * Gets sessionid.
 	 *
 	 * @return the session
 	 */
@@ -34,9 +35,9 @@ public class KundenLoginResponse extends ReturncodeResponse {
 	}
 
 	/**
-	 * Sets the session.
+	 * Sets session in der Response.
 	 *
-	 * @param session the new session
+	 * @param session neue session
 	 */
 	public void setSession(int session) {
 		this.session = session;

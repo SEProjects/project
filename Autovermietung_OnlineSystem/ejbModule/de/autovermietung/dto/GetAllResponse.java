@@ -4,7 +4,15 @@ import java.util.List;
 
 // TODO: Auto-generated Javadoc
 /**
- * The Class GetAllResponse.
+ * @author Kevin Haase
+ * Responseklasse für den Aufruf für alle GetALL
+ * @see de.autovermietung.onlineSystem.OnlineAdminIntegration#getAllAA(int)
+ * @see de.autovermietung.onlineSystem.OnlineAdminIntegration#getAllAutos(int)
+ * @see de.autovermietung.onlineSystem.OnlineAdminIntegration#getAllKS(int)
+ * @see de.autovermietung.onlineSystem.OnlineAdminIntegration#getAllKunden(int)
+ * @see de.autovermietung.onlineSystem.OnlineAdminIntegration#getAllMarken(int)
+ * @see de.autovermietung.onlineSystem.OnlineAdminIntegration#getAllRechnungen(int)
+ * 
  */
 public class GetAllResponse extends ReturncodeResponse {
 	

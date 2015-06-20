@@ -5,123 +5,124 @@ import java.util.Date;
 import java.util.List;
 
 
-// TODO: Auto-generated Javadoc
+
 /**
- * The Class RechnungsAResponse.
+ * @author Kevin Haase
+ *  Responseklasse für den Aufruf  {@link de.autovermietung.onlineSystem.OnlineAdminIntegration#getRechnung(int, int) getRechnung}
  */
 public class RechnungsAResponse extends ReturncodeResponse {
 	
-	/** The rid. */
+	/** Rechnungsid. */
 	private int rid;
 
-	/** The gesamtpreis. */
+	/**Gesamtpreis. */
 	private BigDecimal gesamtpreis;
 	
-	/** The timestamp. */
+	/** timestamp. */
 	private Date timestamp;
 	
-	/** The mwst. */
+	/** 'Mwst. */
 	private BigDecimal mwst;
 	
-	/** The vorpreis. */
+	/** Vorpreis. */
 	private BigDecimal vorpreis;
 	
-	/** The rabatt. */
+	/** Rabatt. */
 	private BigDecimal rabatt;
 	
 	
-	/** The Datensaetze. */
+	/** Datensaetze der mieten in der Rechnung */
 	private List<Object[]> Datensaetze;
 	
-	/** The bezahlmethode. */
+	/** Bezahlmethode. */
 	private String bezahlmethode;
 	
-	/** The kunde. */
+	/** Kundenemail. */
 	private String kunde;
 
 	/**
-	 * Gets the rid.
+	 * Gets Rechnungsid.
 	 *
-	 * @return the rid
+	 * @return  rid
 	 */
 	public int getRid() {
 		return rid;
 	}
 
 	/**
-	 * Sets the rid.
+	 * Sets the rid in der Response.
 	 *
-	 * @param rid the new rid
+	 * @param rid neue rid
 	 */
 	public void setRid(int rid) {
 		this.rid = rid;
 	}
 
 	/**
-	 * Gets the gesamtpreis.
+	 * Gets gesamtpreis.
 	 *
-	 * @return the gesamtpreis
+	 * @return gesamtpreis
 	 */
 	public BigDecimal getGesamtpreis() {
 		return gesamtpreis;
 	}
 
 	/**
-	 * Sets the gesamtpreis.
+	 * Sets gesamtpreis in der Response.
 	 *
-	 * @param gesamtpreis the new gesamtpreis
+	 * @param gesamtpreis neuer gesamtpreis
 	 */
 	public void setGesamtpreis(BigDecimal gesamtpreis) {
 		this.gesamtpreis = gesamtpreis;
 	}
 
 	/**
-	 * Gets the timestamp.
+	 * Gets timestamp.
 	 *
-	 * @return the timestamp
+	 * @return timestamp
 	 */
 	public Date getTimestamp() {
 		return timestamp;
 	}
 
 	/**
-	 * Sets the timestamp.
+	 * Sets timestamp in der Response.
 	 *
-	 * @param timestamp the new timestamp
+	 * @param timestamp neuer timestamp
 	 */
 	public void setTimestamp(Date timestamp) {
 		this.timestamp = timestamp;
 	}
 
 	/**
-	 * Gets the mwst.
+	 * Gets mwst.
 	 *
-	 * @return the mwst
+	 * @return  mwst
 	 */
 	public BigDecimal getMwst() {
 		return mwst;
 	}
 
 	/**
-	 * Sets the mwst.
+	 * Sets mwst.
 	 *
-	 * @param mwst the new mwst
+	 * @param mwst neuer mwst
 	 */
 	public void setMwst(BigDecimal mwst) {
 		this.mwst = mwst;
 	}
 
 	/**
-	 * Gets the vorpreis.
+	 * Gets vorpreis.
 	 *
-	 * @return the vorpreis
+	 * @return vorpreis
 	 */
 	public BigDecimal getVorpreis() {
 		return vorpreis;
 	}
 
 	/**
-	 * Sets the vorpreis.
+	 * Sets vorpreis in der Response.
 	 *
 	 * @param vorpreis the new vorpreis
 	 */
@@ -130,72 +131,72 @@ public class RechnungsAResponse extends ReturncodeResponse {
 	}
 
 	/**
-	 * Gets the rabatt.
+	 * Gets rabatt.
 	 *
-	 * @return the rabatt
+	 * @return rabatt
 	 */
 	public BigDecimal getRabatt() {
 		return rabatt;
 	}
 
 	/**
-	 * Sets the rabatt.
+	 * Sets  rabatt in der Response.
 	 *
-	 * @param rabatt the new rabatt
+	 * @param rabatt neuer rabatt
 	 */
 	public void setRabatt(BigDecimal rabatt) {
 		this.rabatt = rabatt;
 	}
 
 	/**
-	 * Gets the datensaetze.
+	 * Gets  datensaetze.
 	 *
-	 * @return the datensaetze
+	 * @return datensaetze
 	 */
 	public List<Object[]> getDatensaetze() {
 		return Datensaetze;
 	}
 
 	/**
-	 * Sets the datensaetze.
+	 * Sets datensaetze in der Response .
 	 *
-	 * @param datensaetze the new datensaetze
+	 * @param datensaetze neue datensaetze
 	 */
 	public void setDatensaetze(List<Object[]> datensaetze) {
 		Datensaetze = datensaetze;
 	}
 
 	/**
-	 * Gets the bezahlmethode.
+	 * Gets  bezahlmethode.
 	 *
-	 * @return the bezahlmethode
+	 * @return  bezahlmethode
 	 */
 	public String getBezahlmethode() {
 		return bezahlmethode;
 	}
 
 	/**
-	 * Sets the bezahlmethode.
+	 * Sets bezahlmethode in der Response.
 	 *
-	 * @param bezahlmethode the new bezahlmethode
+	 * @param bezahlmethode neue bezahlmethode
 	 */
 	public void setBezahlmethode(String bezahlmethode) {
 		this.bezahlmethode = bezahlmethode;
 	}
 
 	/**
-	 * Gets the kunde.
+	 * Gets kunde.
 	 *
-	 * @return the kunde
+	 * @return  kunde
 	 */
 	public String getKunde() {
 		return kunde;
 	}
 
 	/**
-	 * Sets the kunde.
+	 * Sets  kunde in der Response.
 	 *
-	 * @param kunde the new kunde
+	 * @param kunde neuer kunde
 	 */
 	public void setKunde(String kunde) {
 		this.kunde = kunde;

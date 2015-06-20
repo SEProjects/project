@@ -5,17 +5,18 @@ package de.autovermietung.dto;
 
 // TODO: Auto-generated Javadoc
 /**
- * The Class MarkeResponse.
+ * @author Kevin Haase
+ *  Responseklasse für den Aufruf  {@link de.autovermietung.onlineSystem.OnlineAdminIntegration#getMarke(int, int) getMarke}
  */
 public class MarkeResponse extends ReturncodeResponse {
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -3173158310918408228L;
 	
-	/** The markeid. */
+	/** Markenid. */
 	private int markeid;
 	
-	/** The markenname. */
+	/** Markenname. */
 	private String markenname;
 	
 	/**
@@ -44,16 +45,16 @@ public class MarkeResponse extends ReturncodeResponse {
 	}
 	
 	/**
-	 * Gets the markenname.
+	 * Gets Markenname.
 	 *
-	 * @return the markenname
+	 * @return markenname
 	 */
 	public String getMarkenname() {
 		return markenname;
 	}
 	
 	/**
-	 * Sets the markenname.
+	 * Sets Markenname in der Response.
 	 *
 	 * @param markenname the new markenname
 	 */

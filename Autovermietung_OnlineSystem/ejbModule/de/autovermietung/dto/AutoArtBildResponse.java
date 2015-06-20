@@ -1,12 +1,18 @@
 package de.autovermietung.dto;
 
-// TODO: Auto-generated Javadoc
+
 /**
- * The Class AutoArtBildResponse.
+ * @author Kevin Haase
+ * Responseklasse für den Aufruf getAABild
+ * {@link de.autovermietung.onlineSystem.OnlineAdminIntegration#getAABild(int, int) getAABild}
  */
 public class AutoArtBildResponse extends ReturncodeResponse {
 	
-	/** The Bild. */
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	/** Bild als Base64 encoded Bytestring */
 	private String Bild;
 	
 	/**
@@ -17,18 +23,18 @@ public class AutoArtBildResponse extends ReturncodeResponse {
 	}
 	
 	/**
-	 * Gets the bild.
+	 * leifert das Bild als Base64 encoded Bytestring.
 	 *
-	 * @return the bild
+	 * @return  bild
 	 */
 	public String getBild() {
 		return Bild;
 	}
 	
 	/**
-	 * Sets the bild.
+	 * Sets  bild in der Response .
 	 *
-	 * @param bild the new bild
+	 * @param bild neues bild
 	 */
 	public void setBild(String bild) {
 		Bild = bild;

@@ -35,7 +35,7 @@ import de.autovermietung.entities.PLZ;
 import de.autovermietung.entities.Rechnung;
 import de.autovermietung.entities.Session;
 import de.autovermietung.exceptions.InvalidLoginException;
-import de.autovermietung.exceptions.KeineSessioException;
+import de.autovermietung.exceptions.KeineSessionException;
 import de.autovermietung.exceptions.KundeNichtVorhandenException;
 import de.autovermietung.exceptions.NichtVorhandenException;
 import de.autovermietung.exceptions.OnlineIntegrationExceptions;
@@ -63,10 +63,10 @@ public class OnlineIntegration {
         // TODO Auto-generated constructor stub
     }
     
-    private Session getSession(int Id) throws SessionabgelaufenException, KeineSessioException{
+    private Session getSession(int Id) throws SessionabgelaufenException, KeineSessionException{
   	   Session session = dao.findSessionbyId(Id);
   	   if(session == null)
-  		   throw new KeineSessioException("Bitte loggen Sie sich zuerst ein.");
+  		   throw new KeineSessionException("Bitte loggen Sie sich zuerst ein.");
   	   else {
   		   Date created  = session.getTimestamp();
   		   long startTime = created.getTime();
@@ -116,7 +116,7 @@ public class OnlineIntegration {
 		} catch (SessionabgelaufenException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (KeineSessioException e) {
+		} catch (KeineSessionException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
