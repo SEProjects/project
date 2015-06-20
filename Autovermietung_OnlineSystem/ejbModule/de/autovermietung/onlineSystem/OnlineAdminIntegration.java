@@ -8,13 +8,14 @@ import java.util.List;
 
 import javax.annotation.Resource;
 import javax.ejb.EJB;
+import javax.ejb.Local;
+import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.jws.WebParam;
 import javax.jws.WebService;
 import javax.xml.ws.WebServiceContext;
 
 import org.jboss.logging.Logger;
-
 
 import de.autovermietung.dao.AutovermietungDAOAdminLocal;
 import de.autovermietung.dao.Databuilder;
@@ -47,38 +48,55 @@ import de.autovermietung.exceptions.InvalidLoginException;
 import de.autovermietung.exceptions.KeineAutosException;
 import de.autovermietung.exceptions.KeineKundenException;
 import de.autovermietung.exceptions.KeineMarkenException;
-import de.autovermietung.exceptions.KeineSessioException;
+import de.autovermietung.exceptions.KeineSessionException;
+import de.autovermietung.exceptions.KeineSessionException;
 import de.autovermietung.exceptions.KundeNichtVorhandenException;
 import de.autovermietung.exceptions.NichtVorhandenException;
 import de.autovermietung.exceptions.OnlineIntegrationExceptions;
 import de.autovermietung.exceptions.SessionabgelaufenException;
 import de.autovermietung.util.DtoAssembler;
 
+
 /**
- * Session Bean implementation class OnlineAdminIntegration
+ * Diese Stateless Session bean ist der Webendpoint für den Administrationswebbereich
+ * @author Kevin Haase
  */
 @Stateless
 @WebService
+@LocalBean
 public class OnlineAdminIntegration {
 
     /**
-     * Default constructor. 
+     * Laden des DataAccessObject aus der Autovermietung_Persistense
      */
 	@EJB(beanName = "AutovermietungDAO", beanInterface = de.autovermietung.dao.AutovermietungDAOAdminLocal.class)
 	private AutovermietungDAOAdminLocal dao;
+	
+	/** The ws context. */
 	@Resource
 	private WebServiceContext wsContext;
 	
+	/** Laden der MessageDrivenBean Insert Klasse. */
 	@EJB
 	private OutputRequesterBean outputRequester;
 	
+	/** Laden des dtoAssembler,welcher größere DTO erstellt */
 	@EJB
 	private DtoAssembler dto;
+	
+	/** The Constant logger. */
 	private static final Logger logger = Logger.getLogger(Databuilder.class);
-    public OnlineAdminIntegration() {
-        // TODO Auto-generated constructor stub
-    }
     
+  
+    
+    /**
+     * Loginmethode für den Administratorbereich.
+     *
+     * @param email des Administrators als String
+     * @param password des Administrators als String 
+     * @return {@link de.autovermietung.dto.KundenLoginResponse KundenLoginResponse} testen ob Returncode = 0 sonst failed
+     * @throws InvalidLoginException wenn Eingabe falsch
+         */
     public KundenLoginResponse Adminlogin(@WebParam(name = "email") String email, @WebParam(name="password") String password)   {
        
     	KundenLoginResponse klr = new KundenLoginResponse();
@@ -103,10 +121,19 @@ public class OnlineAdminIntegration {
 		return klr;
 	    
     }
-   private Session getSession(int Id) throws SessionabgelaufenException, KeineSessioException{
+   
+   /**
+    * Interne Methode zum Checken der aktiven Session mit Ablauf
+    *
+    * @param Id the id
+    * @return SessionID zur Authentifizierung
+    * @throws SessionabgelaufenException wenn Session älter als 5 Minuten
+    * @throws KeineSessionException wenn Session nicht vorhanden
+    */
+   private Session getSession(int Id) throws SessionabgelaufenException, KeineSessionException{
 	   Session session = dao.findSessionbyId(Id);
 	   if(session == null )
-		   throw new KeineSessioException("Bitte loggen Sie sich zuerst ein.");
+		   throw new KeineSessionException("Bitte loggen Sie sich zuerst ein.");
 	   else
 	   {
 		   Date created  = session.getTimestamp();
@@ -129,40 +156,51 @@ public class OnlineAdminIntegration {
 	   }
    }
     
-    public String test(@WebParam(name="Sessionid") int session)   {
-    	
-    	try{
-    	Session Nsession = getSession(session);
-    	return "ja";
-    	}
-    	catch (OnlineIntegrationExceptions e)
-    	{
-    		return "nein";
-    	}
-    }
-    public AlleKundenResponse getAllKunden(@WebParam(name="Sessionid") int session){
-    	AlleKundenResponse akr = new AlleKundenResponse();
-    	try {
-    		Session Nsession = getSession(session);
-			List<Object[]> kunden = this.dao.getAllKunden();	
-			
-			if (kunden.isEmpty() == false) {
-				akr.setKunden(kunden);
-			}
-			else {
-				
-				throw new KeineKundenException("Es sind noch keine Kunden vorhanden");
-			}
-		}
-		catch (OnlineIntegrationExceptions e) {
-			akr.setReturnCode(e.getErrorCode());
-			akr.setMessage(e.getMessage());
-		}
-    	
-    	
-    	return akr;
-    }
+ 
     
+    /**
+     * Liefert alle Kunden.
+     **   @param Sessionid muss die SessionID übergeben werden
+     * @return  {@link de.autovermietung.dto.GetAllResponse GetAllResponse}
+     * @throws SessionabgelaufenException wenn Session älter als 5 Minuten
+    * @throws  KeineSessionException wenn Session nicht vorhanden
+    * @throws KeineKundenException wenn es noch keine Kunden gibt
+          */
+    public GetAllResponse getAllKunden(@WebParam(name="Sessionid") int session){
+      
+        	GetAllResponse gar = new 	GetAllResponse();
+        	try {
+        		Session Nsession = getSession(session);
+    			List<Object[]> kunden = this.dao.getAllKunden();	
+    			
+    			if (kunden.isEmpty() == false) {
+    				gar.setDatensaetze(kunden);
+    			}
+    			else {
+    				
+    				throw new KeineKundenException("Es sind noch keine Kunden vorhanden");
+    			}
+    		}
+    		catch (OnlineIntegrationExceptions e) {
+    			gar.setReturnCode(e.getErrorCode());
+    			gar.setMessage(e.getMessage());
+    		}
+        	
+        	
+        	return gar;
+        }
+    
+    /**
+     * Liefert den gesuchten Kunden.
+     *
+     * @param Sessionid  SessionID zur Authentifizierung
+     * @param Kundeemail Übergabe der Kundenemail
+     * @return {@link de.autovermietung.dto.KundeResponse KundeResponse}
+     * @throws SessionabgelaufenException wenn Session älter als 5 Minuten
+    * @throws KeineSessionException wenn Session nicht vorhanden
+    * @throws KundenNichtException Kunde nicht vorhanden.
+    * @throws NichtVorhandenException gesuchter Kunde nicht vorhanden.
+     */
     public KundeResponse getKunde(@WebParam(name="Sessionid") int session,@WebParam(name="Kundeemail") String id){
        KundeResponse kr = new KundeResponse();
     	try {
@@ -174,7 +212,7 @@ public class OnlineAdminIntegration {
 			}
 			else {
 				
-				throw new KundeNichtVorhandenException("Kunde nicht vorhanden");
+				throw new NichtVorhandenException("Kunde nicht vorhanden");
 			}
 		}
 		catch (OnlineIntegrationExceptions e) {
@@ -186,6 +224,20 @@ public class OnlineAdminIntegration {
     	return kr;
     
     }
+    
+    /**
+     * speichert die  Kundendaten.
+     *
+     * @param Sessionid SessionID zur Authentifizierung
+     * @param Kundeemail Kundenemail des Kunden
+     * @param kvorname Vorname des Kunden
+     * @param knachname Nachname des Kunden
+     * @param fsnummer  Führerscheinnummer des Kunden
+     * @param pan Personalausweißnummer des Kunden
+     * @param saf the saf des Kunden
+     * @param admin Adminrechte
+     * @return {@link de.autovermietung.dto.KundeEditResponse KundeEditResponse}
+     */
     public KundeEditResponse saveKunde(@WebParam(name="Sessionid") int session,@WebParam(name="Kundeemail") String id,
     		@WebParam(name="kvorname") String kvorname,@WebParam(name="knachname") String knachname,@WebParam(name="fsnummer") String fsnummer,
     		@WebParam(name="pan") String pan,@WebParam(name="saf") boolean saf,@WebParam(name="admin") boolean admin){
@@ -221,6 +273,16 @@ public class OnlineAdminIntegration {
     	
     	return ker;
     }
+    
+    /**
+     *Liefert alle Autos.
+     *
+     * @param Sessionid muss die SessionID übergeben werden
+     * @return   {@link de.autovermietung.dto.GetAllResponse GetAllResponse}
+     * @throws SessionabgelaufenException wenn Session älter als 5 Minuten
+    * @throws KeineSessionException wenn Session nicht vorhanden
+    * @throws KeineAutosException wenn es noch keine Autos gibt
+     */
     public AlleAutosResponse getAllAutos(@WebParam(name="Sessionid") int session){
     	
     	AlleAutosResponse aar = new AlleAutosResponse();
@@ -246,6 +308,16 @@ public class OnlineAdminIntegration {
     	
     	return aar;
     }
+   
+    /**
+     * Liefert alle Marken.
+     *
+     * @param Sessionid muss die SessionID übergeben werden
+     * @return  {@link de.autovermietung.dto.GetAllResponse GetAllResponse}
+     * @throws SessionabgelaufenException wenn Session älter als 5 Minuten
+    * @throws KeineSessionException wenn Session nicht vorhanden
+    * @throws KeineMarkenException wenn es noch keine Marken gibt
+     */
    public AlleMarkenResponse getAllMarken(@WebParam(name="Sessionid") int session){
     	
     	AlleMarkenResponse amr = new AlleMarkenResponse();
@@ -271,33 +343,50 @@ public class OnlineAdminIntegration {
     	
     	return amr;
     }
-   public neueMarkeResponse createMarke(@WebParam(name="Sessionid") int session,@WebParam(name="Markenname") String Marke){
-	   neueMarkeResponse nmr = new neueMarkeResponse();
+   
+   /**
+    *Erstellt eine neue Marke.
+    *
+    * @param Sessionid SessionID zur Authentifizierung
+    * @param Markenname Name der Marke
+    * @throws InsertException wenn einfügen fehlgeschlagen
+    * @return {@link de.autovermietung.dto.neuerEintragResponse neuerEintragResponse}
+    */
+   public neuerEintragResponse createMarke(@WebParam(name="Sessionid") int session,@WebParam(name="Markenname") String Marke){
+	   neuerEintragResponse ner = new neuerEintragResponse();
 	   try {
    		Session Nsession = getSession(session);
    		Marke marke = dao.createMarke(Marke);
 			
 			if (marke != null) {
-				nmr.setSuccessful(true);
+				ner.setSuccessful(true);
 			}
 			else {
-				nmr.setSuccessful(false);
+				ner.setSuccessful(false);
 				throw new InsertException("Einfügen der Marke ist fehlgeschlagen");
 			}
 		}
 		catch (OnlineIntegrationExceptions e) {
-			nmr.setReturnCode(e.getErrorCode());
-			nmr.setMessage(e.getMessage());
+			ner.setReturnCode(e.getErrorCode());
+			ner.setMessage(e.getMessage());
 		}
 	   
 	   
 	   
 	   
 	   
-	   return nmr;  
+	   return ner;  
 	   
 	   
    }
+  
+  /**
+   * Leifert die selektierte Marke.
+   *
+   * @param Sessionid SessionID zur Authentifizierung
+   * @param MarkenId  der Marke
+   * @return {@link de.autovermietung.dto.MarkeResponse MarkeResponse}
+   */
   public MarkeResponse getMarke(@WebParam(name="Sessionid") int session,@WebParam(name="MarkenId") int Id){
 	  MarkeResponse mr = new MarkeResponse();
 	  
@@ -323,6 +412,16 @@ public class OnlineAdminIntegration {
 	  
 	  return mr;
   }
+  
+  /**
+   * speichert die angebenen Markendetails.
+   *
+   * @param Sessionid SessionID zur Authentifizierung
+   * @param MarkenId der Marke
+   * @param Markenname Markenname
+   * @throws NichtVorhandenException die selektierte Marke ist nicht vorhanden.
+   * @return {@link de.autovermietung.dto.UpdateResponse UpdateResponse}
+   */
   public UpdateResponse saveMarke(@WebParam(name="Sessionid") int session,@WebParam(name="MarkenId") int Id,@WebParam(name="Markenname") String Marke){
 	  UpdateResponse ur = new UpdateResponse();
 	  try {
@@ -346,6 +445,16 @@ public class OnlineAdminIntegration {
 		   
 	  return ur;
   }
+  
+  /**
+   * Liefert alle Krafststoffe.
+   *
+   * @param Sessionid muss die SessionID übergeben werden
+   * @return   {@link de.autovermietung.dto.GetAllResponse GetAllResponse}
+   * @throws SessionabgelaufenException wenn Session älter als 5 Minuten
+  * @throws KeineSessionException wenn Session nicht vorhanden
+  * @throws NichtVorhandenException wenn es noch keine Kraftstoffe gibt
+   */
   public GetAllResponse getAllKS(@WebParam(name="Sessionid") int session){
   	
 	  GetAllResponse  agr = new  GetAllResponse();
@@ -371,6 +480,15 @@ public class OnlineAdminIntegration {
   	
   	return agr;
   }
+ 
+ /**
+  * Erzeugt eine neue Kraftstoffart.
+  *
+  * @param Sessionid SessionID zur Authentifizierung
+  * @param KS Kraftstoffartname
+  * @throws InsertException wenn einfügen fehlgeschlagen
+  * @return {@link de.autovermietung.dto.neuerEintragResponse neuerEintragResponse}
+  */
  public neuerEintragResponse createKS(@WebParam(name="Sessionid") int session,@WebParam(name="KS") String KS){
 	 neuerEintragResponse ner = new neuerEintragResponse();
 	   try {
@@ -398,6 +516,14 @@ public class OnlineAdminIntegration {
 	   
 	   
  }
+
+/**
+ * Liefert die ausgewählte Kraftstoffart.
+ *
+ * @param Sessionid SessionID zur Authentifizierung
+ * @param KSId der Kraftstoffart
+ * @return {@link de.autovermietung.dto.KSResponse KSResponse}
+ */
 public KSResponse getKS(@WebParam(name="Sessionid") int session,@WebParam(name="KSId") int Id){
 	  KSResponse kr = new KSResponse();
 	  
@@ -423,6 +549,16 @@ public KSResponse getKS(@WebParam(name="Sessionid") int session,@WebParam(name="
 	  
 	  return kr;
 }
+
+/**
+ * Speichert die Kraftstoffart
+ *
+ * @param Sessionid SessionID zur Authentifizierung
+ * @param KSId der Kraftstoffart id
+ * @param KSbezeichnung Kraftstoffartbezeichnung
+ * @throws NichtVorhandenException wenn Kraftstoffart nicht vorhanden
+ * @return {@link de.autovermietung.dto.UpdateResponse UpdateResponse}
+ */
 public UpdateResponse saveKS(@WebParam(name="Sessionid") int session,@WebParam(name="KSId") int Id,@WebParam(name="KSbezeichnung") String bezeichnung){
 	  UpdateResponse ur = new UpdateResponse();
 	  try {
@@ -435,7 +571,7 @@ public UpdateResponse saveKS(@WebParam(name="Sessionid") int session,@WebParam(n
 				}
 				else {
 					ur.setSuccessful(false);
-					throw new NichtVorhandenException("Die Marke ist nicht vorhanden");
+					throw new NichtVorhandenException("Die Kraftstoffart ist nicht vorhanden");
 				}
 			}
 			catch (OnlineIntegrationExceptions e) {
@@ -446,6 +582,16 @@ public UpdateResponse saveKS(@WebParam(name="Sessionid") int session,@WebParam(n
 		   
 	  return ur;
 		}
+
+/**
+ * Liefert alle Autoarten.
+ *
+ * @param Sessionid muss die SessionID übergeben werden
+ * @return   {@link de.autovermietung.dto.GetAllResponse GetAllResponse}
+ * @throws SessionabgelaufenException wenn Session älter als 5 Minuten
+* @throws KeineSessionException wenn Session nicht vorhanden
+* @throws NichtVorhandenException wenn es noch keine Autoarten gibt
+ */
 	public GetAllResponse getAllAA(@WebParam(name="Sessionid") int session){
 	
 	  GetAllResponse  agr = new  GetAllResponse();
@@ -458,7 +604,7 @@ public UpdateResponse saveKS(@WebParam(name="Sessionid") int session,@WebParam(n
 				}
 				else {
 					
-					throw new NichtVorhandenException("Es sind noch keine Kraftstoffarten vorhanden");
+					throw new NichtVorhandenException("Es sind noch keine Autoarten vorhanden");
 				}
 			}
 			catch (OnlineIntegrationExceptions e) {
@@ -472,6 +618,15 @@ public UpdateResponse saveKS(@WebParam(name="Sessionid") int session,@WebParam(n
 	  	return agr;
 	
 	}
+	
+	/**
+	 * Liefert die Selektierte Autoart.
+	 *
+	 * @param Sessionid SessionID zur Authentifizierung
+	 * @param AAid Id der Autoart
+	 * @throws  NichtVorhandenException wenn Autoart nicht vorhanden
+	 * @return {@link de.autovermietung.dto.AutoArtResponse AutoArtResponse}
+	 */
 	public AutoArtResponse getAA(@WebParam(name="Sessionid") int session,@WebParam(name="AAid") int aaid){
 		AutoArtResponse aar = new AutoArtResponse(); 
 		 try {
@@ -483,7 +638,7 @@ public UpdateResponse saveKS(@WebParam(name="Sessionid") int session,@WebParam(n
 					}
 					else {
 						
-						throw new NichtVorhandenException("Die Marke ist nicht vorhanden");
+						throw new NichtVorhandenException("Autoart ist nicht vorhanden");
 					}
 				}
 				catch (OnlineIntegrationExceptions e) {
@@ -493,7 +648,24 @@ public UpdateResponse saveKS(@WebParam(name="Sessionid") int session,@WebParam(n
 			   
 		return aar;
 	}
-	public UpdateResponse saveAA(@WebParam(name="Sessionid") int session,@WebParam(name="AAid") int Id,@WebParam(name="beschreibung") String beschreibung,@WebParam(name="bildlink") String bildlink,@WebParam(name="kofferraumvolumen") int kofferraumvolumen,@WebParam(name="kraftstoffverbrauch") String kraftstoffverbrauch, @WebParam(name="ks") int ksid,@WebParam(name="marke") int markenid,@WebParam(name="pjk") double pjk,@WebParam(name="ps") int ps,@WebParam(name="sitzanzahl") int sitzanzahl){
+	
+	/**
+	 * Speichert die Autoartdetails.
+	 *
+	 * @param Sessionid SessionID zur Authentifizierung
+	 * @param AAid der Autoart
+	 * @param beschreibung Beschreibung der Autoart
+	 * @param kofferraumvolumen Kofferraumvolumen der Autoart
+	 * @param kraftstoffverbrauch Kraftstoffverbrauch der Autoart
+	 * @param ks Kraftstoffid der Autoart
+	 * @param marke Markenid der Autoart
+	 * @param pjk Preis je Km der Autoart
+	 * @param ps Ps der Autoart
+	 * @param sitzanzahl Sitzanzahl der Autoart
+	 * @throws NichtVorhandenException wenn Autoart, Marke oder Kraftstoffart nicht vorhanden
+	 * @return {@link de.autovermietung.dto.neuerEintragResponse neuerEintragResponse}
+	 */
+	public UpdateResponse saveAA(@WebParam(name="Sessionid") int session,@WebParam(name="AAid") int Id,@WebParam(name="beschreibung") String beschreibung,@WebParam(name="kofferraumvolumen") int kofferraumvolumen,@WebParam(name="kraftstoffverbrauch") String kraftstoffverbrauch, @WebParam(name="ks") int ksid,@WebParam(name="marke") int markenid,@WebParam(name="pjk") double pjk,@WebParam(name="ps") int ps,@WebParam(name="sitzanzahl") int sitzanzahl){
 		  UpdateResponse ur = new UpdateResponse();
 		  try {
 			 
@@ -543,6 +715,22 @@ public UpdateResponse saveKS(@WebParam(name="Sessionid") int session,@WebParam(n
 			   
 		  return ur;
 			}
+	
+	/**
+	 * Erzeugt eine neue Autoart.
+	 *
+	 * @param Sessionid SessionID zur Authentifizierung
+	 * @param beschreibung Beschreibung der Autoart
+	 * @param kofferraumvolumen Kofferraumvolumen der Autoart
+	 * @param kraftstoffverbrauch Kraftstoffverbrauch der Autoart
+	 * @param ks Kraftstoffid der Autoart
+	 * @param marke Markenid der Autoart
+	 * @param pjk Preis je Km der Autoart
+	 * @param ps Ps der Autoart
+	 * @param sitzanzahl Sitzanzahl der Autoart
+	 * @throws NichtVorhandenException wenn Marke oder Kraftstoffart nicht vorhanden
+	 *	@return {@link de.autovermietung.dto.neuerEintragResponse neuerEintragResponse}
+	 */
 	public neuerEintragResponse createAA(@WebParam(name="Sessionid") int session,@WebParam(name="beschreibung") String beschreibung,@WebParam(name="kofferraumvolumen") int kofferraumvolumen,@WebParam(name="kraftstoffverbrauch") String kraftstoffverbrauch, @WebParam(name="ks") int ksid,@WebParam(name="marke") int markenid,@WebParam(name="pjk") double pjk,@WebParam(name="ps") int ps,@WebParam(name="sitzanzahl") int sitzanzahl){
 		 neuerEintragResponse ner = new neuerEintragResponse();
 		   try {
@@ -586,6 +774,15 @@ public UpdateResponse saveKS(@WebParam(name="Sessionid") int session,@WebParam(n
 		   
 		   
 	 }
+	
+	/**
+	 * Liefert das selektiertes Auto.
+	 *
+	 * @param Sessionid SessionID zur Authentifizierung
+	 * @param Autoid des Autos
+	 * @throws NichtVorhandenException wenn Auto nicht vorhanden
+	 * @return {@link de.autovermietung.dto.AutoResponse AutoResponse} 
+	 */
 	public AutoResponse getAuto(@WebParam(name="Sessionid") int session,@WebParam(name="Autoid") int autoid){
 		AutoResponse ar = new AutoResponse();
 		
@@ -615,6 +812,17 @@ public UpdateResponse saveKS(@WebParam(name="Sessionid") int session,@WebParam(n
 		
 		
 	}
+	
+	/**
+	 * Speichert die Autodetails.
+	 *
+	 * @param Sessionid SessionID zur Authentifizierung
+	 * @param Autoid des Autos
+	 * @param bez Die Bezeichnungs des Autos
+	 * @param AAid die Autoartid des Autos
+	 * @throws NichtVorhandenException wenn Autoart oder Auto nicht vorhanden
+	 * @return {@link de.autovermietung.dto.UpdateResponse UpdateResponse}
+	 */
 	public UpdateResponse saveAuto(@WebParam(name="Sessionid") int session,@WebParam(name="Autoid") int Id,@WebParam(name="bez") String bez,@WebParam(name="AAid") int AAid){
 		UpdateResponse ur = new UpdateResponse();
 		  try {
@@ -651,6 +859,16 @@ public UpdateResponse saveKS(@WebParam(name="Sessionid") int session,@WebParam(n
 			   
 		  return ur;
 			}
+	
+	/**
+	 * Erzeugt ein neues Auto.
+	 *
+	 * @param Sessionid SessionID zur Authentifizierung
+	 * @param bez Die Bezeichnungs des Autos
+	 * @param AAid die Autoartid des Autos
+	 * @throws NichtVorhandenException wenn Autoart  nicht vorhanden
+	 * @return {@link de.autovermietung.dto.neuerEintragResponse neuerEintragResponse}
+	 */
 	public neuerEintragResponse createAuto(@WebParam(name="Sessionid") int session,@WebParam(name="bez") String bez,@WebParam(name="AAid") int AAid){
 		 neuerEintragResponse ner = new neuerEintragResponse();
 		   try {
@@ -686,6 +904,16 @@ public UpdateResponse saveKS(@WebParam(name="Sessionid") int session,@WebParam(n
 		   
 		   
 	 }
+	
+	/**
+	 * Liefert alle Rechnungen.
+	 *
+	 * @param Sessionid muss die SessionID übergeben werden
+	 * @return   {@link de.autovermietung.dto.GetAllResponse GetAllResponse}
+	 * @throws SessionabgelaufenException wenn Session älter als 5 Minuten
+	* @throws KeineSessionException wenn Session nicht vorhanden
+	* @throws NichtVorhandenException wenn es noch keine Rechnungen gibt
+	 */
 	public GetAllResponse getAllRechnungen(@WebParam(name="Sessionid") int session){
 		
 		  GetAllResponse  agr = new  GetAllResponse();
@@ -712,6 +940,15 @@ public UpdateResponse saveKS(@WebParam(name="Sessionid") int session,@WebParam(n
 		  	return agr;
 		
 		}
+	
+	/**
+	 * speichert das Autoartbild.
+	 *
+	 * @param Sessionid SessionID zur Authentifizierung
+	 * @param AAid der Autoart
+	 * @param bild in Base64 encoded als Bytestring
+	 * @return {@link de.autovermietung.dto.UpdateResponse UpdateResponse}
+	 */
 	public UpdateResponse saveAABild(@WebParam(name="Sessionid") int session,@WebParam(name="AAid") int Id,@WebParam(name="Bild") String bild){
 		UpdateResponse ur = new UpdateResponse();
 		  try {
@@ -738,6 +975,15 @@ public UpdateResponse saveKS(@WebParam(name="Sessionid") int session,@WebParam(n
 			   
 		  return ur;
 			}
+	
+	/**
+	 * Leifert das Autoartbild der Autoart.
+	 *
+	 * @param Sessionid SessionID zur Authentifizierung
+	 * @param AAid AutoartID
+	 * @throws NichtVorhandenException wenn Autoart nicht vorhanden
+	 * @return {@link de.autovermietung.dto.AutoArtBildResponse AutoArtBildResponse}
+	 */
 	public AutoArtBildResponse getAABild(@WebParam(name="Sessionid") int session,@WebParam(name="AAid") int aaid){
 		AutoArtBildResponse aar = new AutoArtBildResponse(); 
 		 try {
@@ -759,6 +1005,13 @@ public UpdateResponse saveKS(@WebParam(name="Sessionid") int session,@WebParam(n
 			   
 		return aar;
 	}
+	
+	/**
+	 * Erzeugt alle Rechungen.
+	 *
+	 * @param Sessionid SessionID zur Authentifizierung
+	 * @return {@link de.autovermietung.dto.neuerEintragResponse neuerEintragResponse}
+	 */
 	public neuerEintragResponse createAllRechungen(@WebParam(name="Sessionid") int session){
 		 neuerEintragResponse ner = new neuerEintragResponse();
 		   try {
@@ -784,32 +1037,17 @@ public UpdateResponse saveKS(@WebParam(name="Sessionid") int session,@WebParam(n
 		   
 		   
 	 }
-	public UpdateResponse saveRechnung(@WebParam(name="Sessionid") int session,@WebParam(name="Rechnungsid") int Id,@WebParam(name="Rabatt") String bild){
-		UpdateResponse ur = new UpdateResponse();
-		  try {
-			 
-		   		Session Nsession = getSession(session);
-		   		Autoart aa = dao.findAutoartbyID(Id);
-					
-		   		if (aa != null) {
-		   			   
-		   			    
-			   			aa.setBild(bild);
-			   			ur.setSuccessful(true);
-					}
-					else {
-						ur.setSuccessful(false);
-						throw new NichtVorhandenException("AutoArt ist nicht vorhanden");
-					}
-				}
-				catch (OnlineIntegrationExceptions e) {
-					ur.setReturnCode(e.getErrorCode());
-					ur.setMessage(e.getMessage());
-					ur.setSuccessful(false);
-				}
-			   
-		  return ur;
-			}
+	
+
+	
+	/**
+	 * Zahlungbestaetigen einer Rechnung.
+	 *
+	 * @param Sessionid SessionID zur Authentifizierung
+	 * @param Rechnungsid der Rechnung
+	 * @throws NichtVorhandenException wenn Rechnung nicht vorhanden
+	 * @return {@link de.autovermietung.dto.UpdateResponse UpdateResponse}
+	 */
 	public UpdateResponse Zahlungbestaetigen(@WebParam(name="Sessionid") int session,@WebParam(name="Rechnungsid") int Id){
 		UpdateResponse ur = new UpdateResponse();
 		  try {
@@ -825,7 +1063,7 @@ public UpdateResponse saveKS(@WebParam(name="Sessionid") int session,@WebParam(n
 					}
 					else {
 						ur.setSuccessful(false);
-						throw new NichtVorhandenException("AutoArt ist nicht vorhanden");
+						throw new NichtVorhandenException("Rechnung ist nicht vorhanden");
 					}
 				}
 				catch (OnlineIntegrationExceptions e) {
@@ -836,6 +1074,15 @@ public UpdateResponse saveKS(@WebParam(name="Sessionid") int session,@WebParam(n
 			   
 		  return ur;
 			}
+	
+	/**
+	 * Gets the rechnungs rabatt.
+	 *
+	 * @param Sessionid SessionID zur Authentifizierung
+	 * @param Rechnungsid Rechnungsid
+	 * @throws NichtVorhandenException wenn Rechnung nicht vorhanden
+	 * @return {@link de.autovermietung.dto.RechnungsrabattResponse RechnungsrabattResponse}
+	 */
 	public RechnungsrabattResponse getRechnungsRabatt(@WebParam(name="Sessionid") int session,@WebParam(name="Rechnungsid") int id){
 		RechnungsrabattResponse rrr = new RechnungsrabattResponse(); 
 		 try {
@@ -851,7 +1098,7 @@ public UpdateResponse saveKS(@WebParam(name="Sessionid") int session,@WebParam(n
 					}
 					else {
 						
-						throw new NichtVorhandenException("AutoArt ist nicht vorhanden");
+						throw new NichtVorhandenException("Rechnung ist nicht vorhanden");
 					}
 				}
 				catch (OnlineIntegrationExceptions e) {
@@ -862,6 +1109,16 @@ public UpdateResponse saveKS(@WebParam(name="Sessionid") int session,@WebParam(n
 			   
 		  return rrr;
 			}
+	
+	/**
+	 * Speichert den Rechnungsrabatt.
+	 *
+	 * @param Sessionid SessionID zur Authentifizierung
+	 * @param Rechnungsid  der Rechnung
+	 * @param Rabatt  Rabatt der Rechnung
+	 * @throws NichtVorhandenException wenn Rechnung nicht vorhanden
+	 * @return {@link de.autovermietung.dto.UpdateResponse UpdateResponse}
+		 */
 	public UpdateResponse saveRechnungsRabatt(@WebParam(name="Sessionid") int session,@WebParam(name="Rechnungsid") int Id,@WebParam(name="Rabatt") double rabatt){
 		UpdateResponse ur = new UpdateResponse();
 		  try {
@@ -896,6 +1153,13 @@ public UpdateResponse saveKS(@WebParam(name="Sessionid") int session,@WebParam(n
 		  return ur;
 			}
 	
+	/**
+	 * Leifert die ausgewählte Rechnung.
+	 *
+	 * @param Sessionid SessionID zur Authentifizierung
+	 * @param Rechungsid der Rechnung
+	 * @return {@link de.autovermietung.dto.RechnungsAResponse RechnungsAResponse}
+	 */
 	public RechnungsAResponse getRechnung(@WebParam(name="Sessionid") int session,@WebParam(name="Rechnungsid") int id){
 		RechnungsAResponse rr = new RechnungsAResponse();
 		
