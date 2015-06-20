@@ -48,9 +48,9 @@ public class AutovermietungDAO implements AutovermietungDAOAdminLocal,Autovermie
     	return em.find(Auto.class, Aid);
     
     }
-    public Autoart findAutoartbyID(int AAid)
+    public Autoart findAutoartbyID(int aaId)
     {
-    	return em.find(Autoart.class,AAid );
+    	return em.find(Autoart.class,aaId );
     
     }
     public mieten findMietenbyID(int Mid)

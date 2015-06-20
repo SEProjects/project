@@ -17,16 +17,22 @@ import org.jboss.logging.Logger.Level;
 import de.autovermietung.dao.AutovermietungDAOLocal;
 import de.autovermietung.dao.Databuilder;
 import de.autovermietung.dto.AlleAutosResponse;
+import de.autovermietung.dto.AutoArtResponse;
 import de.autovermietung.dto.AutoListResponse;
 import de.autovermietung.dto.AutoResponse;
 import de.autovermietung.dto.EditResponse;
+import de.autovermietung.dto.KSResponse;
 import de.autovermietung.dto.KundeResponse;
 import de.autovermietung.dto.KundenLoginResponse;
+import de.autovermietung.dto.MarkeResponse;
 import de.autovermietung.dto.RechnungsResponse;
 import de.autovermietung.dto.ReturncodeResponse;
 import de.autovermietung.entities.Auto;
+import de.autovermietung.entities.Autoart;
 import de.autovermietung.entities.Bezahlmethode;
+import de.autovermietung.entities.Kraftstoff;
 import de.autovermietung.entities.Kunde;
+import de.autovermietung.entities.Marke;
 import de.autovermietung.entities.PLZ;
 import de.autovermietung.entities.Rechnung;
 import de.autovermietung.entities.Session;
@@ -169,6 +175,42 @@ public class OnlineIntegration {
 		return ar;
 	}
     
+    public MarkeResponse getMarke(@WebParam(name="Sessionid")int session, @WebParam(name="MarkeId")int markeId) {
+    	MarkeResponse mR = new MarkeResponse();
+    	try {
+			Session sessionId = getSession(session);
+			Marke marke = dao.findMarkebyID(markeId);
+			if(marke != null) {
+				mR.setMarkeid(marke.getMarkeid());
+				mR.setMarkenname(marke.getMarkenname());
+			} else {
+				throw new NichtVorhandenException("Marke ist nict vorhanden");
+			}
+    	} catch (OnlineIntegrationExceptions e) {
+			mR.setReturnCode(e.getErrorCode());
+			mR.setMessage(e.getMessage());
+		}  
+    	return mR;
+    }
+    
+    public KSResponse getKraftstoff(@WebParam(name="Sessionid")int session, @WebParam(name="KsId")int ksId) {
+    	KSResponse kR = new KSResponse();
+    	try {
+			Session sessionId = getSession(session);
+			Kraftstoff kraftstoff = dao.findKsbyId(ksId);
+			if(kraftstoff != null) {
+				kR.setKsid(kraftstoff.getKsid());
+				kR.setBezeichnung(kraftstoff.getKsbezeichnung());
+			} else {
+				throw new NichtVorhandenException("Marke ist nict vorhanden");
+			}
+    	} catch (OnlineIntegrationExceptions e) {
+			kR.setReturnCode(e.getErrorCode());
+			kR.setMessage(e.getMessage());
+		}  
+    	return kR;
+    }
+    
     public AutoListResponse getAllAutos(@WebParam(name="Sessionid") int session){	
     	AutoListResponse aar = new AutoListResponse();
     	try {
@@ -183,6 +225,27 @@ public class OnlineIntegration {
     		aar.setAutoList(dto.makeDTO(autoList));
 		} catch (OnlineIntegrationExceptions e) {
 			//logger.info("Test" + dao.getAllAutos().get(0).getClass().getName());
+			aar.setReturnCode(e.getErrorCode());
+			aar.setMessage(e.getMessage());
+		}
+    	return aar;
+    }
+    public AutoArtResponse getAutoArt(@WebParam(name="Sessionid") int sessionId, @WebParam(name="AutoArtId") int id) {
+    	AutoArtResponse aar = new AutoArtResponse();
+    	try {
+			Session sessionid = getSession(sessionId);  
+	    	Autoart autoArt = dao.findAutoartbyID(id);
+	    	if(autoArt != null) {
+	    		aar.setAaid(id);
+	    		aar.setBeschreibung(autoArt.getBeschreibung());
+	    		aar.setKofferraumvolumen(autoArt.getKofferraumvolumen());
+	    		aar.setPjk(autoArt.getPjk());
+	    		aar.setPs(autoArt.getPs());
+	    		aar.setSitzanzahl(autoArt.getSitzanzahl());
+	    		aar.setKs(autoArt.getKs().getKsid());
+	    		aar.setMarke(autoArt.getMarke().getMarkeid());
+	    	}
+		} catch (OnlineIntegrationExceptions e) {
 			aar.setReturnCode(e.getErrorCode());
 			aar.setMessage(e.getMessage());
 		}
@@ -303,4 +366,47 @@ public class OnlineIntegration {
 		
 		
 	}
+    public EditResponse regisKunde(@WebParam(name="Sessionid") int session,
+    		@WebParam(name="email") String Email,
+    		@WebParam(name="Passwort") String kpassword,
+    		@WebParam(name="Nachname")String knachname,
+    		@WebParam(name="Vorname")String kvorname,
+    		@WebParam(name="Strasse")String strasse,
+    		@WebParam(name="PLZ")PLZ kplz,
+    		@WebParam(name="fsn")String fsn,
+    		@WebParam(name="pan")String pan){
+		EditResponse up = new EditResponse();
+		
+		 try {
+			 Session Nsession = getSession(session);
+		   		
+		   		Kunde k = dao.findKundebyEmail(Email);
+				
+					if (k == null) {
+						k = new Kunde();
+						k.setEmail(Email);
+						k.setKpassword(kpassword);
+						k.setKvorname(kvorname);
+						k.setKnachname(knachname);
+						k.setStrasse(strasse);
+						k.setKplz(kplz);
+						k.setFsnummer(fsn);
+						k.setPan(pan);
+						up.setSuccessful(true);
+					}
+					else {
+						
+						throw new NichtVorhandenException("Kunde ist nicht vorhanden");
+					}
+				}
+				catch (OnlineIntegrationExceptions e) {
+					up.setReturnCode(e.getErrorCode());
+					up.setMessage(e.getMessage());
+				}
+			   
+		  
+		  
+		  return up;
+    }
+    
 }
