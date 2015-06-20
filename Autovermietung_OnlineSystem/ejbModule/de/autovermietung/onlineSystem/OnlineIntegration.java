@@ -12,11 +12,9 @@ import javax.jws.WebService;
 import javax.xml.ws.WebServiceContext;
 
 import org.jboss.logging.Logger;
-import org.jboss.logging.Logger.Level;
 
 import de.autovermietung.dao.AutovermietungDAOLocal;
 import de.autovermietung.dao.Databuilder;
-import de.autovermietung.dto.AlleAutosResponse;
 import de.autovermietung.dto.AutoArtResponse;
 import de.autovermietung.dto.AutoListResponse;
 import de.autovermietung.dto.AutoResponse;
@@ -37,7 +35,6 @@ import de.autovermietung.entities.PLZ;
 import de.autovermietung.entities.Rechnung;
 import de.autovermietung.entities.Session;
 import de.autovermietung.exceptions.InvalidLoginException;
-import de.autovermietung.exceptions.KeineAutosException;
 import de.autovermietung.exceptions.KeineSessioException;
 import de.autovermietung.exceptions.KundeNichtVorhandenException;
 import de.autovermietung.exceptions.NichtVorhandenException;

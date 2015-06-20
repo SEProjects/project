@@ -8,7 +8,6 @@ import java.util.List;
 
 import javax.annotation.Resource;
 import javax.ejb.EJB;
-import javax.ejb.Local;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.jws.WebParam;
@@ -19,22 +18,18 @@ import org.jboss.logging.Logger;
 
 import de.autovermietung.dao.AutovermietungDAOAdminLocal;
 import de.autovermietung.dao.Databuilder;
-import de.autovermietung.dto.AlleAutosResponse;
-import de.autovermietung.dto.AlleKundenResponse;
-import de.autovermietung.dto.AlleMarkenResponse;
 import de.autovermietung.dto.AutoArtBildResponse;
 import de.autovermietung.dto.AutoArtResponse;
 import de.autovermietung.dto.AutoResponse;
 import de.autovermietung.dto.GetAllResponse;
 import de.autovermietung.dto.KSResponse;
-import de.autovermietung.dto.KundeEditResponse;
+
 import de.autovermietung.dto.KundeResponse;
 import de.autovermietung.dto.KundenLoginResponse;
 import de.autovermietung.dto.MarkeResponse;
 import de.autovermietung.dto.RechnungsAResponse;
 import de.autovermietung.dto.RechnungsrabattResponse;
 import de.autovermietung.dto.UpdateResponse;
-import de.autovermietung.dto.neueMarkeResponse;
 import de.autovermietung.dto.neuerEintragResponse;
 import de.autovermietung.entities.Auto;
 import de.autovermietung.entities.Autoart;
@@ -48,7 +43,6 @@ import de.autovermietung.exceptions.InvalidLoginException;
 import de.autovermietung.exceptions.KeineAutosException;
 import de.autovermietung.exceptions.KeineKundenException;
 import de.autovermietung.exceptions.KeineMarkenException;
-import de.autovermietung.exceptions.KeineSessionException;
 import de.autovermietung.exceptions.KeineSessionException;
 import de.autovermietung.exceptions.KundeNichtVorhandenException;
 import de.autovermietung.exceptions.NichtVorhandenException;
@@ -236,12 +230,12 @@ public class OnlineAdminIntegration {
      * @param pan Personalausweißnummer des Kunden
      * @param saf the saf des Kunden
      * @param admin Adminrechte
-     * @return {@link de.autovermietung.dto.KundeEditResponse KundeEditResponse}
+     * @return {@link de.autovermietung.dto.UpdateResponse UpdateResponse}
      */
-    public KundeEditResponse saveKunde(@WebParam(name="Sessionid") int session,@WebParam(name="Kundeemail") String id,
+    public UpdateResponse saveKunde(@WebParam(name="Sessionid") int session,@WebParam(name="Kundeemail") String id,
     		@WebParam(name="kvorname") String kvorname,@WebParam(name="knachname") String knachname,@WebParam(name="fsnummer") String fsnummer,
     		@WebParam(name="pan") String pan,@WebParam(name="saf") boolean saf,@WebParam(name="admin") boolean admin){
-    	KundeEditResponse ker = new KundeEditResponse();
+    	UpdateResponse ker = new UpdateResponse();
     	try {
     		Session Nsession = getSession(session);
 			Kunde kunde = dao.findKundebyEmail(id);	
@@ -283,15 +277,15 @@ public class OnlineAdminIntegration {
     * @throws KeineSessionException wenn Session nicht vorhanden
     * @throws KeineAutosException wenn es noch keine Autos gibt
      */
-    public AlleAutosResponse getAllAutos(@WebParam(name="Sessionid") int session){
+    public GetAllResponse getAllAutos(@WebParam(name="Sessionid") int session){
     	
-    	AlleAutosResponse aar = new AlleAutosResponse();
+    	GetAllResponse aar = new GetAllResponse();
     	try {
     		Session Nsession = getSession(session);
 			List<Object[]> autos = this.dao.getAllAutos();	
 	
 			if (autos.isEmpty() == false) {
-				aar.setAutos(autos);
+				aar.setDatensaetze(autos);
 			}
 			else {
 				
@@ -318,15 +312,15 @@ public class OnlineAdminIntegration {
     * @throws KeineSessionException wenn Session nicht vorhanden
     * @throws KeineMarkenException wenn es noch keine Marken gibt
      */
-   public AlleMarkenResponse getAllMarken(@WebParam(name="Sessionid") int session){
+   public GetAllResponse  getAllMarken(@WebParam(name="Sessionid") int session){
     	
-    	AlleMarkenResponse amr = new AlleMarkenResponse();
+	   GetAllResponse  amr = new GetAllResponse();
     	try {
     		Session Nsession = getSession(session);
-			List<Object[]> marken = this.dao.getAllMarken();	
+			List<Object[]> marken  = this.dao.getAllMarken();	
 	
 			if (marken.isEmpty() == false) {
-				amr.setMarken(marken);
+				amr.setDatensaetze(marken);
 			}
 			else {
 				
