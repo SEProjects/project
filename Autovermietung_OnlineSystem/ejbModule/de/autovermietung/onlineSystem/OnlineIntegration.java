@@ -15,6 +15,7 @@ import org.jboss.logging.Logger;
 
 import de.autovermietung.dao.AutovermietungDAOLocal;
 import de.autovermietung.dao.Databuilder;
+import de.autovermietung.dto.AutoArtBildResponse;
 import de.autovermietung.dto.AutoArtResponse;
 import de.autovermietung.dto.AutoListResponse;
 import de.autovermietung.dto.AutoResponse;
@@ -30,7 +31,7 @@ import de.autovermietung.entities.Autoart;
 import de.autovermietung.entities.Bezahlmethode;
 import de.autovermietung.entities.Kraftstoff;
 import de.autovermietung.entities.Kunde;
-import de.autovermietung.entities.Marke;
+import de.autovermietung.entities.Marke;	    		
 import de.autovermietung.entities.PLZ;
 import de.autovermietung.entities.Rechnung;
 import de.autovermietung.entities.Session;
@@ -241,6 +242,7 @@ public class OnlineIntegration {
 	    		aar.setSitzanzahl(autoArt.getSitzanzahl());
 	    		aar.setKs(autoArt.getKs().getKsid());
 	    		aar.setMarke(autoArt.getMarke().getMarkeid());
+	    		aar.setBildlink(autoArt.getBild());
 	    	}
 		} catch (OnlineIntegrationExceptions e) {
 			aar.setReturnCode(e.getErrorCode());
@@ -248,6 +250,26 @@ public class OnlineIntegration {
 		}
     	return aar;
     }
+    
+    public AutoArtBildResponse getAABild(@WebParam(name="Sessionid") int session,@WebParam(name="Aaid") int aaid){
+		AutoArtBildResponse aar = new AutoArtBildResponse(); 
+		 try {
+		   		Session Nsession = getSession(session);
+		   		Autoart aa = dao.findAutoartbyID(aaid);
+				
+					if (aa != null) {
+						aar.setBild(aa.getBild());
+					} else {
+						throw new NichtVorhandenException("Die Autoart ist nicht vorhanden");
+					}
+				}
+				catch (OnlineIntegrationExceptions e) {
+					aar.setReturnCode(e.getErrorCode());
+					aar.setMessage(e.getMessage());
+				}
+			   
+		return aar;
+	}
     
     public RechnungsResponse rechnung(@WebParam(name="Sessionid") int session,@WebParam(name="Rechnungsid") int rid){
 		RechnungsResponse rechung = new RechnungsResponse();
@@ -357,6 +379,7 @@ public class OnlineIntegration {
 				catch (OnlineIntegrationExceptions e) {
 					edit.setReturnCode(e.getErrorCode());
 					edit.setMessage(e.getMessage());
+
 				}
 	 	  
 		  return edit;

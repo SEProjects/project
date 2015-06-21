@@ -1,6 +1,3 @@
-/*
- * 
- */
 package de.autovermietung.onlineSystem;
 
 import java.math.BigDecimal;

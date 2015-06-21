@@ -13,7 +13,7 @@ public class AutoArtBildResponse extends ReturncodeResponse {
 	 */
 	private static final long serialVersionUID = 1L;
 	/** Bild als Base64 encoded Bytestring */
-	private String Bild;
+	private String bild;
 	
 	/**
 	 * Instantiates a new auto art bild response.
@@ -28,7 +28,7 @@ public class AutoArtBildResponse extends ReturncodeResponse {
 	 * @return  bild
 	 */
 	public String getBild() {
-		return Bild;
+		return bild;
 	}
 	
 	/**
@@ -37,7 +37,7 @@ public class AutoArtBildResponse extends ReturncodeResponse {
 	 * @param bild neues bild
 	 */
 	public void setBild(String bild) {
-		Bild = bild;
+		bild = bild;
 	}
 	
 }

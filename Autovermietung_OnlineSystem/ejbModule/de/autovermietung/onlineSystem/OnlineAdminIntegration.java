@@ -105,8 +105,7 @@ public class OnlineAdminIntegration {
 			}
 			else {
 				
-				throw new InvalidLoginException("Login fehlgeschlagen, da Kunde unbekannt oder Passwort falsch.");
-				
+				throw new InvalidLoginException("Login fehlgeschlagen, da Kunde unbekannt oder Passwort falsch. username=" + email + " " + password);
 			}
 		}
 		catch (InvalidLoginException e) {
@@ -1032,17 +1031,32 @@ public UpdateResponse saveKS(@WebParam(name="Sessionid") int session,@WebParam(n
 		   
 		   
 	 }
-	
-
-	
-	/**
-	 * Zahlungbestaetigen einer Rechnung.
-	 *
-	 * @param Sessionid SessionID zur Authentifizierung
-	 * @param Rechnungsid der Rechnung
-	 * @throws NichtVorhandenException wenn Rechnung nicht vorhanden
-	 * @return {@link de.autovermietung.dto.UpdateResponse UpdateResponse}
-	 */
+	public UpdateResponse saveRechnung(@WebParam(name="Sessionid") int session,@WebParam(name="Rechnungsid") int Id,@WebParam(name="Rabatt") String bild){
+		UpdateResponse ur = new UpdateResponse();
+		  try {
+			 
+		   		Session Nsession = getSession(session);
+		   		Autoart aa = dao.findAutoartbyID(Id);
+					
+		   		if (aa != null) {
+		   			   
+		   			    
+			   			aa.setBild(bild);
+			   			ur.setSuccessful(true);
+					}
+					else {
+						ur.setSuccessful(false);
+						throw new NichtVorhandenException("AutoArt ist nicht vorhanden");
+					}
+				}
+				catch (OnlineIntegrationExceptions e) {
+					ur.setReturnCode(e.getErrorCode());
+					ur.setMessage(e.getMessage());
+					ur.setSuccessful(false);
+				}
+			   
+		  return ur;
+			}
 	public UpdateResponse Zahlungbestaetigen(@WebParam(name="Sessionid") int session,@WebParam(name="Rechnungsid") int Id){
 		UpdateResponse ur = new UpdateResponse();
 		  try {
@@ -1214,6 +1228,7 @@ public UpdateResponse saveKS(@WebParam(name="Sessionid") int session,@WebParam(n
 		
 		return ur;
 	}
+
 	/**
 	 * Liefert alle Schaeden.
 	 *
@@ -1342,4 +1357,5 @@ public UpdateResponse saveKS(@WebParam(name="Sessionid") int session,@WebParam(n
 		  	return dr;
 		
 		}
+
 }
