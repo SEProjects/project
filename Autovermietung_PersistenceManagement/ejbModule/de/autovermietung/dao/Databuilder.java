@@ -13,11 +13,13 @@ import org.jboss.logging.Logger;
 
 import de.autovermietung.entities.Auto;
 import de.autovermietung.entities.Autoart;
+import de.autovermietung.entities.Dreck;
 import de.autovermietung.entities.FSA;
 import de.autovermietung.entities.Kraftstoff;
 import de.autovermietung.entities.Kunde;
 import de.autovermietung.entities.Marke;
 import de.autovermietung.entities.PLZ;
+import de.autovermietung.entities.Schaden;
 import de.autovermietung.entities.mieten;
 
 
@@ -141,13 +143,16 @@ public class Databuilder {
 				mieten m11 = new mieten(2000,auto2,customer13);
 				m11.setEndkm(2500);
 				em.persist(m11);
-			
+				Schaden schaden = new Schaden(customer11,auto2,"Licht vorne Rechts defekt");
+				em.persist(schaden);
+				Dreck dreck = new Dreck(customer11,auto2);
+				em.persist(dreck);
 			
 				
 			
 			}
 		
-			
+	
 		}
 
 			

@@ -218,4 +218,6 @@ public interface AutovermietungDAOAdminLocal {
 	 */
 	public List<Object[]> getAllRechnungenposition(int id);
 	public Kunde getKundeByHash(String Hash);
+	public List<Object[]> getAllSchaeden();
+	public List<Object[]> getAllDreck();
 }

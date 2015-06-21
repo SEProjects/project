@@ -332,6 +332,14 @@ public class AutovermietungDAO implements AutovermietungDAOAdminLocal,Autovermie
 		
 		return kunde;
 	}
+	public List<Object[]> getAllSchaeden(){
+		 List query = em.createQuery("SELECT s.sid, s.auto.bez, s.beschreibung, s.auto.aid, s.timestamp FROM Schaden s").getResultList();
+	   	 return  query;
+	}
+	public List<Object[]> getAllDreck(){
+		 List query = em.createQuery("SELECT d.did, d.auto.bez, d.timestamp, d.auto.aid FROM Dreck d").getResultList();
+	   	 return  query;
+	}
 
 }
 

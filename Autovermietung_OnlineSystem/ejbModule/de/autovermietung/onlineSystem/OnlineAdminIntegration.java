@@ -105,7 +105,8 @@ public class OnlineAdminIntegration {
 			}
 			else {
 				
-				throw new InvalidLoginException("Login fehlgeschlagen, da Kunde unbekannt oder Passwort falsch. username=" + email + " " + password);
+				throw new InvalidLoginException("Login fehlgeschlagen, da Kunde unbekannt oder Passwort falsch.");
+				
 			}
 		}
 		catch (InvalidLoginException e) {
@@ -1213,6 +1214,74 @@ public UpdateResponse saveKS(@WebParam(name="Sessionid") int session,@WebParam(n
 		
 		return ur;
 	}
-	
-	 
+	/**
+	 * Liefert alle Schaeden.
+	 *
+	 * @param Sessionid muss die SessionID übergeben werden
+	 * @return   {@link de.autovermietung.dto.GetAllResponse GetAllResponse}
+	 * @throws SessionabgelaufenException wenn Session älter als 5 Minuten
+	* @throws KeineSessionException wenn Session nicht vorhanden
+	* @throws NichtVorhandenException wenn es noch keine Schaeden gibt
+	 */
+	public GetAllResponse getAllSchaeden(@WebParam(name="Sessionid") int session){
+		
+		  GetAllResponse  agr = new  GetAllResponse();
+		  	try {
+		  		Session Nsession = getSession(session);
+					List<Object[]> daten = this.dao.getAllSchaeden();	
+			
+					if (daten.isEmpty() == false) {
+						agr.setDatensaetze(daten);
+					}
+					else {
+						
+						throw new NichtVorhandenException("Es sind noch keine Schäden vorhanden");
+					}
+				}
+				catch (OnlineIntegrationExceptions e) {
+					agr.setReturnCode(e.getErrorCode());
+					agr.setMessage(e.getMessage());
+				}
+		  	 	
+		  	
+		  	
+		  	
+		  	return agr;
+		
+		}
+	/**
+	 * Liefert alle Dreckeintraege.
+	 *
+	 * @param Sessionid muss die SessionID übergeben werden
+	 * @return   {@link de.autovermietung.dto.GetAllResponse GetAllResponse}
+	 * @throws SessionabgelaufenException wenn Session älter als 5 Minuten
+	* @throws KeineSessionException wenn Session nicht vorhanden
+	* @throws NichtVorhandenException wenn es noch keine Schaeden gibt
+	 */
+	public GetAllResponse getAllDreck(@WebParam(name="Sessionid") int session){
+		
+		  GetAllResponse  agr = new  GetAllResponse();
+		  	try {
+		  		Session Nsession = getSession(session);
+					List<Object[]> daten = this.dao.getAllDreck();	
+			
+					if (daten.isEmpty() == false) {
+						agr.setDatensaetze(daten);
+					}
+					else {
+						
+						throw new NichtVorhandenException("Es sind keine Dreckigmeldungen vorhanden");
+					}
+				}
+				catch (OnlineIntegrationExceptions e) {
+					agr.setReturnCode(e.getErrorCode());
+					agr.setMessage(e.getMessage());
+				}
+		  	 	
+		  	
+		  	
+		  	
+		  	return agr;
+		
+		}
 }
