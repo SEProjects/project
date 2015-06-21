@@ -31,8 +31,7 @@ import de.autovermietung.entities.Autoart;
 import de.autovermietung.entities.Bezahlmethode;
 import de.autovermietung.entities.Kraftstoff;
 import de.autovermietung.entities.Kunde;
-import de.autovermietung.entities.Marke;	    		aar.setBildlink(autoArt.getBildLink());
-
+import de.autovermietung.entities.Marke;	    		
 import de.autovermietung.entities.PLZ;
 import de.autovermietung.entities.Rechnung;
 import de.autovermietung.entities.Session;
@@ -430,11 +429,4 @@ public class OnlineIntegration {
 		  return up;
     }
     
-}
-				}
-	 	  
-		  return edit;
-		
-		
-	}
 }
