@@ -37,7 +37,7 @@ public class AutoArtBildResponse extends ReturncodeResponse {
 	 * @param bild neues bild
 	 */
 	public void setBild(String bild) {
-		bild = bild;
+		this.bild = bild;
 	}
 	
 }
