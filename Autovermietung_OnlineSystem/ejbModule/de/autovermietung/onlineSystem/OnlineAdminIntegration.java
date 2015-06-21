@@ -234,7 +234,7 @@ public class OnlineAdminIntegration {
      */
     public UpdateResponse saveKunde(@WebParam(name="Sessionid") int session,@WebParam(name="Kundeemail") String id,
     		@WebParam(name="kvorname") String kvorname,@WebParam(name="knachname") String knachname,@WebParam(name="fsnummer") String fsnummer,
-    		@WebParam(name="pan") String pan,@WebParam(name="saf") boolean saf,@WebParam(name="admin") boolean admin){
+    		@WebParam(name="pan") String pan,@WebParam(name="aktive") boolean aktive,@WebParam(name="admin") boolean admin){
     	UpdateResponse ker = new UpdateResponse();
     	try {
     		Session Nsession = getSession(session);
@@ -246,7 +246,7 @@ public class OnlineAdminIntegration {
 				kunde.setKnachname(knachname);
 				kunde.setFsnummer(fsnummer);
 				kunde.setPan(pan);
-				kunde.setSaf(saf);
+				kunde.setAktive(aktive);
 				kunde.setAdmin(admin);
 				ker.setSuccessful(true);
 					

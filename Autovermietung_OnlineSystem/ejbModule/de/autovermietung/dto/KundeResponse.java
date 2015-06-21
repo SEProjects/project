@@ -29,10 +29,11 @@ public class KundeResponse extends ReturncodeResponse {
 	private String pan;
 	
 	/** Straße. */
-	private String straße;
+	private String strasse;
 
-	/** The saf. */
-	private boolean saf;
+	
+
+	private boolean aktive;
 	
 	/** adminrechte */
 	private boolean admin;
@@ -141,41 +142,15 @@ public class KundeResponse extends ReturncodeResponse {
 		this.pan = pan;
 	}
 	
-	/**
-	 * Gets Strasse.
-	 *
-	 * @return strasse
-	 */
-	public String getStraße() {
-		return this.straße;
-	}
 	
-	/**
-	 * Sets straße in der Response .
-	 *
-	 * @param straße neue straße
-	 */
-	public void setStraße(String straße) {
-		this.straße = straße;
+	public String getStrasse() {
+		return strasse;
 	}
 
-	/**
-	 * Checks if is saf.
-	 *
-	 * @return true, if is saf
-	 */
-	public boolean isSaf() {
-		return saf;
+	public void setStrasse(String strasse) {
+		this.strasse = strasse;
 	}
-	
-	/**
-	 * Sets the saf.
-	 *
-	 * @param saf the new saf
-	 */
-	public void setSaf(boolean saf) {
-		this.saf = saf;
-	}
+
 	
 	/**
 	 * Checks if is admin.
@@ -247,5 +222,12 @@ public class KundeResponse extends ReturncodeResponse {
 	 */
 	public void setWohnort(String wohnort) {
 		this.wohnort = wohnort;
+	}
+	public boolean isAktive() {
+		return aktive;
+	}
+
+	public void setAktive(boolean aktive) {
+		this.aktive = aktive;
 	}
 }
