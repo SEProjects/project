@@ -26,7 +26,6 @@ public interface AutovermietungDAOLocal {
 	 * @return the kunde
 	 */
 	public Kunde findKundebyEmail(String Email);
-	
 	/**
 	 * Creates the session.
 	 *

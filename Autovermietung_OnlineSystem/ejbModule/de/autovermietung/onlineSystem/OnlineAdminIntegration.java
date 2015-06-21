@@ -953,7 +953,7 @@ public UpdateResponse saveKS(@WebParam(name="Sessionid") int session,@WebParam(n
 		   		if (aa != null) {
 		   			   
 		   			    
-			   			aa.setBild(bild);
+			   			aa.setBildLink(bild);
 			   			ur.setSuccessful(true);
 					}
 					else {
@@ -985,7 +985,7 @@ public UpdateResponse saveKS(@WebParam(name="Sessionid") int session,@WebParam(n
 		   		Autoart aa = dao.findAutoartbyID(aaid);
 				
 					if (aa != null) {
-						aar.setBild(aa.getBild());
+						aar.setBild(aa.getBildLink());
 					}
 					else {
 						
@@ -1031,17 +1031,32 @@ public UpdateResponse saveKS(@WebParam(name="Sessionid") int session,@WebParam(n
 		   
 		   
 	 }
-	
-
-	
-	/**
-	 * Zahlungbestaetigen einer Rechnung.
-	 *
-	 * @param Sessionid SessionID zur Authentifizierung
-	 * @param Rechnungsid der Rechnung
-	 * @throws NichtVorhandenException wenn Rechnung nicht vorhanden
-	 * @return {@link de.autovermietung.dto.UpdateResponse UpdateResponse}
-	 */
+	public UpdateResponse saveRechnung(@WebParam(name="Sessionid") int session,@WebParam(name="Rechnungsid") int Id,@WebParam(name="Rabatt") String bild){
+		UpdateResponse ur = new UpdateResponse();
+		  try {
+			 
+		   		Session Nsession = getSession(session);
+		   		Autoart aa = dao.findAutoartbyID(Id);
+					
+		   		if (aa != null) {
+		   			   
+		   			    
+			   			aa.setBildLink(bild);
+			   			ur.setSuccessful(true);
+					}
+					else {
+						ur.setSuccessful(false);
+						throw new NichtVorhandenException("AutoArt ist nicht vorhanden");
+					}
+				}
+				catch (OnlineIntegrationExceptions e) {
+					ur.setReturnCode(e.getErrorCode());
+					ur.setMessage(e.getMessage());
+					ur.setSuccessful(false);
+				}
+			   
+		  return ur;
+			}
 	public UpdateResponse Zahlungbestaetigen(@WebParam(name="Sessionid") int session,@WebParam(name="Rechnungsid") int Id){
 		UpdateResponse ur = new UpdateResponse();
 		  try {

@@ -16,8 +16,6 @@ import javax.persistence.OneToMany;
 
 
 
-
-// TODO: Auto-generated Javadoc
 /**
  * The Class Autoart.
  *
@@ -49,7 +47,7 @@ public class Autoart implements Serializable {
 	
 	/** Bild. */
 	@Column(length=50000000)
-	private String bild;
+	private String bildLink;
 	
 	/** Kraftstoffverbrauch. */
 	private double kraftstoffverbrauch;
@@ -112,8 +110,8 @@ public class Autoart implements Serializable {
 	 *
 	 * @return the bild
 	 */
-	public String getBild() {
-		return bild;
+	public String getBildLink() {
+		return bildLink;
 	}
 
 	/**
@@ -121,8 +119,8 @@ public class Autoart implements Serializable {
 	 *
 	 * @param bild the new bild
 	 */
-	public void setBild(String bild) {
-		this.bild = bild;
+	public void setBildLink(String bildLink) {
+		this.bildLink = bildLink;
 	}
 
 	/**
