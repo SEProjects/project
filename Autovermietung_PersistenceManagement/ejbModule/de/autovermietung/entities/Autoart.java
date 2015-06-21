@@ -110,7 +110,7 @@ public class Autoart implements Serializable {
 	 *
 	 * @return the bild
 	 */
-	public String getBildLink() {
+	public String getBild() {
 		return bildLink;
 	}
 
@@ -119,7 +119,7 @@ public class Autoart implements Serializable {
 	 *
 	 * @param bild the new bild
 	 */
-	public void setBildLink(String bildLink) {
+	public void setBild(String bildLink) {
 		this.bildLink = bildLink;
 	}
 

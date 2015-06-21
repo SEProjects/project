@@ -242,7 +242,7 @@ public class OnlineIntegration {
 	    		aar.setSitzanzahl(autoArt.getSitzanzahl());
 	    		aar.setKs(autoArt.getKs().getKsid());
 	    		aar.setMarke(autoArt.getMarke().getMarkeid());
-	    		aar.setBildlink(autoArt.getBildLink());
+	    		aar.setBildlink(autoArt.getBild());
 	    	}
 		} catch (OnlineIntegrationExceptions e) {
 			aar.setReturnCode(e.getErrorCode());
@@ -258,7 +258,7 @@ public class OnlineIntegration {
 		   		Autoart aa = dao.findAutoartbyID(aaid);
 				
 					if (aa != null) {
-						aar.setBild(aa.getBildLink());
+						aar.setBild(aa.getBild());
 					} else {
 						throw new NichtVorhandenException("Die Autoart ist nicht vorhanden");
 					}
