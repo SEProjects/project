@@ -122,7 +122,7 @@ public class Databuilder {
 				ks.addAutoart(autoart);
 				autoart.addAuto(auto2);
 				em.persist(auto2);
-				Auto auto21 = new Auto("51.967517, 7.602504","Auto2",autoart);
+				Auto auto21 = new Auto("51.967517, 7.602504","Auto10",autoart);
 				marke.addAutoart(autoart);
 				ks.addAutoart(autoart);
 				autoart.addAuto(auto21);

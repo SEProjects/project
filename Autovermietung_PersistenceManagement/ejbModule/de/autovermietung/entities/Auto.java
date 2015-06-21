@@ -275,7 +275,12 @@ public class Auto implements Serializable {
 	public List<mieten> getGemietet() {
 		return gemietet;
 	}
-
+	public void deleteSchaden(Schaden schaden){
+		this.schaden.remove(schaden);
+	}
+	public void deleteDreck(Dreck dreck){
+		this.dreck.remove(dreck);
+	}
 	
 	
 }

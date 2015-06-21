@@ -344,12 +344,16 @@ public class AutovermietungDAO implements AutovermietungDAOAdminLocal,Autovermie
 	}
 	public void deleteDreck(int id){
 		Dreck dreck = em.find(Dreck.class, id);
+		dreck.getAuto().deleteDreck(dreck);
+		dreck.getKunde().deleteDreck(dreck);
 		em.remove(dreck);
 		em.flush();
 	}
 	public void deleteSchaden(int id){
 		Schaden schaden = em.find(Schaden.class, id);
 		logger.info(schaden);
+		schaden.getAuto().deleteSchaden(schaden);
+		schaden.getKunde().deleteSchaden(schaden);
 		em.remove(schaden);
 		em.flush();
 	}

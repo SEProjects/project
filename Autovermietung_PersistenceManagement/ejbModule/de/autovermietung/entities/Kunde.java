@@ -738,4 +738,10 @@ public class Kunde implements Serializable {
 	public void setFsnummer(String fsnummer) {
 		this.fsnummer = fsnummer;
 	}
+	public void deleteSchaden(Schaden schaden){
+		this.schaden.remove(schaden);
+	}
+	public void deleteDreck(Dreck dreck){
+		this.dreck.remove(dreck);
+	}
 }
