@@ -19,12 +19,14 @@ import org.jboss.logging.Logger;
 import de.autovermietung.entities.Auto;
 import de.autovermietung.entities.Autoart;
 import de.autovermietung.entities.Bankkonto;
+import de.autovermietung.entities.Dreck;
 import de.autovermietung.entities.FSA;
 import de.autovermietung.entities.Kraftstoff;
 import de.autovermietung.entities.Kunde;
 import de.autovermietung.entities.Marke;
 import de.autovermietung.entities.PLZ;
 import de.autovermietung.entities.Rechnung;
+import de.autovermietung.entities.Schaden;
 import de.autovermietung.entities.Session;
 import de.autovermietung.entities.mieten;
 
@@ -340,7 +342,17 @@ public class AutovermietungDAO implements AutovermietungDAOAdminLocal,Autovermie
 		 List query = em.createQuery("SELECT d.did, d.auto.bez, d.timestamp, d.auto.aid FROM Dreck d").getResultList();
 	   	 return  query;
 	}
-
+	public void deleteDreck(int id){
+		Dreck dreck = em.find(Dreck.class, id);
+		em.remove(dreck);
+		em.flush();
+	}
+	public void deleteSchaden(int id){
+		Schaden schaden = em.find(Schaden.class, id);
+		logger.info(schaden);
+		em.remove(schaden);
+		em.flush();
+	}
 }
 
 

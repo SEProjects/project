@@ -220,4 +220,6 @@ public interface AutovermietungDAOAdminLocal {
 	public Kunde getKundeByHash(String Hash);
 	public List<Object[]> getAllSchaeden();
 	public List<Object[]> getAllDreck();
+	public void deleteSchaden(int id);
+	public void deleteDreck(int id);
 }

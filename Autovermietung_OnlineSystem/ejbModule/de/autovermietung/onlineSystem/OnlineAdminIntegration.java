@@ -21,9 +21,9 @@ import de.autovermietung.dao.Databuilder;
 import de.autovermietung.dto.AutoArtBildResponse;
 import de.autovermietung.dto.AutoArtResponse;
 import de.autovermietung.dto.AutoResponse;
+import de.autovermietung.dto.DeleteResponse;
 import de.autovermietung.dto.GetAllResponse;
 import de.autovermietung.dto.KSResponse;
-
 import de.autovermietung.dto.KundeResponse;
 import de.autovermietung.dto.KundenLoginResponse;
 import de.autovermietung.dto.MarkeResponse;
@@ -1282,6 +1282,64 @@ public UpdateResponse saveKS(@WebParam(name="Sessionid") int session,@WebParam(n
 		  	
 		  	
 		  	return agr;
+		
+		}
+	/**
+	 * Liefert alle Dreckeintraege.
+	 *
+	 * @param Sessionid muss die SessionID übergeben werden
+	 * @return   {@link de.autovermietung.dto.GetAllResponse GetAllResponse}
+	 * @throws SessionabgelaufenException wenn Session älter als 5 Minuten
+	* @throws KeineSessionException wenn Session nicht vorhanden
+	* @throws NichtVorhandenException wenn es noch keine Schaeden gibt
+	 */
+	public DeleteResponse deleteDreck(@WebParam(name="Sessionid") int session,@WebParam(name="DreckId") int DreckId){
+		
+		DeleteResponse dr = new  DeleteResponse();
+		  	try {
+		  		Session Nsession = getSession(session);
+					this.dao.deleteDreck(DreckId);
+			
+				
+				}
+				catch (OnlineIntegrationExceptions e) {
+					dr.setReturnCode(e.getErrorCode());
+					dr.setMessage(e.getMessage());
+				}
+		  	 	
+		  	
+		  	
+		  	
+		  	return dr;
+		
+		}
+	/**
+	 * Liefert alle Dreckeintraege.
+	 *
+	 * @param Sessionid muss die SessionID übergeben werden
+	 * @return   {@link de.autovermietung.dto.GetAllResponse GetAllResponse}
+	 * @throws SessionabgelaufenException wenn Session älter als 5 Minuten
+	* @throws KeineSessionException wenn Session nicht vorhanden
+	* @throws NichtVorhandenException wenn es noch keine Schaeden gibt
+	 */
+	public DeleteResponse deleteSchaden(@WebParam(name="Sessionid") int session,@WebParam(name="SchadenId") int SchadenId){
+		
+		DeleteResponse dr = new  DeleteResponse();
+		  	try {
+		  		Session Nsession = getSession(session);
+					this.dao.deleteSchaden(SchadenId);
+			
+				
+				}
+				catch (OnlineIntegrationExceptions e) {
+					dr.setReturnCode(e.getErrorCode());
+					dr.setMessage(e.getMessage());
+				}
+		  	 	
+		  	
+		  	
+		  	
+		  	return dr;
 		
 		}
 }
