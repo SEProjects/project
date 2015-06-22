@@ -454,7 +454,7 @@ public class OnlineIntegration {
 		   		Rechnung rechn = dao.findRechnungbyID(rid);
 				
 					if (rechn != null) {
-						rechn.setAbgerechnet(true);
+						rechn.setBezahlt(true);
 						response.setSuccessful(true);
 						
 					}
