@@ -234,13 +234,14 @@ public class OnlineAdminIntegration {
      */
     public UpdateResponse saveKunde(@WebParam(name="Sessionid") int session,@WebParam(name="Kundeemail") String id,
     		@WebParam(name="kvorname") String kvorname,@WebParam(name="knachname") String knachname,@WebParam(name="fsnummer") String fsnummer,
-    		@WebParam(name="pan") String pan,@WebParam(name="aktive") boolean aktive,@WebParam(name="admin") boolean admin){
+    		@WebParam(name="pan") String pan,@WebParam(name="aktive") boolean aktive,@WebParam(name="admin") boolean admin,@WebParam(name="strasse") String strasse){
     	UpdateResponse ker = new UpdateResponse();
     	try {
     		Session Nsession = getSession(session);
 			Kunde kunde = dao.findKundebyEmail(id);	
 			
 			if (kunde != null) {
+				kunde.setStrasse(strasse);
 				kunde.setEmail(id);
 				kunde.setKvorname(kvorname);
 				kunde.setKnachname(knachname);

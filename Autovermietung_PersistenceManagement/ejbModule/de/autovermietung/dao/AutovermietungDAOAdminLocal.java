@@ -86,25 +86,7 @@ public interface AutovermietungDAOAdminLocal {
      */
     public void deleteSession(Session session);
     
-    /**
-     * erstellt einen neuen Kunden
-     *
-     * @param kvorname Kundenvorname
-     * @param knachname Kundennachname
-     * @param email Kundenemail
-     * @param kpassword Kundenpassword schon gehashed
-     * @param fSnummer Fuehrerscheinnummer
-     * @param pAN Personalausweissnummer
-     * @param strasse strasse
-     * @param sAF the s af
-     * @param fSA FueherscheinArt als Object
-     * @param kplz Kundenplz als PLZ Object
-     * @return Kunde als fertiges object
-     */
-    public Kunde createKunde(String kvorname, String knachname, String email,
-			String kpassword, String fSnummer, String pAN, String strasse,
-			boolean sAF, FSA fSA, PLZ kplz);
-			
+    
   
     
     /**

@@ -89,7 +89,7 @@ public class Kunde implements Serializable {
 	private List<Dreck> dreck;
 
 	/** The fsa. */
-	@ManyToOne(optional=false)
+	@ManyToOne()
 	private FSA fsa;
 	
 	/** The kplz. */
@@ -123,7 +123,7 @@ public class Kunde implements Serializable {
 	 */
 	public Kunde(String email, String kvorname, String knachname,
 			String kpassword, String fsnummer, String pan, String strasse,
-			boolean saf, boolean admin, FSA fsa, PLZ kplz) {
+			 boolean admin, PLZ kplz) {
 		super();
 		this.email = email;
 		this.kvorname = kvorname;
@@ -132,7 +132,7 @@ public class Kunde implements Serializable {
 		this.fsnummer = fsnummer;
 		this.pan = pan;
 		this.strasse = strasse;
-		this.saf = saf;
+	
 		this.admin = admin;
 		this.gemietet = new ArrayList<>();
 		this.rechnungen = new ArrayList<>();
@@ -140,7 +140,7 @@ public class Kunde implements Serializable {
 		this.schaden = new ArrayList<>();
 		this.bewertungen = new ArrayList<>();
 		this.dreck = new ArrayList<>();
-		this.fsa = fsa;
+		
 		this.kplz = kplz;
 		this.link = Integer.toString(this.hashCode());
 	}
@@ -744,4 +744,5 @@ public class Kunde implements Serializable {
 	public void deleteDreck(Dreck dreck){
 		this.dreck.remove(dreck);
 	}
+	
 }

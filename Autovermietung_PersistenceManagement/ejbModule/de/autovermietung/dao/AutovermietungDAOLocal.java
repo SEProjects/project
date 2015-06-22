@@ -10,6 +10,7 @@ import de.autovermietung.entities.Kraftstoff;
 import de.autovermietung.entities.Kunde;
 import de.autovermietung.entities.Marke;
 import de.autovermietung.entities.Mieten;
+import de.autovermietung.entities.PLZ;
 import de.autovermietung.entities.Rechnung;
 import de.autovermietung.entities.Session;
 
@@ -114,5 +115,9 @@ public interface AutovermietungDAOLocal {
     public List<Integer> getAllMietenId();
     
     public Mieten createMieten(double anfangskm, Auto auto, Kunde kunde);
+    public PLZ findPlzByID(String id);
+    public Kunde createKunde(String kvorname, String knachname, String email,
+ 			String kpassword, String fSnummer, String pAN, String strasse,
+ 			  PLZ kplz);
    
 }

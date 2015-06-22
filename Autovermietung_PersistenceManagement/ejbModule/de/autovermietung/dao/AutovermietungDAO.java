@@ -102,11 +102,10 @@ public class AutovermietungDAO implements AutovermietungDAOAdminLocal,Autovermie
      */
     public Kunde createKunde(String kvorname, String knachname, String email,
 			String kpassword, String fSnummer, String pAN, String strasse,
-			boolean sAF, FSA fSA, PLZ kplz)
+			  PLZ kplz)
 			{
     			boolean admin = false;
-    			Kunde newKunde = new Kunde(kvorname,knachname,email,kpassword,fSnummer,pAN, strasse,
-			sAF, admin,fSA,kplz);
+    			Kunde newKunde = new Kunde(kvorname,knachname,email,kpassword,fSnummer,pAN, strasse,admin,kplz);
     			em.persist(newKunde);
     			return newKunde;
 			}
@@ -117,6 +116,8 @@ public class AutovermietungDAO implements AutovermietungDAOAdminLocal,Autovermie
     public Mieten createMieten(double anfangskm,Auto auto, Kunde kunde)
 	{
     	Mieten newmieten = new Mieten(anfangskm,auto,kunde);
+    	auto.addMieten(newmieten);
+    	kunde.addmiete(newmieten);
     	em.persist(newmieten);
     	return newmieten;
 	}
@@ -271,7 +272,7 @@ public class AutovermietungDAO implements AutovermietungDAOAdminLocal,Autovermie
 	 * @see de.autovermietung.dao.AutovermietungDAOAdminLocal#getAllRechnungenposition(int)
 	 */
 	public List<Object[]> getAllRechnungenposition(int id){
-		 List query = em.createQuery("SELECT m.mid, m.anfangskm, m.endkm, m.auto.autoart.beschreibung, m.auto.autoart.pjk, m.diff, m.timestamp FROM mieten m where m.rechnung.rid = '" + id + "'").getResultList();
+		 List query = em.createQuery("SELECT m.mid, m.anfangskm, m.endkm, m.auto.autoart.beschreibung, m.auto.autoart.pjk, m.diff, m.timestamp FROM Mieten m where m.rechnung.rid = '" + id + "'").getResultList();
 	   	 return  query;
 	 
 	}
@@ -280,8 +281,8 @@ public class AutovermietungDAO implements AutovermietungDAOAdminLocal,Autovermie
 	 * @see de.autovermietung.dao.AutovermietungDAOAdminLocal#createAllRechnungen()
 	 */
 	public void createAllRechnungen(){
-		List query = em.createQuery("SELECT m.kunde.email from mieten m where m.endkm is not null and m.abgerechnet = false group by m.kunde.email").getResultList();
-		List query2 = em.createQuery("SELECT m.mid from mieten m where m.endkm is not null and m.abgerechnet = false").getResultList();
+		List query = em.createQuery("SELECT m.kunde.email from Mieten m where m.endkm is not null and m.abgerechnet = false group by m.kunde.email").getResultList();
+		List query2 = em.createQuery("SELECT m.mid from Mieten m where m.endkm is not null and m.abgerechnet = false").getResultList();
 		if(query.isEmpty()){
 			logger.info("keine rechnungen vorhanden");
 		}
@@ -289,7 +290,7 @@ public class AutovermietungDAO implements AutovermietungDAOAdminLocal,Autovermie
 			for(int i=0;i<query.size();i++){
 				logger.info(query.get(i));
 				
-				List query3 = em.createQuery("SELECT m.mid from mieten m where m.endkm is not null and m.abgerechnet = false and m.kunde.email = '" + query.get(i) + "'").getResultList();
+				List query3 = em.createQuery("SELECT m.mid from Mieten m where m.endkm is not null and m.abgerechnet = false and m.kunde.email = '" + query.get(i) + "'").getResultList();
 				BigDecimal summe = new BigDecimal(0);
 				Kunde kunde = em.find(Kunde.class,query.get(i));
 				Rechnung rechnung = new Rechnung(kunde);
@@ -359,6 +360,9 @@ public class AutovermietungDAO implements AutovermietungDAOAdminLocal,Autovermie
 		schaden.getKunde().deleteSchaden(schaden);
 		em.remove(schaden);
 		em.flush();
+	}
+	public PLZ findPlzByID(String id){
+		return em.find(PLZ.class,id);
 	}
 }
 

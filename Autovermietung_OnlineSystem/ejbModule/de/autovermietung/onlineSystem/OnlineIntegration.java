@@ -250,15 +250,7 @@ public class OnlineIntegration {
 			Session sessionid = getSession(sessionId);  
 	    	Autoart autoArt = dao.findAutoartbyID(id);
 	    	if(autoArt != null) {
-	    		aar.setAaid(id);
-	    		aar.setBeschreibung(autoArt.getBeschreibung());
-	    		aar.setKofferraumvolumen(autoArt.getKofferraumvolumen());
-	    		aar.setPjk(autoArt.getPjk());
-	    		aar.setPs(autoArt.getPs());
-	    		aar.setSitzanzahl(autoArt.getSitzanzahl());
-	    		aar.setKs(autoArt.getKs().getKsid());
-	    		aar.setMarke(autoArt.getMarke().getMarkeid());
-	    		aar.setBildlink(autoArt.getBild());
+	    		aar = dto.makeDTO(autoArt);
 	    	}
 		} catch (OnlineIntegrationExceptions e) {
 			aar.setReturnCode(e.getErrorCode());
@@ -296,8 +288,7 @@ public class OnlineIntegration {
 					Auto auto = dao.findAutobyID(autoId);
 					Kunde kunde = dao.findKundebyEmail(kundeEmail);
 			    	Mieten mieten = dao.createMieten(anfangskm, auto, kunde);
-			    	auto.addMieten(mieten);
-			    	kunde.addmiete(mieten);
+			    	
 			    	if (mieten != null) {
 						neu.setSuccessful(true);
 					}
@@ -548,7 +539,7 @@ public class OnlineIntegration {
     		@WebParam(name="Nachname")String knachname,
     		@WebParam(name="Vorname")String kvorname,
     		@WebParam(name="Strasse")String strasse,
-    		@WebParam(name="PLZ")PLZ kplz,
+    		@WebParam(name="PLZ")String kplz,
     		@WebParam(name="fsn")String fsn,
     		@WebParam(name="pan")String pan){
 		EditResponse up = new EditResponse();
@@ -559,15 +550,8 @@ public class OnlineIntegration {
 		   		Kunde k = dao.findKundebyEmail(Email);
 				
 					if (k == null) {
-						k = new Kunde();
-						k.setEmail(Email);
-						k.setKpassword(kpassword);
-						k.setKvorname(kvorname);
-						k.setKnachname(knachname);
-						k.setStrasse(strasse);
-						k.setKplz(kplz);
-						k.setFsnummer(fsn);
-						k.setPan(pan);
+						dao.createKunde(kvorname, knachname, Email, kpassword, fsn, pan, strasse, dao.findPlzByID(kplz));
+					
 						up.setSuccessful(true);
 					}
 					else {
