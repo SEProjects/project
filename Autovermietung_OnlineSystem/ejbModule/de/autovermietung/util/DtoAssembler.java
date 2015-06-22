@@ -43,7 +43,7 @@ public class DtoAssembler {
 		  kr.setStrasse(kunde.getStrasse());
 		
 		  kr.setAdmin(kunde.isAdmin());
-		  kr.setFsaName(kunde.getFsa().getFsaname());
+		  
 		  kr.setPlz(kunde.getKplz().getPlz());
 		  kr.setWohnort(kunde.getKplz().getWohnort());
 		  
