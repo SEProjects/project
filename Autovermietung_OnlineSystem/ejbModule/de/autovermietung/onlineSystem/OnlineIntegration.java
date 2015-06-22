@@ -414,6 +414,9 @@ public class OnlineIntegration {
 		
 		
 	}
+    /*
+     * Aktualisierung der Kunden Daten
+     */
     public EditResponse updateKunde(@WebParam(name="Sessionid") int session,@WebParam(name="email") String Email,
     		@WebParam(name="Passwort") String kpassword,
     		@WebParam(name="Nachname")String knachname,
@@ -449,6 +452,10 @@ public class OnlineIntegration {
 		
 		
 	}
+    
+    /*
+     * Rechnung auf bezahlt setzen
+     */
     public EditResponse rechnungBezahlen(@WebParam(name="Sessionid") int session,@WebParam(name="Rechnungsid") int rid){
     	EditResponse response = new EditResponse();
 		 try {
@@ -474,6 +481,9 @@ public class OnlineIntegration {
 		  return response;
 	
 	}
+    /*
+     * Bezahlmethode hinzufügen
+     */
     public EditResponse addBezahlmethode(@WebParam(name="Sessionid") int session,@WebParam(name="email") String email,
     		@WebParam(name="addBezmeth") Bezahlmethode bezmeth){
 		EditResponse edit = new EditResponse();
@@ -499,6 +509,39 @@ public class OnlineIntegration {
 		
 		
 	}
+    public Kunde showKunde(@WebParam(name="Sessionid") int session, @WebParam(name="email") String Email) throws NichtVorhandenException{
+    	
+    	
+    		Kunde k = dao.findKundebyEmail(Email);
+    		
+    		if(k != null){
+    			k.getEmail();
+    			k.getFsnummer();
+    			k.getBezahlmethoden();
+    			k.getGemietet();
+    			k.getKnachname();
+    			k.getKplz();
+    			k.getKvorname();
+    			k.getPan();
+    			k.getRechnungen();
+    			k.getStrasse();
+    			k.getSchaden();
+    	}
+    		else {
+				
+				throw new NichtVorhandenException("Kunde ist nicht vorhanden");
+			}
+		
+    	
+    	
+    	return k;
+    	
+    	}
+    	
+   
+    /*
+     * register Kunde
+     */
     public EditResponse regisKunde(@WebParam(name="Sessionid") int session,
     		@WebParam(name="email") String Email,
     		@WebParam(name="Passwort") String kpassword,
