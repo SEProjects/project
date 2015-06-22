@@ -140,7 +140,7 @@ public class Kunde implements Serializable {
 		this.schaden = new ArrayList<>();
 		this.bewertungen = new ArrayList<>();
 		this.dreck = new ArrayList<>();
-		
+		this.aktive = true ;
 		this.kplz = kplz;
 		this.link = Integer.toString(this.hashCode());
 	}

@@ -100,9 +100,21 @@ public class OnlineIntegration {
 		try {
 			Kunde kunde = this.dao.findKundebyEmail(email);	
 			
-			if (kunde != null && kunde.getKpassword().equals(password)) {
-				Session session = dao.createSession(kunde);
-				klr.setSession(session.getSid());
+			if (kunde != null && kunde.getKpassword().equals(password) ) {
+				if(kunde.isAktive() == true ){
+					if(kunde.getLink().equals("true")){
+					Session session = dao.createSession(kunde);
+					klr.setSession(session.getSid());
+					}
+					else
+					{
+						throw new InvalidLoginException("Login fehlgeschlagen, da Email noch nicht bestätigt. username=" + email + " " + password);	
+					}
+				}
+				else
+					{
+					throw new InvalidLoginException("Login fehlgeschlagen, da Kunde gesperrt. username=" + email + " " + password);
+					}
 			}
 			else {
 				throw new InvalidLoginException("Login fehlgeschlagen, da Kunde unbekannt oder Passwort falsch. username=" + email + " " + password);

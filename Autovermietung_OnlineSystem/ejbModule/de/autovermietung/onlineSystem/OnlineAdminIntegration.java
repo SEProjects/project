@@ -1214,6 +1214,7 @@ public UpdateResponse saveKS(@WebParam(name="Sessionid") int session,@WebParam(n
 			
 				if (kunde != null) {
 					kunde.setLink("true");
+					
 					ur.setSuccessful(true);
 				}
 				else {
