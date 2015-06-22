@@ -351,16 +351,15 @@ public class OnlineIntegration {
     }
     //TODO erst abgerechnet ohne Rechnung
     public UpdateResponse updateMieten(@WebParam(name="Sessionid")int session, @WebParam(name="Mietenid") int mid, 
-    								   @WebParam(name="Endkilometer") double endKm, @WebParam(name="Differenz") BigDecimal diff,
-    								   @WebParam(name="Abgerechnet") boolean abgerechnet) {
+    								   @WebParam(name="Endkilometer") double endKm) {
     	UpdateResponse uM = new UpdateResponse();
     	try {
     		Session Nsession = getSession(session);
 			Mieten m = dao.findMietenbyID(mid);
 				if (m != null) {
 					m.setEndkm(endKm);
-					m.setDiff(diff);
-					m.setAbgerechnet(abgerechnet);
+					
+				
 					//TODO Rechnungen
 					uM.setSuccessful(true);
 				} else {
