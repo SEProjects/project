@@ -9,6 +9,7 @@ import de.autovermietung.entities.Autoart;
 import de.autovermietung.entities.Kraftstoff;
 import de.autovermietung.entities.Kunde;
 import de.autovermietung.entities.Marke;
+import de.autovermietung.entities.Mieten;
 import de.autovermietung.entities.Rechnung;
 import de.autovermietung.entities.Session;
 
@@ -102,4 +103,16 @@ public interface AutovermietungDAOLocal {
 	 * @return the all autos
 	 */
 	public List<Object[]> getAllAutos();
+	/**
+     * Sucht mieten mit angebener ID
+     *
+     * @param Mid MietenID
+     * @return mieten  or null if not exists
+     */
+    public Mieten findMietenbyID(int Mid);
+    
+    public List<Integer> getAllMietenId();
+    
+    public Mieten createMieten(double anfangskm, Auto auto, Kunde kunde);
+   
 }

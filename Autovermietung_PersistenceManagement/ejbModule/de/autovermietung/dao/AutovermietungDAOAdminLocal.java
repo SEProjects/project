@@ -13,7 +13,7 @@ import de.autovermietung.entities.Marke;
 import de.autovermietung.entities.PLZ;
 import de.autovermietung.entities.Rechnung;
 import de.autovermietung.entities.Session;
-import de.autovermietung.entities.mieten;
+import de.autovermietung.entities.Mieten;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -53,7 +53,7 @@ public interface AutovermietungDAOAdminLocal {
      * @param Mid MietenID
      * @return mieten  or null if not exists
      */
-    public mieten findMietenbyID(int Mid);
+    public Mieten findMietenbyID(int Mid);
     
     /**
      *Sucht Rechnung mit angebener ID

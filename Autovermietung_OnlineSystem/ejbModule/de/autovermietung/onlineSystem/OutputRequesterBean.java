@@ -23,7 +23,7 @@ import org.jboss.logging.Logger;
 import de.autovermietung.dao.Databuilder;
 import de.autovermietung.entities.Kunde;
 import de.autovermietung.entities.Rechnung;
-import de.autovermietung.entities.mieten;
+import de.autovermietung.entities.Mieten;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -68,7 +68,7 @@ public class OutputRequesterBean {
     
     		 String content="<p><b>Rechnung</b><br>Rechnungsnummer:" + r.getRid() + "<br>Datum: " + r.getTimestamp()+ "<br>Firma: Autovermietung GmbH<br>Plz:48153<br>Wohnort:Münster<br>Stra&szlig;e:Scheibenstraße 84</p><p>Kundenname: " + r.getKunde().getKvorname() + " " + r.getKunde().getKnachname() + "<br>Kundenemail: " + r.getKunde().getEmail() + "<br>Plz:" + r.getKunde().getKplz().getPlz() + "<br>Wohnort: " + r.getKunde().getKplz().getWohnort() + "<br>Stra&szlig;e:" + r.getKunde().getStrasse() + "</p><hr style='float:left; width:400px; height:1px; border:1px solid; border-color:#004400;'><br><br>Guten Tag,<br>vielen Dank f&uuml;r die Nutzung unserer Mietautos. <br>Hier die Kostenaufstellung Ihrer Nutzung:<br><table><tr>  <tr>               <th>ID</th>                <th>Anfangskm</th>                <th>Endkm</th>            <th>Diff</th>               <th>Auto</th>                <th>Preis je Km</th>                <th>Datum</th>                   <th>Preis</th>           </tr></tr>";
     		String table ="";
-    		 for(mieten m: r.getRechnungspositionen()){
+    		 for(Mieten m: r.getRechnungspositionen()){
     		 
     		table = table + "<tr><td>" + m.getMid() + "</td><td>"+ m.getAnfangskm() + "</td><td>"+ m.getEndkm() + "</td><td>"+( m.getEndkm()-m.getAnfangskm() )+"</td><td>" + m.getAuto().getAutoart().getBeschreibung() + "</td><td>" + m.getAuto().getAutoart().getPjk() + "</td><td>" + m.getTimestamp() +"</td><td>" + (m.getAuto().getAutoart().getPjk().multiply(new BigDecimal(m.getEndkm()-m.getAnfangskm()))) + "</td></tr>";
     		}

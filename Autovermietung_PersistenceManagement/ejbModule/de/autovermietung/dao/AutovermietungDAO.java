@@ -28,7 +28,7 @@ import de.autovermietung.entities.PLZ;
 import de.autovermietung.entities.Rechnung;
 import de.autovermietung.entities.Schaden;
 import de.autovermietung.entities.Session;
-import de.autovermietung.entities.mieten;
+import de.autovermietung.entities.Mieten;
 
 
 // TODO: Auto-generated Javadoc
@@ -76,9 +76,9 @@ public class AutovermietungDAO implements AutovermietungDAOAdminLocal,Autovermie
     /* (non-Javadoc)
      * @see de.autovermietung.dao.AutovermietungDAOAdminLocal#findMietenbyID(int)
      */
-    public mieten findMietenbyID(int Mid)
+    public Mieten findMietenbyID(int Mid)
     {
-    	return em.find(mieten.class,Mid);
+    	return em.find(Mieten.class,Mid);
     }
     
     /* (non-Javadoc)
@@ -114,11 +114,9 @@ public class AutovermietungDAO implements AutovermietungDAOAdminLocal,Autovermie
     /* (non-Javadoc)
      * @see de.autovermietung.dao.AutovermietungDAOAdminLocal#createMieten(double, de.autovermietung.entities.Auto, de.autovermietung.entities.Kunde)
      */
-    public mieten createMieten(double anfangskm,Auto auto, Kunde kunde)
+    public Mieten createMieten(double anfangskm,Auto auto, Kunde kunde)
 	{
-    	
-    	
-    	mieten newmieten = new mieten(anfangskm,auto,kunde);
+    	Mieten newmieten = new Mieten(anfangskm,auto,kunde);
     	em.persist(newmieten);
     	return newmieten;
 	}
@@ -183,6 +181,11 @@ public class AutovermietungDAO implements AutovermietungDAOAdminLocal,Autovermie
 	   	 return  query;
 	   }
 	
+	public List<Integer> getAllMietenId() {
+		List query = em.createQuery("Select M.mid From Mieten m").getResultList();
+		return query;
+	}
+	
 	/* (non-Javadoc)
 	 * @see de.autovermietung.dao.AutovermietungDAOAdminLocal#getAllMarken()
 	 */
@@ -190,7 +193,7 @@ public class AutovermietungDAO implements AutovermietungDAOAdminLocal,Autovermie
 	   	 List query = em.createQuery("SELECT m.markeid, m.markenname FROM Marke m").getResultList();
 	   	    return  query;
 	 
-	   }
+	}
 	
 	/* (non-Javadoc)
 	 * @see de.autovermietung.dao.AutovermietungDAOAdminLocal#createMarke(java.lang.String)
@@ -295,7 +298,7 @@ public class AutovermietungDAO implements AutovermietungDAOAdminLocal,Autovermie
 				
 
 				
-					mieten miet = em.find(mieten.class,query3.get(j));
+					Mieten miet = em.find(Mieten.class,query3.get(j));
 					rechnung.addRechnungsposition(miet);
 					
 					BigDecimal zsumme = miet.getDiff();

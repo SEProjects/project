@@ -10,9 +10,11 @@ import javax.ejb.Stateless;
 import de.autovermietung.dto.AutoArtResponse;
 import de.autovermietung.dto.AutoResponse;
 import de.autovermietung.dto.KundeResponse;
+import de.autovermietung.dto.MietenResponse;
 import de.autovermietung.entities.Auto;
 import de.autovermietung.entities.Autoart;
 import de.autovermietung.entities.Kunde;
+import de.autovermietung.entities.Mieten;
 
 
 
@@ -44,6 +46,13 @@ public class DtoAssembler {
 		  kr.setFsaName(kunde.getFsa().getFsaname());
 		  kr.setPlz(kunde.getKplz().getPlz());
 		  kr.setWohnort(kunde.getKplz().getWohnort());
+		  
+		  List<Integer> mId = new ArrayList<Integer>();
+		  List<Mieten> mieten = kunde.getGemietet();
+			for(int i = 0; i < mieten.size(); i++) {
+				mId.add(mieten.get(i).getMid());
+			}
+		  kr.setGemietet(mId);
 		  return kr;
 	  }
 	  
@@ -59,6 +68,7 @@ public class DtoAssembler {
 		  autoR.setBez(auto.getBez());
 		  autoR.setPosition(auto.getPosition());
 		  autoR.setAa(auto.getAutoart().getAaid());
+		  
 		  return autoR;
 	  }
 	  
@@ -80,9 +90,19 @@ public class DtoAssembler {
 		  aar.setPjk(aa.getPjk());
 		  aar.setPs(aa.getPs());
 		  aar.setSitzanzahl(aa.getSitzanzahl());
-		  
+		  aar.setBildlink(aa.getBild());
 		  return aar;
 	  }
+  	
+  	public MietenResponse makeDTO(Mieten m) {
+  		MietenResponse mr = new MietenResponse();
+  		mr.setMid(m.getMid());
+		mr.setAnfangskm(m.getAnfangskm());
+		mr.setDiff(m.getDiff());
+		mr.setAutoId(m.getAuto().getAid());
+		mr.setKundeEmail(m.getKunde().getEmail());
+		return mr;
+  	}
 	  
   	/**
   	 * Make dto.
@@ -96,5 +116,13 @@ public class DtoAssembler {
 			  dtoList.add(this.makeDTO(a));
 		  }
 		  return dtoList;
-	  }
+	}
+  	
+  	public List<MietenResponse> makeDto(List<Mieten> mieten) {
+  		ArrayList<MietenResponse> dtoList = new ArrayList<>();
+  		for(Mieten m : mieten) {
+  			dtoList.add(this.makeDTO(m));
+  		}
+  		return dtoList;
+  	}
 }

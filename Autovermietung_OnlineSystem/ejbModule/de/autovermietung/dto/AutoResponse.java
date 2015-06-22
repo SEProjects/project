@@ -1,5 +1,12 @@
 package de.autovermietung.dto;
 
+import java.util.List;
+
+import de.autovermietung.entities.Bewertung;
+import de.autovermietung.entities.Dreck;
+import de.autovermietung.entities.Mieten;
+import de.autovermietung.entities.Schaden;
+
 
 
 // TODO: Auto-generated Javadoc
@@ -24,6 +31,17 @@ public class AutoResponse extends ReturncodeResponse {
 	
 	/** Autoartid. */
 	private int aa;
+	
+	private List<Integer> gemietet;
+	
+	/** Schaden. */
+	private List<Schaden> schaden;
+	
+	/** Bewertungen. */
+	private List<Bewertung> bewertungen;
+	
+	/** Dreck. */
+	private List<Dreck> dreck;
 
 
 	/**
@@ -103,6 +121,38 @@ public class AutoResponse extends ReturncodeResponse {
 	 */
 	public void setAa(int aa) {
 		this.aa = aa;
+	}
+
+	public List<Integer> getGemietet() {
+		return gemietet;
+	}
+
+	public void setGemietet(List<Integer> gemietet) {
+		this.gemietet = gemietet;
+	}
+
+	public List<Schaden> getSchaden() {
+		return schaden;
+	}
+
+	public void setSchaden(List<Schaden> schaden) {
+		this.schaden = schaden;
+	}
+
+	public List<Bewertung> getBewertungen() {
+		return bewertungen;
+	}
+
+	public void setBewertungen(List<Bewertung> bewertungen) {
+		this.bewertungen = bewertungen;
+	}
+
+	public List<Dreck> getDreck() {
+		return dreck;
+	}
+
+	public void setDreck(List<Dreck> dreck) {
+		this.dreck = dreck;
 	}
 	
 }

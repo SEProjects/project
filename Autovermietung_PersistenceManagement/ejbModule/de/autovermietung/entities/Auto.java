@@ -46,7 +46,7 @@ public class Auto implements Serializable {
 	
 	/** Gemietet. */
 	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, mappedBy="auto") 
-	private List<mieten> gemietet;
+	private List<Mieten> gemietet;
 	
 	/** Schaden. */
 	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, mappedBy="auto") 
@@ -92,7 +92,7 @@ public class Auto implements Serializable {
 	 *
 	 * @param miet mieten object
 	 */
-	public void addMieten(mieten miet){
+	public void addMieten(Mieten miet){
 		gemietet.add(miet);
 	}
 	
@@ -262,7 +262,7 @@ public class Auto implements Serializable {
 	 *
 	 * @param gemietet the new gemietet
 	 */
-	public void setGemietet(List<mieten> gemietet) {
+	public void setGemietet(List<Mieten> gemietet) {
 		this.gemietet = gemietet;
 	}
 
@@ -272,7 +272,7 @@ public class Auto implements Serializable {
 	 *
 	 * @return the gemietet
 	 */
-	public List<mieten> getGemietet() {
+	public List<Mieten> getGemietet() {
 		return gemietet;
 	}
 	public void deleteSchaden(Schaden schaden){

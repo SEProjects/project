@@ -20,7 +20,7 @@ import de.autovermietung.entities.Kunde;
 import de.autovermietung.entities.Marke;
 import de.autovermietung.entities.PLZ;
 import de.autovermietung.entities.Schaden;
-import de.autovermietung.entities.mieten;
+import de.autovermietung.entities.Mieten;
 
 
 
@@ -127,11 +127,11 @@ public class Databuilder {
 				ks.addAutoart(autoart);
 				autoart.addAuto(auto21);
 				em.persist(auto21);
-				mieten m = em.find(mieten.class, 1);
+				Mieten m = em.find(Mieten.class, 1);
 				if (m== null) {
 					Kunde customer11 = em.find(Kunde.class, "Kevin@web.de");
 					
-					mieten m1 = new mieten(2000,auto21,customer11);
+					Mieten m1 = new Mieten(2000,auto21,customer11);
 					m1.setEndkm(2500);
 					em.persist(m1);
 				
@@ -140,12 +140,13 @@ public class Databuilder {
 				}
 				Kunde customer11 = em.find(Kunde.class, "Kevin@web.de");
 				
-				mieten m1 = new mieten(2000,auto21,customer11);
+				Mieten m1 = new Mieten(2000,auto21,customer11);
 				m1.setEndkm(2500);
+				m1.setAbgerechnet(true);
 				em.persist(m1);
 				Kunde customer13 = em.find(Kunde.class, "test@web.de");
 				
-				mieten m11 = new mieten(2000,auto21,customer13);
+				Mieten m11 = new Mieten(2000,auto21,customer13);
 				m11.setEndkm(2500);
 				em.persist(m11);
 				Schaden schaden = new Schaden(customer11,auto21,"Licht vorne Rechts defekt");

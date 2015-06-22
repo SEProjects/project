@@ -17,7 +17,7 @@ import javax.persistence.TemporalType;
  * The Class mieten.
  */
 @Entity
-public class mieten implements Serializable{
+public class Mieten implements Serializable{
 	
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
@@ -41,10 +41,6 @@ public class mieten implements Serializable{
 	/** The kunde. */
 	@ManyToOne(optional=false)
 	private Kunde kunde;
-
-
-
-
 
 	/** The rechnung. */
 	@ManyToOne()
@@ -110,7 +106,7 @@ public class mieten implements Serializable{
 	/**
 	 * Instantiates a new mieten.
 	 */
-	public mieten(){
+	public Mieten(){
 		
 	}
 
@@ -123,14 +119,11 @@ public class mieten implements Serializable{
 	 * @param auto the auto
 	 * @param kunde the kunde
 	 */
-	public mieten(double anfangskm, Auto auto, Kunde kunde) {
+	public Mieten(double anfangskm, Auto auto, Kunde kunde) {
 		super();
 		this.anfangskm = anfangskm;
-	
 		this.auto = auto;
 		this.kunde = kunde;
-	
-		
 	}
 
 

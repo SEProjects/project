@@ -1,5 +1,6 @@
 package de.autovermietung.onlineSystem;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -24,17 +25,23 @@ import de.autovermietung.dto.KSResponse;
 import de.autovermietung.dto.KundeResponse;
 import de.autovermietung.dto.KundenLoginResponse;
 import de.autovermietung.dto.MarkeResponse;
+import de.autovermietung.dto.MietenListResponse;
+import de.autovermietung.dto.MietenResponse;
 import de.autovermietung.dto.RechnungsResponse;
 import de.autovermietung.dto.ReturncodeResponse;
+import de.autovermietung.dto.UpdateResponse;
+import de.autovermietung.dto.neuerEintragResponse;
 import de.autovermietung.entities.Auto;
 import de.autovermietung.entities.Autoart;
 import de.autovermietung.entities.Bezahlmethode;
 import de.autovermietung.entities.Kraftstoff;
 import de.autovermietung.entities.Kunde;
 import de.autovermietung.entities.Marke;	    		
+import de.autovermietung.entities.Mieten;
 import de.autovermietung.entities.PLZ;
 import de.autovermietung.entities.Rechnung;
 import de.autovermietung.entities.Session;
+import de.autovermietung.exceptions.InsertException;
 import de.autovermietung.exceptions.InvalidLoginException;
 import de.autovermietung.exceptions.KeineSessionException;
 import de.autovermietung.exceptions.KundeNichtVorhandenException;
@@ -163,6 +170,15 @@ public class OnlineIntegration {
 				ar.setBez(auto.getBez());
 				ar.setAa(auto.getAutoart().getAaid());
 				ar.setPosition(auto.getPosition());
+				List<Integer> mId = dao.getAllMietenId();
+				List<Integer> mieten = new ArrayList<Integer>();
+				for(int i = 0; i < mId.size(); i++) {
+					Mieten m = dao.findMietenbyID(mId.get(i));
+					if(m != null)
+						mieten.add(m.getMid());
+				}
+				ar.setGemietet(mieten);
+				//TODO DRECK und SCHADEN
 			} else {						
 				throw new NichtVorhandenException("Auto ist nicht vorhanden");
 			}
@@ -270,6 +286,103 @@ public class OnlineIntegration {
 			   
 		return aar;
 	}
+    
+    public neuerEintragResponse saveMieten(@WebParam(name="Sessionid")int session, @WebParam(name="Anfangskm") double anfangskm,
+    									   @WebParam(name="Autoid")int autoId, @WebParam(name="Kundeemail")String kundeEmail) {
+    	neuerEintragResponse neu = new neuerEintragResponse();
+    	try {
+    		Session Nsession = getSession(session);
+				if (dao.findAutobyID(autoId) != null && dao.findKundebyEmail(kundeEmail) != null) {
+					Auto auto = dao.findAutobyID(autoId);
+					Kunde kunde = dao.findKundebyEmail(kundeEmail);
+			    	Mieten mieten = dao.createMieten(anfangskm, auto, kunde);
+			    	auto.addMieten(mieten);
+			    	kunde.addmiete(mieten);
+			    	if (mieten != null) {
+						neu.setSuccessful(true);
+					}
+					else {
+						neu.setSuccessful(false);
+						throw new InsertException("Einfügen des Mieten ist fehlgeschlagen");
+					}
+				} else {
+					throw new NichtVorhandenException("Kunde oder Auto nicht vorhanden");
+				}
+		} catch (OnlineIntegrationExceptions e) {
+			neu.setReturnCode(e.getErrorCode());
+			neu.setMessage(e.getMessage());
+			neu.setSuccessful(false);
+		}
+    	return neu;
+    }
+    
+    public MietenResponse getMieten(@WebParam(name="Sessionid")int session, @WebParam(name="Mietenid") int mid) {
+    	MietenResponse mr = new MietenResponse();
+    	try {
+    		Session Nsession = getSession(session);
+			Mieten m = dao.findMietenbyID(mid);
+				if (m != null) {
+					mr.setMid(mid);
+					mr.setAnfangskm(m.getAnfangskm());
+					mr.setEndkm(m.getEndkm());
+					mr.setDiff(m.getDiff());
+					mr.setAutoId(m.getAuto().getAid());
+					mr.setKundeEmail(m.getKunde().getEmail());
+					mr.setTimestamp(m.getTimestamp().toString());
+					//TODO Rechnungen
+				} else {
+					throw new NichtVorhandenException("Die Miete ist nicht vorhanden");
+				}
+		} catch (OnlineIntegrationExceptions e) {
+			mr.setReturnCode(e.getErrorCode());
+			mr.setMessage(e.getMessage());
+		}
+    	return mr;
+    }
+    public MietenListResponse getAllMieten(@WebParam(name="Sessionid") int session){	
+    	MietenListResponse aar = new MietenListResponse();
+    	try {
+    		Session sessionId = getSession(session);
+    		//logger.info("Test" + dao.getAllAutos().get(0).getClass().getName());
+    		List<Integer> mId = dao.getAllMietenId();
+    		List<Mieten> mietenList = new ArrayList<>();
+    		for(int i = 0; i < mId.size(); i++) {
+    			Mieten mieten = dao.findMietenbyID(mId.get(i));
+    			mietenList.add(mieten);
+    		}
+    		aar.setMietenList(dto.makeDto(mietenList));
+		} catch (OnlineIntegrationExceptions e) {
+			//logger.info("Test" + dao.getAllAutos().get(0).getClass().getName());
+			aar.setReturnCode(e.getErrorCode());
+			aar.setMessage(e.getMessage());
+		}
+    	return aar;
+    }
+    //TODO erst abgerechnet ohne Rechnung
+    public UpdateResponse updateMieten(@WebParam(name="Sessionid")int session, @WebParam(name="Mietenid") int mid, 
+    								   @WebParam(name="Endkilometer") double endKm, @WebParam(name="Differenz") BigDecimal diff,
+    								   @WebParam(name="Abgerechnet") boolean abgerechnet) {
+    	UpdateResponse uM = new UpdateResponse();
+    	try {
+    		Session Nsession = getSession(session);
+			Mieten m = dao.findMietenbyID(mid);
+				if (m != null) {
+					m.setEndkm(endKm);
+					m.setDiff(diff);
+					m.setAbgerechnet(abgerechnet);
+					//TODO Rechnungen
+					uM.setSuccessful(true);
+				} else {
+					throw new NichtVorhandenException("Die Miete ist nicht vorhanden");
+				}
+			}
+			catch (OnlineIntegrationExceptions e) {
+				uM.setReturnCode(e.getErrorCode());
+				uM.setMessage(e.getMessage());
+				uM.setSuccessful(false);
+			}
+    	return uM;
+    }
     
     public RechnungsResponse rechnung(@WebParam(name="Sessionid") int session,@WebParam(name="Rechnungsid") int rid){
 		RechnungsResponse rechung = new RechnungsResponse();

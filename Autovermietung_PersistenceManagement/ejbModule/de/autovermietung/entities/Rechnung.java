@@ -55,7 +55,7 @@ public class Rechnung implements Serializable{
 	
 	/** The rechnungspositionen. */
 	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, mappedBy="rechnung") 
-	private List<mieten> rechnungspositionen;
+	private List<Mieten> rechnungspositionen;
 	
 	/** The bezahlmethode. */
 	@ManyToOne
@@ -178,7 +178,7 @@ public class Rechnung implements Serializable{
 	 *
 	 * @param miet the miet
 	 */
-	public void addRechnungsposition(mieten miet){
+	public void addRechnungsposition(Mieten miet){
 		rechnungspositionen.add(miet);
 	}
 
@@ -227,7 +227,7 @@ public class Rechnung implements Serializable{
 	 *
 	 * @return the rechnungspositionen
 	 */
-	public List<mieten> getRechnungspositionen() {
+	public List<Mieten> getRechnungspositionen() {
 		return rechnungspositionen;
 	}
 
@@ -237,7 +237,7 @@ public class Rechnung implements Serializable{
 	 *
 	 * @param rechnungspositionen the new rechnungspositionen
 	 */
-	public void setRechnungspositionen(List<mieten> rechnungspositionen) {
+	public void setRechnungspositionen(List<Mieten> rechnungspositionen) {
 		this.rechnungspositionen =  rechnungspositionen;
 	}
 

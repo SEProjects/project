@@ -3,7 +3,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import de.autovermietung.entities.Kunde;
-import de.autovermietung.entities.mieten;
+import de.autovermietung.entities.Mieten;
 // TODO: Auto-generated Javadoc
 
 /**
@@ -27,7 +27,7 @@ private Date timestamp;
 private BigDecimal mwst;
 
 /** The rechnungspositionen. */
-private List<mieten> rechnungspositionen;
+private List<Mieten> rechnungspositionen;
 
 /** The kunde. */
 private Kunde kunde;
@@ -112,7 +112,7 @@ this.mwst = mwst;
  *
  * @return the rechnungspositionen
  */
-public List<mieten> getRechnungspositionen() {
+public List<Mieten> getRechnungspositionen() {
 return rechnungspositionen;
 }
 
@@ -121,7 +121,7 @@ return rechnungspositionen;
  *
  * @param rechnungspositionen the new rechnungspositionen
  */
-public void setRechnungspositionen(List<mieten> rechnungspositionen) {
+public void setRechnungspositionen(List<Mieten> rechnungspositionen) {
 this.rechnungspositionen = rechnungspositionen;
 }
 

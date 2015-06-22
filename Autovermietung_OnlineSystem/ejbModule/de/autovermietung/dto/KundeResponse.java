@@ -1,5 +1,8 @@
 package de.autovermietung.dto;
 
+
+import java.util.List;
+
 import de.autovermietung.entities.FSA;
 import de.autovermietung.entities.PLZ;
 
@@ -46,6 +49,8 @@ public class KundeResponse extends ReturncodeResponse {
 	
 	/** Wohnort. */
 	private String wohnort;
+	
+	private List<Integer> gemietet;
 
 	/**
 	 * Instantiates a new kunde response.
@@ -229,5 +234,19 @@ public class KundeResponse extends ReturncodeResponse {
 
 	public void setAktive(boolean aktive) {
 		this.aktive = aktive;
+	}
+
+	/**
+	 * @return the gemietet
+	 */
+	public List<Integer> getGemietet() {
+		return gemietet;
+	}
+
+	/**
+	 * @param gemietet the gemietet to set
+	 */
+	public void setGemietet(List<Integer> gemietet) {
+		this.gemietet = gemietet;
 	}
 }

@@ -66,7 +66,7 @@ public class Kunde implements Serializable {
 	
 	/** The gemietet. */
 	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, mappedBy="kunde") @MapKey
-	private List<mieten> gemietet;
+	private List<Mieten> gemietet;
 	
 	/** The rechnungen. */
 	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, mappedBy="kunde") @MapKey
@@ -499,7 +499,7 @@ public class Kunde implements Serializable {
 	 *
 	 * @return the gemietet
 	 */
-	public List<mieten> getGemietet() {
+	public List<Mieten> getGemietet() {
 		return gemietet;
 	}
 
@@ -509,7 +509,7 @@ public class Kunde implements Serializable {
 	 *
 	 * @param gemietet the new gemietet
 	 */
-	public void setGemietet(List<mieten> gemietet) {
+	public void setGemietet(List<Mieten> gemietet) {
 		this.gemietet = gemietet;
 	}
 
@@ -666,7 +666,7 @@ public class Kunde implements Serializable {
 	 *
 	 * @param miet the miet
 	 */
-	public void addmiete(mieten miet) {
+	public void addmiete(Mieten miet) {
 		gemietet.add(miet);
 	}
 	
