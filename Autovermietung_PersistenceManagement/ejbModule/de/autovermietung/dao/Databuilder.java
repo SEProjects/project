@@ -62,6 +62,7 @@ public class Databuilder {
 				Kunde newKunde = new Kunde("Kevin@web.de","asfd","asdf","1234","asds","asdf","asdf",true,kplz);
 				newFSA.addKunde(newKunde);
 				kplz.addKunde(newKunde);
+				newKunde.setLink("true");
 				em.persist(newKunde);
 				Kunde customer3 = em.find(Kunde.class, "test@web.de");
 				logger.info(newKunde);
@@ -70,6 +71,7 @@ public class Databuilder {
 					Kunde newKunde2 = new Kunde("test@web.de","asss","asss","1234","asdsaa","avs","aaf",true,kplz);
 					newFSA.addKunde(newKunde2);
 					kplz.addKunde(newKunde2);
+					newKunde2.setLink("true");
 					em.persist(newKunde2);
 					logger.info(newKunde2);
 				
@@ -92,6 +94,7 @@ public class Databuilder {
 				Kunde newKunde = new Kunde("Kevin@web.de","asfd","asdf","1234","asds","asdf","asdf",true,kplz);
 				newFSA.addKunde(newKunde);
 				kplz.addKunde(newKunde);
+				newKunde.setLink("true");
 				em.persist(newKunde);
 				Kunde customer3 = em.find(Kunde.class, "test@web.de");
 				if (customer3 == null) {
@@ -99,6 +102,7 @@ public class Databuilder {
 					Kunde newKunde2 = new Kunde("test@web.de","asss","asss","1234","asdsaa","avs","aaf",true,kplz);
 					newFSA.addKunde(newKunde2);
 					kplz.addKunde(newKunde2);
+					newKunde2.setLink("true");
 					em.persist(newKunde2);
 				
 				}
