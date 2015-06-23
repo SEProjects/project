@@ -3,6 +3,7 @@ package de.autovermietung.onlineSystem;
 
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -98,7 +99,7 @@ public class OnlineAdminIntegration {
 		try {
 			Kunde kunde = this.dao.findKundebyEmail(email);	
 			
-			if (kunde != null && kunde.getKpassword().equals(password)) {
+			if (kunde != null && kunde.getKpassword().equals(password) && kunde.isAdmin()) {
 				Session session = dao.createSession(kunde);
 				klr.setSession(session.getSid());
 				
@@ -126,7 +127,7 @@ public class OnlineAdminIntegration {
     */
    private Session getSession(int Id) throws SessionabgelaufenException, KeineSessionException{
 	   Session session = dao.findSessionbyId(Id);
-	   if(session == null )
+	   if(session == null || session.getKunde().isAdmin() == false)
 		   throw new KeineSessionException("Bitte loggen Sie sich zuerst ein.");
 	   else
 	   {
@@ -1014,7 +1015,12 @@ public UpdateResponse saveKS(@WebParam(name="Sessionid") int session,@WebParam(n
 	 		
 				
 	 		 
-	 			dao.createAllRechnungen();
+	 			ArrayList<Rechnung> rechnungen=dao.createAllRechnungen();
+	 			if(rechnungen.isEmpty()==false){
+	 				for(int i=0; i< rechnungen.size();i++)
+	 				outputRequester.sendMessage(rechnungen.get(i));
+	 			}
+	 				
 	 			ner.setSuccessful(true);
 				
 			}
@@ -1143,7 +1149,7 @@ public UpdateResponse saveKS(@WebParam(name="Sessionid") int session,@WebParam(n
 			   			ur.setSuccessful(true);
 			   			logger.info("!");
 			   			outputRequester.sendMessage(rechnung);
-			   			outputRequester.sendMessage(Nsession.getKunde());
+			   			
 			   			
 			   				
 			   			}

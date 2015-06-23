@@ -63,6 +63,9 @@ public class OnlineIntegration {
 	private WebServiceContext wsContext;
 	@EJB
 	private DtoAssembler dto;
+	/** Laden der MessageDrivenBean Insert Klasse. */
+	@EJB
+	private OutputRequesterBean outputRequester;
 	private static final Logger logger = Logger.getLogger(Databuilder.class);
     /**
      * Default constructor. 
@@ -566,7 +569,7 @@ public class OnlineIntegration {
 		   		Kunde k = dao.findKundebyEmail(Email);
 				
 					if (k == null) {
-						dao.createKunde(kvorname, knachname, Email, kpassword, fsn, pan, strasse, dao.findPlzByID(kplz));
+						outputRequester.sendMessage(dao.createKunde(kvorname, knachname, Email, kpassword, fsn, pan, strasse, dao.findPlzByID(kplz)));
 					
 						up.setSuccessful(true);
 					}

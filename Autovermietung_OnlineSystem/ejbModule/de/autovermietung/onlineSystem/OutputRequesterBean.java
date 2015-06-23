@@ -95,8 +95,8 @@ public class OutputRequesterBean {
     public void sendMessage(Kunde k){
     	try{
     
-    		
-    		String content = "Hallo " + k.getKvorname() + " " +k.getKnachname() +  ",<br>Danke das du dich bei  unsere Autovermietung registiert hast.<br>Bitte best&auml;tige deine Email unter folgendem Link:<br> <a href='http://localhost:3000/users/hash/"+ k.getLink() +"'>KlickMich!!</a> <br>Solltest du dich nicht bei uns registiert haben, kannst du diese Email ignorieren.<br>Bei weiteren Fragen kannst du mich gerne unter folgender Email Kontaktieren:<br> <a href='mailto:Kevin.haase.kh@googlemail.com'>Kevin.haase.kh@googlemail.com</a><br>Mit freundlichen Grü&szlig;en<br>Kevin Haase";
+    		String url="http://localhost:3000";
+    		String content = "Hallo " + k.getKvorname() + " " +k.getKnachname() +  ",<br>Danke das du dich bei  unsere Autovermietung registiert hast.<br>Bitte best&auml;tige deine Email unter folgendem Link:<br> <a href='" + url + "/users/hash/"+ k.getLink() +"'>KlickMich!!</a> <br>Solltest du dich nicht bei uns registiert haben, kannst du diese Email ignorieren.<br>Bei weiteren Fragen kannst du mich gerne unter folgender Email Kontaktieren:<br> <a href='mailto:Kevin.haase.kh@googlemail.com'>Kevin.haase.kh@googlemail.com</a><br>Mit freundlichen Grü&szlig;en<br>Kevin Haase";
     		JMSContext context = jmsFactory.createContext(JMSContext.AUTO_ACKNOWLEDGE);
     		TextMessage message = context.createTextMessage();
     		

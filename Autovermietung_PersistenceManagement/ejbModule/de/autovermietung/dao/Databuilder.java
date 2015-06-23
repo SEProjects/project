@@ -18,9 +18,10 @@ import de.autovermietung.entities.FSA;
 import de.autovermietung.entities.Kraftstoff;
 import de.autovermietung.entities.Kunde;
 import de.autovermietung.entities.Marke;
-import de.autovermietung.entities.PLZ;
-import de.autovermietung.entities.Schaden;
 import de.autovermietung.entities.Mieten;
+import de.autovermietung.entities.PLZ;
+import de.autovermietung.entities.Rechnung;
+import de.autovermietung.entities.Schaden;
 
 
 
@@ -68,7 +69,7 @@ public class Databuilder {
 				logger.info(newKunde);
 				if (customer3 == null) {
 					
-					Kunde newKunde2 = new Kunde("test@web.de","asss","asss","1234","asdsaa","avs","aaf",true,kplz);
+					Kunde newKunde2 = new Kunde("test@web.de","asss","asss","1234","asdsaa","avs","aaf",false,kplz);
 					newFSA.addKunde(newKunde2);
 					kplz.addKunde(newKunde2);
 					newKunde2.setLink("true");
@@ -79,40 +80,11 @@ public class Databuilder {
 						
 				
 					
-				
-				}
-
-			Kunde customer2 = em.find(Kunde.class, "test@web.de");
-			if (customer2 == null) {
-				boolean admin = false;
-				PLZ kplz = new PLZ("48153","Münster");
-				em.persist(kplz);
-				logger.info(kplz);
-				FSA newFSA = new FSA("LKW");
-				em.persist(newFSA);
-				logger.info(newFSA);
-				Kunde newKunde = new Kunde("Kevin@web.de","asfd","asdf","1234","asds","asdf","asdf",true,kplz);
-				newFSA.addKunde(newKunde);
-				kplz.addKunde(newKunde);
-				newKunde.setLink("true");
-				em.persist(newKunde);
-				Kunde customer3 = em.find(Kunde.class, "test@web.de");
-				if (customer3 == null) {
-					
-					Kunde newKunde2 = new Kunde("test@web.de","asss","asss","1234","asdsaa","avs","aaf",true,kplz);
-					newFSA.addKunde(newKunde2);
-					kplz.addKunde(newKunde2);
-					newKunde2.setLink("true");
-					em.persist(newKunde2);
+		
 				
 				}
 			
-				
-					
-				
-				}
-			Auto auto = em.find(Auto.class, 1);
-			if (auto == null) {
+			
 				Marke marke = new Marke("VW");
 				em.persist(marke);
 				Kraftstoff ks = new Kraftstoff("Diesel");
@@ -121,12 +93,12 @@ public class Databuilder {
 				Autoart autoart = new Autoart("VW Kombi", 90, 4,60,9.8,pjk,ks,marke);
 				autoart.setBild("");
 					em.persist(autoart);
-				Auto auto2 = new Auto("51.955206, 7.627572","Auto2",autoart);
+				Auto auto2 = new Auto("51.955206, 7.627572","VW2",autoart);
 				marke.addAutoart(autoart);
 				ks.addAutoart(autoart);
 				autoart.addAuto(auto2);
 				em.persist(auto2);
-				Auto auto21 = new Auto("51.967517, 7.602504","Auto2",autoart);
+				Auto auto21 = new Auto("51.967517, 7.602504","VW1",autoart);
 				marke.addAutoart(autoart);
 				ks.addAutoart(autoart);
 				autoart.addAuto(auto21);
@@ -156,13 +128,47 @@ public class Databuilder {
 				em.persist(schaden);
 				Dreck dreck = new Dreck(customer11,auto21);
 				em.persist(dreck);
-			
+				Rechnung rechnung = new Rechnung(customer11);
+				rechnung.addRechnungsposition(m1);
+				rechnung.setVorpreis(m1.getAuto().getAutoart().getPjk().multiply(m1.getDiff()));
+				rechnung.setRabatt(new BigDecimal(0));
+				m1.setRechnung(rechnung);
+				m1.setAbgerechnet(true);
+				rechnung.setBezahlt(true);
+				em.persist(rechnung);
+				if(em.find(PLZ.class, "48143") == null ){
+				PLZ plz = new PLZ("48143","Münster");
+				em.persist(plz);
 				
+				plz = new PLZ("48145","Münster");
+				em.persist(plz);
+				plz = new PLZ("48147","Münster");
+				em.persist(plz);
+				plz = new PLZ("48149","Münster");
+				em.persist(plz);
+				plz = new PLZ("48151","Münster");
+				em.persist(plz);
+			
+				plz = new PLZ("48155","Münster");
+				em.persist(plz);
+				plz = new PLZ("48157","Münster");
+				em.persist(plz);
+				plz = new PLZ("48159","Münster");
+				em.persist(plz);
+				plz = new PLZ("48161","Münster");
+				em.persist(plz);
+				plz = new PLZ("48163","Münster");
+				em.persist(plz);
+				plz = new PLZ("48165","Münster");
+				em.persist(plz);
+				plz = new PLZ("48167","Münster");
+				em.persist(plz);
+				
+				}
 			
 			}
-		
 	
-		}
+		
 
 	
 		
