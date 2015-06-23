@@ -300,7 +300,6 @@ public class OnlineIntegration {
 					Auto auto = dao.findAutobyID(autoId);
 					Kunde kunde = dao.findKundebyEmail(kundeEmail);
 			    	Mieten mieten = dao.createMieten(anfangskm, auto, kunde);
-			    	
 			    	if (mieten != null) {
 						neu.setSuccessful(true);
 					}
@@ -419,27 +418,34 @@ public class OnlineIntegration {
     /*
      * Aktualisierung der Kunden Daten
      */
-    public EditResponse updateKunde(@WebParam(name="Sessionid") int session,@WebParam(name="email") String Email,
-    		@WebParam(name="Passwort") String kpassword,
+    public EditResponse updateKunde(@WebParam(name="Sessionid") int session,@WebParam(name="email") String email,
+    		@WebParam(name="Password") String kpassword,
     		@WebParam(name="Nachname")String knachname,
+    		@WebParam(name="Vorname")String kvorname,
     		@WebParam(name="Strasse")String strasse,
-    		@WebParam(name="PLZ")PLZ plz){
+    		@WebParam(name="PLZ")String plz,
+    		@WebParam(name="Fsnummer")String fsnummer,
+    		@WebParam(name="Pan")String pan){
 		EditResponse up = new EditResponse();
 		
 		 try {
 			 Session Nsession = getSession(session);
 		   		
-		   		Kunde k = dao.findKundebyEmail(Email);
+		   		Kunde k = dao.findKundebyEmail(email);
 				
 					if (k != null) {
+						k.setEmail(email);
 						k.setKpassword(kpassword);
 						k.setKnachname(knachname);
+						k.setKvorname(kvorname);
 						k.setStrasse(strasse);
-						k.setKplz(plz);
+						k.setKplz(dao.findPlzByID(plz));
+						k.setFsnummer(fsnummer);
+						k.setPan(pan);
+						
 						up.setSuccessful(true);
 					}
 					else {
-						
 						throw new NichtVorhandenException("Kunde ist nicht vorhanden");
 					}
 				}
@@ -544,19 +550,18 @@ public class OnlineIntegration {
     /*
      * register Kunde
      */
-    public EditResponse regisKunde(@WebParam(name="Sessionid") int session,
+    public neuerEintragResponse regisKunde(@WebParam(name="Sessionid") int session,
     		@WebParam(name="email") String Email,
-    		@WebParam(name="Passwort") String kpassword,
+    		@WebParam(name="Password") String kpassword,
     		@WebParam(name="Nachname")String knachname,
     		@WebParam(name="Vorname")String kvorname,
     		@WebParam(name="Strasse")String strasse,
     		@WebParam(name="PLZ")String kplz,
     		@WebParam(name="fsn")String fsn,
     		@WebParam(name="pan")String pan){
-		EditResponse up = new EditResponse();
+		neuerEintragResponse up = new neuerEintragResponse();
 		
 		 try {
-			 Session Nsession = getSession(session);
 		   		
 		   		Kunde k = dao.findKundebyEmail(Email);
 				

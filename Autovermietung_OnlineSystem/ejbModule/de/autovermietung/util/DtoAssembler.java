@@ -101,6 +101,7 @@ public class DtoAssembler {
 		mr.setDiff(m.getDiff());
 		mr.setAutoId(m.getAuto().getAid());
 		mr.setKundeEmail(m.getKunde().getEmail());
+		mr.setEndkm(m.getEndkm());
 		return mr;
   	}
 	  
