@@ -1,6 +1,7 @@
 package de.autovermietung.dao;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -280,8 +281,10 @@ public class AutovermietungDAO implements AutovermietungDAOAdminLocal,Autovermie
 	/* (non-Javadoc)
 	 * @see de.autovermietung.dao.AutovermietungDAOAdminLocal#createAllRechnungen()
 	 */
-	public void createAllRechnungen(){
+	public ArrayList<Rechnung> createAllRechnungen(){
 		List query = em.createQuery("SELECT m.kunde.email from Mieten m where m.endkm is not null and m.abgerechnet = false group by m.kunde.email").getResultList();
+		ArrayList<Rechnung> rechnungen = new ArrayList<>();
+	
 		List query2 = em.createQuery("SELECT m.mid from Mieten m where m.endkm is not null and m.abgerechnet = false").getResultList();
 		if(query.isEmpty()){
 			logger.info("keine rechnungen vorhanden");
@@ -319,12 +322,13 @@ public class AutovermietungDAO implements AutovermietungDAOAdminLocal,Autovermie
 				mwst.multiply(new BigDecimal(0.19));
 				rechnung.setMwst(mwst);
 				em.persist(rechnung);
-				
+				rechnungen.add(rechnung);
 				logger.info(rechnung.getGesamtpreis());
 				
 			}
 			
 		}
+		return rechnungen;
 	}
 	public Kunde getKundeByHash(String Hash){
 		logger.info(Hash);

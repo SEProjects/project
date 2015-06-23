@@ -1,4 +1,5 @@
 package de.autovermietung.dao;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.ejb.Local;
@@ -190,7 +191,7 @@ public interface AutovermietungDAOAdminLocal {
 	/**
 	 * erzeugt alle Rechnungen mit einem Algorithmus.
 	 */
-	public void createAllRechnungen();
+	public ArrayList<Rechnung> createAllRechnungen();
 	
 	/**
 	 * Liefert alle Rechnungenposition der angebenen Rechnungsid.
