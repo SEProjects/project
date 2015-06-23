@@ -360,6 +360,49 @@ public class OnlineIntegration {
 		}
     	return aar;
     }
+    
+    public MietenListResponse getAllMietenAid(@WebParam(name="Sessionid") int session, @WebParam(name="Aid") int aid){	
+    	MietenListResponse aar = new MietenListResponse();
+    	try {
+    		Session sessionId = getSession(session);
+    		//logger.info("Test" + dao.getAllAutos().get(0).getClass().getName());
+    		List<Integer> mId = dao.getAllMietenId();
+    		List<Mieten> mietenList = new ArrayList<>();
+    		for(int i = 0; i < mId.size(); i++) {
+    			Mieten mieten = dao.findMietenbyID(mId.get(i));
+    			if(mieten.getAuto().getAid() == aid)
+    				mietenList.add(mieten);
+    		}
+    		aar.setMietenList(dto.makeDto(mietenList));
+		} catch (OnlineIntegrationExceptions e) {
+			//logger.info("Test" + dao.getAllAutos().get(0).getClass().getName());
+			aar.setReturnCode(e.getErrorCode());
+			aar.setMessage(e.getMessage());
+		}
+    	return aar;
+    }
+    
+    public MietenListResponse getAllMietenKEmail(@WebParam(name="Sessionid") int session, @WebParam(name="Kemail") String email){	
+    	MietenListResponse aar = new MietenListResponse();
+    	try {
+    		Session sessionId = getSession(session);
+    		//logger.info("Test" + dao.getAllAutos().get(0).getClass().getName());
+    		List<Integer> mId = dao.getAllMietenId();
+    		List<Mieten> mietenList = new ArrayList<>();
+    		for(int i = 0; i < mId.size(); i++) {
+    			Mieten mieten = dao.findMietenbyID(mId.get(i));
+    			if(mieten.getKunde().getEmail().equals(email));
+    				mietenList.add(mieten);
+    		}
+    		aar.setMietenList(dto.makeDto(mietenList));
+		} catch (OnlineIntegrationExceptions e) {
+			//logger.info("Test" + dao.getAllAutos().get(0).getClass().getName());
+			aar.setReturnCode(e.getErrorCode());
+			aar.setMessage(e.getMessage());
+		}
+    	return aar;
+    }
+    
     //TODO erst abgerechnet ohne Rechnung
     public UpdateResponse updateMieten(@WebParam(name="Sessionid")int session, @WebParam(name="Mietenid") int mid, 
     								   @WebParam(name="Endkilometer") double endKm) {
