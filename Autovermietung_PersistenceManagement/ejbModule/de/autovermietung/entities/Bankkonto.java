@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 
 // TODO: Auto-generated Javadoc
 /**
+ * @Kevin Haase
  * The Class Bankkonto.
  */
 @Entity

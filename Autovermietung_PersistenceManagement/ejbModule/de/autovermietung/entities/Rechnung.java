@@ -20,6 +20,7 @@ import javax.xml.bind.annotation.XmlType;
 // TODO: Auto-generated Javadoc
 
 /**
+ * @author Kevin Haase
  * The Class Rechnung.
  */
 @XmlType(name="Rechnung2")

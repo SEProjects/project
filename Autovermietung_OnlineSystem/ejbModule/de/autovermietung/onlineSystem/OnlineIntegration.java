@@ -50,22 +50,30 @@ import de.autovermietung.exceptions.OnlineIntegrationExceptions;
 import de.autovermietung.exceptions.SessionabgelaufenException;
 import de.autovermietung.util.DtoAssembler;
 
+// TODO: Auto-generated Javadoc
 /**
- * Session Bean implementation class OnlineIntegration
+ * Session Bean implementation class OnlineIntegration.
  */
 @Stateless
 @WebService
 public class OnlineIntegration {
 
+	/** The dao. */
 	@EJB(beanName = "AutovermietungDAO", beanInterface = de.autovermietung.dao.AutovermietungDAOLocal.class)
 	private AutovermietungDAOLocal dao;
+	
+	/** The ws context. */
 	@Resource
 	private WebServiceContext wsContext;
+	
+	/** The dto. */
 	@EJB
 	private DtoAssembler dto;
 	/** Laden der MessageDrivenBean Insert Klasse. */
 	@EJB
 	private OutputRequesterBean outputRequester;
+	
+	/** The Constant logger. */
 	private static final Logger logger = Logger.getLogger(Databuilder.class);
     /**
      * Default constructor. 
@@ -74,6 +82,15 @@ public class OnlineIntegration {
         // TODO Auto-generated constructor stub
     }
     
+    /**
+     * @Autor Marian Vennewald
+     * Gets the session.
+     *
+     * @param Id Session wird vom Client übergeben um ein Session Objekt per Id zu erreichen
+     * @return session Objekt anhand der Id 
+     * @throws SessionabgelaufenException: die Session ist abgelaufen
+     * @throws KeineSessionException: keine session vorhanden
+     */
     private Session getSession(int Id) throws SessionabgelaufenException, KeineSessionException{
   	   Session session = dao.findSessionbyId(Id);
   	   if(session == null)
@@ -96,6 +113,14 @@ public class OnlineIntegration {
   	   }
      }
     
+    /**
+     * @Autor Marian Vennewald
+     * Login.
+     *
+     * @param email Die Email des Regristierten Benutzer muss übergeben we4rden
+     * @param password Das Password des Regristierten Benutzer muss übergeben werden
+     * @return the kunden login response {@link de.autovermietung.dio.KundenLoginResponse} KundenLoginResponse
+     */
     public KundenLoginResponse login(@WebParam(name="email") String email, @WebParam(name="password") String password)   {
         
     	KundenLoginResponse klr = new KundenLoginResponse();
@@ -131,6 +156,13 @@ public class OnlineIntegration {
 	    
     }
     
+    /**
+     * @Autor Marian Vennewald
+     * Logout.
+     *
+     * @param sessionId the session id vom Aktiven Benutzer übergeben
+     * @return the returncode response {@link de.autovermietung.dio.ReturncodeResponse} ReturncodeResponse
+     */
     public ReturncodeResponse logout(@WebParam(name="sessionId") int sessionId) {
     	Session session;
 		try {
@@ -148,6 +180,14 @@ public class OnlineIntegration {
 		return response;
 	}
     
+    /**
+     * @Autor Marian Vennewald
+     * Gets the kunde.
+     *
+     * @param session the session id vom Aktiven Benutzer übergeben
+     * @param email vom Kunden übergeben
+     * @return the KundeResponse {@link de.autovermietung.dio.KundeResponse} KundeResponse
+     */
     public KundeResponse getKunde(@WebParam(name="Sessionid") int session,@WebParam(name="Kundeemail") String email){
         KundeResponse kr = new KundeResponse();
      	try {
@@ -165,16 +205,14 @@ public class OnlineIntegration {
  		}
      	return kr;
      }
-    /**
-     * ########## For Auto Use-Cases
-     */
-    /**
-     * 
-     * @param session
-     * @param autoid
-     * @return AutoResponse
-     */
     
+    /**
+     * @Autor Marian Vennewald
+     *
+     * @param session the session id vom Aktiven Benutzer übergeben
+     * @param autoid Die Id des Erwarteten Autos übergeben
+     * @return the AutoResponse {@link de.autovermietung.dio.AutoResponse} AutoResponse
+     */    
     public AutoResponse getAuto(@WebParam(name="Sessionid") int session,@WebParam(name="Autoid") int autoid){
 		AutoResponse ar = new AutoResponse();
 		try {
@@ -204,6 +242,14 @@ public class OnlineIntegration {
 		return ar;
 	}
     
+    /**
+     * @Autor Marian Vennewald
+     * Gets the marke.
+     *
+     * @param the session id vom Aktiven Benutzer übergeben
+     * @param markeId die
+     * @return the marke
+     */
     public MarkeResponse getMarke(@WebParam(name="Sessionid")int session, @WebParam(name="MarkeId")int markeId) {
     	MarkeResponse mR = new MarkeResponse();
     	try {
@@ -222,6 +268,14 @@ public class OnlineIntegration {
     	return mR;
     }
     
+    /**
+     * @Autor Marian Vennewald
+     * Gets the kraftstoff.
+     *
+     * @param the session id vom Aktiven Benutzer übergeben
+     * @param ksId the ks id
+     * @return the kraftstoff
+     */
     public KSResponse getKraftstoff(@WebParam(name="Sessionid")int session, @WebParam(name="KsId")int ksId) {
     	KSResponse kR = new KSResponse();
     	try {
@@ -240,6 +294,13 @@ public class OnlineIntegration {
     	return kR;
     }
     
+    /**
+     * @Autor Marian Vennewald
+     * Gets the all autos.
+     *
+     * @param the session id vom Aktiven Benutzer übergeben
+     * @return the all autos
+     */
     public AutoListResponse getAllAutos(@WebParam(name="Sessionid") int session){	
     	AutoListResponse aar = new AutoListResponse();
     	try {
@@ -259,6 +320,15 @@ public class OnlineIntegration {
 		}
     	return aar;
     }
+    
+    /**
+     * @Autor Marian Vennewald
+     * Gets the auto art.
+     *
+     * @param sessionId the session id vom Aktiven Benutzer übergeben
+     * @param id the id
+     * @return the auto art
+     */
     public AutoArtResponse getAutoArt(@WebParam(name="Sessionid") int sessionId, @WebParam(name="AutoArtId") int id) {
     	AutoArtResponse aar = new AutoArtResponse();
     	try {
@@ -274,6 +344,14 @@ public class OnlineIntegration {
     	return aar;
     }
     
+    /**
+     * @Autor Marian Vennewald
+     * Gets the AA bild.
+     *
+     * @param session the session id vom Aktiven Benutzer übergeben
+     * @param aaid the aaid
+     * @return the AA bild
+     */
     public AutoArtBildResponse getAABild(@WebParam(name="Sessionid") int session,@WebParam(name="Aaid") int aaid){
 		AutoArtBildResponse aar = new AutoArtBildResponse(); 
 		 try {
@@ -294,6 +372,16 @@ public class OnlineIntegration {
 		return aar;
 	}
     
+    /**
+     * @Autor Marian Vennewald
+     * Save mieten.
+     *
+     * @param session the session id vom Aktiven Benutzer übergeben
+     * @param anfangskm the anfangskm
+     * @param autoId the auto id
+     * @param kundeEmail the kunde email
+     * @return the neuer eintrag response
+     */
     public neuerEintragResponse saveMieten(@WebParam(name="Sessionid")int session, @WebParam(name="Anfangskm") double anfangskm,
     									   @WebParam(name="Autoid")int autoId, @WebParam(name="Kundeemail")String kundeEmail) {
     	neuerEintragResponse neu = new neuerEintragResponse();
@@ -321,6 +409,14 @@ public class OnlineIntegration {
     	return neu;
     }
     
+    /**
+     * @Autor Marian Vennewald
+     * Gets the mieten.
+     *
+     * @param session the session id vom Aktiven Benutzer übergeben
+     * @param mid the mid
+     * @return the mieten
+     */
     public MietenResponse getMieten(@WebParam(name="Sessionid")int session, @WebParam(name="Mietenid") int mid) {
     	MietenResponse mr = new MietenResponse();
     	try {
@@ -344,6 +440,14 @@ public class OnlineIntegration {
 		}
     	return mr;
     }
+    
+    /**
+     * @Autor Marian Vennewald
+     * Gets the all mieten.
+     *
+     * @param session the session id vom Aktiven Benutzer übergeben
+     * @return the all mieten
+     */
     public MietenListResponse getAllMieten(@WebParam(name="Sessionid") int session){	
     	MietenListResponse aar = new MietenListResponse();
     	try {
@@ -364,6 +468,14 @@ public class OnlineIntegration {
     	return aar;
     }
     
+    /**
+     * @Autor Marian Vennewald
+     * Gets the all mieten aid.
+     *
+     * @param session the session id vom Aktiven Benutzer übergeben
+     * @param aid the aid
+     * @return the all mieten aid
+     */
     public MietenListResponse getAllMietenAid(@WebParam(name="Sessionid") int session, @WebParam(name="Aid") int aid){	
     	MietenListResponse aar = new MietenListResponse();
     	try {
@@ -385,6 +497,14 @@ public class OnlineIntegration {
     	return aar;
     }
     
+    /**
+     * @Autor Marian Vennewald
+     * Gets the all mieten k email.
+     *
+     * @param session the session id vom Aktiven Benutzer übergeben
+     * @param email the email
+     * @return the all mieten k email
+     */
     public MietenListResponse getAllMietenKEmail(@WebParam(name="Sessionid") int session, @WebParam(name="Kemail") String email){	
     	MietenListResponse aar = new MietenListResponse();
     	try {
@@ -407,15 +527,26 @@ public class OnlineIntegration {
     }
     
     //TODO erst abgerechnet ohne Rechnung
+    /**
+     * @Autor Marian Vennewald
+     * Update mieten.
+     *
+     * @param session the session id vom Aktiven Benutzer übergeben
+     * @param mid the mid
+     * @param endKm the end km
+     * @param position the position
+     * @return the update response
+     */
     public UpdateResponse updateMieten(@WebParam(name="Sessionid")int session, @WebParam(name="Mietenid") int mid, 
-    								   @WebParam(name="Endkilometer") double endKm) {
+    								   @WebParam(name="Endkilometer") String endKm, @WebParam(name="Position") String position) {
     	UpdateResponse uM = new UpdateResponse();
     	try {
     		Session Nsession = getSession(session);
 			Mieten m = dao.findMietenbyID(mid);
 				if (m != null) {
-					m.setEndkm(endKm);
+					m.setEndkm(Double.parseDouble(endKm));
 					
+					m.getAuto().setPosition(position);
 				
 					//TODO Rechnungen
 					uM.setSuccessful(true);
@@ -431,6 +562,14 @@ public class OnlineIntegration {
     	return uM;
     }
     
+    /**
+     * @Autor Marian Vennewald
+     * Rechnung.
+     *
+     * @param session the session id vom Aktiven Benutzer übergeben
+     * @param rid the rid
+     * @return the rechnungs response
+     */
     public RechnungsResponse rechnung(@WebParam(name="Sessionid") int session,@WebParam(name="Rechnungsid") int rid){
 		RechnungsResponse rechung = new RechnungsResponse();
 		
@@ -463,6 +602,21 @@ public class OnlineIntegration {
 	}
     /*
      * Aktualisierung der Kunden Daten
+     */
+    /**
+     * @Autor Carlo Eefting
+     * Update kunde.
+     *
+     * @param session the session id vom Aktiven Benutzer übergeben
+     * @param email the email
+     * @param kpassword the kpassword
+     * @param knachname the knachname
+     * @param kvorname the kvorname
+     * @param strasse the strasse
+     * @param plz the plz
+     * @param fsnummer the fsnummer
+     * @param pan the pan
+     * @return the edits the response
      */
     public EditResponse updateKunde(@WebParam(name="Sessionid") int session,@WebParam(name="email") String email,
     		@WebParam(name="Password") String kpassword,
@@ -510,6 +664,14 @@ public class OnlineIntegration {
     /*
      * Rechnung auf bezahlt setzen
      */
+    /**
+     * @Autor Carlo Eefting
+     * Rechnung bezahlen.
+     *
+     * @param session the session id vom Aktiven Benutzer übergeben
+     * @param rid the rid
+     * @return the edits the response
+     */
     public EditResponse rechnungBezahlen(@WebParam(name="Sessionid") int session,@WebParam(name="Rechnungsid") int rid){
     	EditResponse response = new EditResponse();
 		 try {
@@ -538,6 +700,15 @@ public class OnlineIntegration {
     /*
      * Bezahlmethode hinzufügen
      */
+    /**
+     * @Autor Carlo Eefting
+     * Adds the bezahlmethode.
+     *
+     * @param session the session id vom Aktiven Benutzer übergeben
+     * @param email the email
+     * @param bezmeth the bezmeth
+     * @return the edits the response
+     */
     public EditResponse addBezahlmethode(@WebParam(name="Sessionid") int session,@WebParam(name="email") String email,
     		@WebParam(name="addBezmeth") Bezahlmethode bezmeth){
 		EditResponse edit = new EditResponse();
@@ -563,6 +734,16 @@ public class OnlineIntegration {
 		
 		
 	}
+    
+    /**
+     * @Autor Marian Vennewald
+     * Show kunde.
+     *
+     * @param session the session id vom Aktiven Benutzer übergeben
+     * @param Email the email
+     * @return the kunde
+     * @throws NichtVorhandenException the nicht vorhanden exception
+     */
     public Kunde showKunde(@WebParam(name="Sessionid") int session, @WebParam(name="email") String Email) throws NichtVorhandenException{
     	
     	
@@ -596,6 +777,21 @@ public class OnlineIntegration {
     /*
      * register Kunde
      */
+    /**
+     * @Autor Carlo Eefting
+     * Regis kunde.
+     *
+     * @param session the session id vom Aktiven Benutzer übergeben
+     * @param Email the email
+     * @param kpassword the kpassword
+     * @param knachname the knachname
+     * @param kvorname the kvorname
+     * @param strasse the strasse
+     * @param kplz the kplz
+     * @param fsn the fsn
+     * @param pan the pan
+     * @return the neuer eintrag response
+     */
     public neuerEintragResponse regisKunde(@WebParam(name="Sessionid") int session,
     		@WebParam(name="email") String Email,
     		@WebParam(name="Password") String kpassword,
@@ -612,7 +808,7 @@ public class OnlineIntegration {
 		   		Kunde k = dao.findKundebyEmail(Email);
 				
 					if (k == null) {
-						outputRequester.sendMessage(dao.createKunde(kvorname, knachname, Email, kpassword, fsn, pan, strasse, dao.findPlzByID(kplz)));
+						outputRequester.sendMessage(dao.createKunde(Email,kvorname, knachname,  kpassword, fsn, pan, strasse, dao.findPlzByID(kplz)));
 					
 						up.setSuccessful(true);
 					}

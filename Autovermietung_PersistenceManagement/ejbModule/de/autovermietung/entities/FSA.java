@@ -15,6 +15,7 @@ import javax.persistence.OneToMany;
 
 // TODO: Auto-generated Javadoc
 /**
+ * @author Kevin Haase
  * The Class FSA.
  */
 @Entity

@@ -46,7 +46,7 @@ private Session session;
             	  
         	  javax.mail.Message message1 =  new javax.mail.internet.MimeMessage(session);
                   message1.setRecipients(javax.mail.Message.RecipientType.TO, InternetAddress.parse("autovermietungfhm@gmail.com"));
-                  message1.setSubject("Rechnung");
+                  message1.setSubject("Kundenregistration");
                   Multipart mp = new MimeMultipart();
                   MimeBodyPart htmlPart = new MimeBodyPart();
                 

@@ -14,6 +14,7 @@ import javax.persistence.TemporalType;
 
 // TODO: Auto-generated Javadoc
 /**
+ * @Kevin Haase
  * The Class mieten.
  */
 @Entity

@@ -33,6 +33,7 @@ import org.jboss.logging.Logger;
 
 // TODO: Auto-generated Javadoc
 /**
+ * @author Kevin Haase
  * Message-Driven Bean  für den Rechnungsversand in der Nacht + Druck in der Nacht
  */
 @MessageDriven(

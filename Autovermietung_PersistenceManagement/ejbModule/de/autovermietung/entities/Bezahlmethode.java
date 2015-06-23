@@ -9,6 +9,7 @@ import javax.persistence.ManyToOne;
 // TODO: Auto-generated Javadoc
 
 /**
+ * @author Kevin Haase
  * The Class Bezahlmethode.
  */
 @Entity

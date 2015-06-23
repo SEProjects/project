@@ -14,6 +14,7 @@ import javax.persistence.TemporalType;
 
 // TODO: Auto-generated Javadoc
 /**
+ * @author Kevin Haase
  * The Class Schaden.
  */
 @Entity

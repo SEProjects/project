@@ -15,6 +15,7 @@ import javax.persistence.OneToMany;
 
 // TODO: Auto-generated Javadoc
 /**
+ * @Kevin Haase
  * The Class Kraftstoff.
  */
 @Entity

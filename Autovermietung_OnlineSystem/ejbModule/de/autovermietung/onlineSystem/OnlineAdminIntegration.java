@@ -1018,7 +1018,7 @@ public UpdateResponse saveKS(@WebParam(name="Sessionid") int session,@WebParam(n
 	 			ArrayList<Rechnung> rechnungen=dao.createAllRechnungen();
 	 			if(rechnungen.isEmpty()==false){
 	 				for(int i=0; i< rechnungen.size();i++)
-	 				outputRequester.sendMessage(rechnungen.get(i));
+	 				outputRequester.sendMessage(dao.findRechnungbyID(rechnungen.get(i).getRid()));
 	 			}
 	 				
 	 			ner.setSuccessful(true);

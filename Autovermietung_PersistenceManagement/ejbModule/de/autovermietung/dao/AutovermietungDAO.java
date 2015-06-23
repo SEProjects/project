@@ -293,7 +293,7 @@ public class AutovermietungDAO implements AutovermietungDAOAdminLocal,Autovermie
 			for(int i=0;i<query.size();i++){
 				logger.info(query.get(i));
 				
-				List query3 = em.createQuery("SELECT m.mid from Mieten m where m.endkm is not null and m.abgerechnet = false and m.kunde.email = '" + query.get(i) + "'").getResultList();
+				List query3 = em.createQuery("SELECT m.mid from Mieten m where m.endkm <> '0.0' and m.abgerechnet = false and m.kunde.email = '" + query.get(i) + "'").getResultList();
 				BigDecimal summe = new BigDecimal(0);
 				Kunde kunde = em.find(Kunde.class,query.get(i));
 				Rechnung rechnung = new Rechnung(kunde);
