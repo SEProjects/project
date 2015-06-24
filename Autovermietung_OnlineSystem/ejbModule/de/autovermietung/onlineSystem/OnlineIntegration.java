@@ -52,13 +52,13 @@ import de.autovermietung.util.DtoAssembler;
 
 // TODO: Auto-generated Javadoc
 /**
- * Session Bean implementation class OnlineIntegration.
+ * Diese Stateless Session bean ist der Webendpoint für die Clientapp
  */
 @Stateless
 @WebService
 public class OnlineIntegration {
 
-	/** The dao. */
+	/** Laden des DataAccessObject aus der Autovermietung_Persistense */
 	@EJB(beanName = "AutovermietungDAO", beanInterface = de.autovermietung.dao.AutovermietungDAOLocal.class)
 	private AutovermietungDAOLocal dao;
 	
@@ -66,30 +66,25 @@ public class OnlineIntegration {
 	@Resource
 	private WebServiceContext wsContext;
 	
-	/** The dto. */
+	/** Laden des dtoAssembler,welcher größere DTO erstellt */
 	@EJB
 	private DtoAssembler dto;
+	
 	/** Laden der MessageDrivenBean Insert Klasse. */
 	@EJB
 	private OutputRequesterBean outputRequester;
 	
 	/** The Constant logger. */
 	private static final Logger logger = Logger.getLogger(Databuilder.class);
-    /**
-     * Default constructor. 
-     */
-    public OnlineIntegration() {
-        // TODO Auto-generated constructor stub
-    }
     
     /**
-     * @Autor Marian Vennewald
-     * Gets the session.
+     * @author Marian Vennewald
+     * Interne Methode zum Checken der aktiven Session mit Ablauf
      *
-     * @param Id Session wird vom Client übergeben um ein Session Objekt per Id zu erreichen
-     * @return session Objekt anhand der Id 
-     * @throws SessionabgelaufenException: die Session ist abgelaufen
-     * @throws KeineSessionException: keine session vorhanden
+     * @param  Id der Session
+     * @return SessionID zur Authentifizierung
+     * @throws SessionabgelaufenException wenn Session älter als 5 Minuten
+     * @throws KeineSessionException wenn Session nicht vorhanden
      */
     private Session getSession(int Id) throws SessionabgelaufenException, KeineSessionException{
   	   Session session = dao.findSessionbyId(Id);
@@ -114,12 +109,14 @@ public class OnlineIntegration {
      }
     
     /**
-     * @Autor Marian Vennewald
-     * Login.
+     * @author Marian Vennewald
+     * Login Methode für die App
      *
-     * @param email Die Email des Regristierten Benutzer muss übergeben we4rden
+     * @param email Die Email des Regristierten Benutzer muss übergeben werden
      * @param password Das Password des Regristierten Benutzer muss übergeben werden
-     * @return the kunden login response {@link de.autovermietung.dio.KundenLoginResponse} KundenLoginResponse
+     * @return the kunden login response {@link de.autovermietung.dio.KundenLoginResponse KundenLoginResponse }
+     * @throws InvalidLoginException wenn Email noch nicht bestätigt wurde, der Kunde gesperrt oder der Kunde unbekannt nzw. das Passwort falsch ist
+     * @throws SessionabgelaufenException falls die Session abgelaufen ist
      */
     public KundenLoginResponse login(@WebParam(name="email") String email, @WebParam(name="password") String password)   {
         
@@ -133,35 +130,30 @@ public class OnlineIntegration {
 					if(kunde.getLink().equals("true")){
 					Session session = dao.createSession(kunde);
 					klr.setSession(session.getSid());
-					}
-					else
-					{
+					} else {
 						throw new InvalidLoginException("Login fehlgeschlagen, da Email noch nicht bestätigt. username=" + email + " " + password);	
 					}
-				}
-				else
-					{
+				} else {
 					throw new InvalidLoginException("Login fehlgeschlagen, da Kunde gesperrt. username=" + email + " " + password);
-					}
-			}
-			else {
+				}
+			} else {
 				throw new InvalidLoginException("Login fehlgeschlagen, da Kunde unbekannt oder Passwort falsch. username=" + email + " " + password);
 			}
-		}
-		catch (InvalidLoginException e) {
+		} catch (InvalidLoginException e) {
 			klr.setReturnCode(e.getErrorCode());
 			klr.setMessage(e.getMessage());
 		}
 		return klr;
-	    
     }
     
     /**
-     * @Autor Marian Vennewald
-     * Logout.
+     * @author Marian Vennewald
+     * Logout Methode für die App
      *
-     * @param sessionId the session id vom Aktiven Benutzer übergeben
-     * @return the returncode response {@link de.autovermietung.dio.ReturncodeResponse} ReturncodeResponse
+     * @param session id vom Aktiven Benutzer übergeben
+     * @return the returncode response {@link de.autovermietung.dio.ReturncodeResponse ReturncodeResponse }
+     * @throws KeineSessionException wenn Session nicht vorhanden
+     * @throws SessionabgelaufenException falls die Session abgelaufen ist
      */
     public ReturncodeResponse logout(@WebParam(name="sessionId") int sessionId) {
     	Session session;
@@ -181,12 +173,14 @@ public class OnlineIntegration {
 	}
     
     /**
-     * @Autor Marian Vennewald
-     * Gets the kunde.
+     * @author Marian Vennewald
+     * Liefert den gesuchten Kunden
      *
-     * @param session the session id vom Aktiven Benutzer übergeben
+     * @param ssession id vom Aktiven Benutzer übergeben
      * @param email vom Kunden übergeben
-     * @return the KundeResponse {@link de.autovermietung.dio.KundeResponse} KundeResponse
+     * @return KundeResponse {@link de.autovermietung.dio.KundeResponse KundeResponse }
+     * @throws KeineSessionException wenn Session nicht vorhanden
+     * @throws NichtVorhandenException falls der Kunde nicht vorhanden ist
      */
     public KundeResponse getKunde(@WebParam(name="Sessionid") int session,@WebParam(name="Kundeemail") String email){
         KundeResponse kr = new KundeResponse();
@@ -207,11 +201,14 @@ public class OnlineIntegration {
      }
     
     /**
-     * @Autor Marian Vennewald
-     *
-     * @param session the session id vom Aktiven Benutzer übergeben
-     * @param autoid Die Id des Erwarteten Autos übergeben
-     * @return the AutoResponse {@link de.autovermietung.dio.AutoResponse} AutoResponse
+     * @author Marian Vennewald
+     * Liefert das gesuchte Auto zurück
+     * 
+     * @param Session id vom Aktiven Benutzer übergeben
+     * @param Auto Id des Erwarteten Autos übergeben
+     * @return AutoResponse {@link de.autovermietung.dio.AutoResponse AutoResponse }
+     * @throws KeineSessionException wenn Session nicht vorhanden
+     * @throws NichtVorhandenException falls das Auto nicht vorhanden ist
      */    
     public AutoResponse getAuto(@WebParam(name="Sessionid") int session,@WebParam(name="Autoid") int autoid){
 		AutoResponse ar = new AutoResponse();
@@ -243,12 +240,14 @@ public class OnlineIntegration {
 	}
     
     /**
-     * @Autor Marian Vennewald
-     * Gets the marke.
+     * @author Marian Vennewald
+     * Liefert die gesuchte Marke zurück
      *
-     * @param the session id vom Aktiven Benutzer übergeben
-     * @param markeId die
-     * @return the marke
+     * @param Session id vom Aktiven Benutzer übergeben
+     * @param Marke Id der gesuchten Marke
+     * @return MarkeResponse {@link de.autovermietung.dio.MarkeResponse MarkeResponse }
+     * @throws KeineSessionException wenn Session nicht vorhanden
+     * @throws NichtVorhandenException falls die Marke nicht vorhanden ist
      */
     public MarkeResponse getMarke(@WebParam(name="Sessionid")int session, @WebParam(name="MarkeId")int markeId) {
     	MarkeResponse mR = new MarkeResponse();
@@ -259,7 +258,7 @@ public class OnlineIntegration {
 				mR.setMarkeid(marke.getMarkeid());
 				mR.setMarkenname(marke.getMarkenname());
 			} else {
-				throw new NichtVorhandenException("Marke ist nict vorhanden");
+				throw new NichtVorhandenException("Marke ist nicht vorhanden");
 			}
     	} catch (OnlineIntegrationExceptions e) {
 			mR.setReturnCode(e.getErrorCode());
@@ -269,12 +268,14 @@ public class OnlineIntegration {
     }
     
     /**
-     * @Autor Marian Vennewald
-     * Gets the kraftstoff.
+     * @author Marian Vennewald
+     * Liefert den gesuchten Kraftstoff zurück
      *
-     * @param the session id vom Aktiven Benutzer übergeben
-     * @param ksId the ks id
-     * @return the kraftstoff
+     * @param Session id vom Aktiven Benutzer übergeben
+     * @param Kraftstoff Id des gesuchten Kraftstoffs
+     * @return KSResponse {@link de.autovermietung.dio.KSResponse KSResponse }
+     * @throws KeineSessionException wenn Session nicht vorhanden
+     * @throws NichtVorhandenException falls der Kraftstoff nicht vorhanden ist
      */
     public KSResponse getKraftstoff(@WebParam(name="Sessionid")int session, @WebParam(name="KsId")int ksId) {
     	KSResponse kR = new KSResponse();
@@ -285,7 +286,7 @@ public class OnlineIntegration {
 				kR.setKsid(kraftstoff.getKsid());
 				kR.setBezeichnung(kraftstoff.getKsbezeichnung());
 			} else {
-				throw new NichtVorhandenException("Marke ist nict vorhanden");
+				throw new NichtVorhandenException("Kraftstoff ist nicht vorhanden");
 			}
     	} catch (OnlineIntegrationExceptions e) {
 			kR.setReturnCode(e.getErrorCode());
@@ -295,17 +296,17 @@ public class OnlineIntegration {
     }
     
     /**
-     * @Autor Marian Vennewald
-     * Gets the all autos.
+     * @author Marian Vennewald
+     * Liefert alle Autos zurück
      *
-     * @param the session id vom Aktiven Benutzer übergeben
-     * @return the all autos
+     * @param Session id vom Aktiven Benutzer übergeben
+     * @return AutoListResponse {@link de.autovermietung.dio.AutoListResponse AutoListResponse }
+     * @throws KeineSessionException wenn Session nicht vorhanden
      */
     public AutoListResponse getAllAutos(@WebParam(name="Sessionid") int session){	
     	AutoListResponse aar = new AutoListResponse();
     	try {
     		Session sessionId = getSession(session);
-    		//logger.info("Test" + dao.getAllAutos().get(0).getClass().getName());
     		List<Integer> aId = dao.getAllAutosA();
     		List<Auto> autoList = new ArrayList<>();
     		for(int i = 0; i < aId.size(); i++) {
@@ -314,7 +315,6 @@ public class OnlineIntegration {
     		}
     		aar.setAutoList(dto.makeDTO(autoList));
 		} catch (OnlineIntegrationExceptions e) {
-			//logger.info("Test" + dao.getAllAutos().get(0).getClass().getName());
 			aar.setReturnCode(e.getErrorCode());
 			aar.setMessage(e.getMessage());
 		}
@@ -322,12 +322,14 @@ public class OnlineIntegration {
     }
     
     /**
-     * @Autor Marian Vennewald
-     * Gets the auto art.
+     * @author Marian Vennewald
+     * Liefert ein Auto Art zurück
      *
-     * @param sessionId the session id vom Aktiven Benutzer übergeben
-     * @param id the id
-     * @return the auto art
+     * @param Session id vom Aktiven Benutzer übergeben
+     * @param id des gesuchten Autoartes
+     * @return AutoArtResponse {@link de.autovermietung.dio.AutoArtResponse AutoArtResponse }
+     * @throws KeineSessionException wenn Session nicht vorhanden
+     * @throws NichtVorhandenException falls die Autoart nicht vorhanden ist
      */
     public AutoArtResponse getAutoArt(@WebParam(name="Sessionid") int sessionId, @WebParam(name="AutoArtId") int id) {
     	AutoArtResponse aar = new AutoArtResponse();
@@ -336,7 +338,9 @@ public class OnlineIntegration {
 	    	Autoart autoArt = dao.findAutoartbyID(id);
 	    	if(autoArt != null) {
 	    		aar = dto.makeDTO(autoArt);
-	    	}
+	    	} else {
+				throw new NichtVorhandenException("Die Autoart ist nicht vorhanden");
+			}
 		} catch (OnlineIntegrationExceptions e) {
 			aar.setReturnCode(e.getErrorCode());
 			aar.setMessage(e.getMessage());
@@ -345,62 +349,63 @@ public class OnlineIntegration {
     }
     
     /**
-     * @Autor Marian Vennewald
-     * Gets the AA bild.
+     * @author Marian Vennewald
+     * Liefert vom Auto Art das Bild
      *
-     * @param session the session id vom Aktiven Benutzer übergeben
-     * @param aaid the aaid
-     * @return the AA bild
+     * @param Session id vom Aktiven Benutzer übergeben
+     * @param id des Autoartes
+     * @return AutoArtBildResponse {@link de.autovermietung.dio.AutoArtBildResponse AutoArtBildResponse }
+     * @throws KeineSessionException wenn Session nicht vorhanden
+     * @throws NichtVorhandenException falls die Autoart nicht vorhanden ist
      */
     public AutoArtBildResponse getAABild(@WebParam(name="Sessionid") int session,@WebParam(name="Aaid") int aaid){
 		AutoArtBildResponse aar = new AutoArtBildResponse(); 
-		 try {
-		   		Session Nsession = getSession(session);
-		   		Autoart aa = dao.findAutoartbyID(aaid);
-				
-					if (aa != null) {
-						aar.setBild(aa.getBild());
-					} else {
-						throw new NichtVorhandenException("Die Autoart ist nicht vorhanden");
-					}
-				}
-				catch (OnlineIntegrationExceptions e) {
-					aar.setReturnCode(e.getErrorCode());
-					aar.setMessage(e.getMessage());
-				}
-			   
+		try {
+			Session Nsession = getSession(session);
+		   	Autoart aa = dao.findAutoartbyID(aaid);	
+			if (aa != null) {
+				aar.setBild(aa.getBild());
+			} else {
+				throw new NichtVorhandenException("Die Autoart ist nicht vorhanden");
+			}
+		} catch (OnlineIntegrationExceptions e) {
+			aar.setReturnCode(e.getErrorCode());
+			aar.setMessage(e.getMessage());
+		}	   
 		return aar;
 	}
     
     /**
-     * @Autor Marian Vennewald
-     * Save mieten.
+     * @author Marian Vennewald
+     * Speichert eine neue Miete an
      *
-     * @param session the session id vom Aktiven Benutzer übergeben
-     * @param anfangskm the anfangskm
-     * @param autoId the auto id
-     * @param kundeEmail the kunde email
-     * @return the neuer eintrag response
+     * @param Session id vom Aktiven Benutzer übergeben
+     * @param anfangskm von dem gemieteten Auto
+     * @param autoId Id des gemieteten Autos
+     * @param kundeEmail email des aktiven Benutzer der das Auto Mieten möchte
+     * @return neuerEintragResponse {@link de.autovermietung.dio.neuerEintragResponse neuerEintragResponse }
+     * @throws KeineSessionException wenn Session nicht vorhanden
+     * @throws NichtVorhandenException falls der Kunde oder das Auto nicht vorhanden ist
+     * @throws InsertException falls beim einfügen ein Fehler aufgetreten ist
      */
     public neuerEintragResponse saveMieten(@WebParam(name="Sessionid")int session, @WebParam(name="Anfangskm") double anfangskm,
     									   @WebParam(name="Autoid")int autoId, @WebParam(name="Kundeemail")String kundeEmail) {
     	neuerEintragResponse neu = new neuerEintragResponse();
     	try {
     		Session Nsession = getSession(session);
-				if (dao.findAutobyID(autoId) != null && dao.findKundebyEmail(kundeEmail) != null) {
-					Auto auto = dao.findAutobyID(autoId);
-					Kunde kunde = dao.findKundebyEmail(kundeEmail);
-			    	Mieten mieten = dao.createMieten(anfangskm, auto, kunde);
-			    	if (mieten != null) {
-						neu.setSuccessful(true);
-					}
-					else {
-						neu.setSuccessful(false);
-						throw new InsertException("Einfügen des Mieten ist fehlgeschlagen");
-					}
+			if (dao.findAutobyID(autoId) != null && dao.findKundebyEmail(kundeEmail) != null) {
+				Auto auto = dao.findAutobyID(autoId);
+				Kunde kunde = dao.findKundebyEmail(kundeEmail);
+			   	Mieten mieten = dao.createMieten(anfangskm, auto, kunde);
+			   	if (mieten != null) {
+					neu.setSuccessful(true);
 				} else {
-					throw new NichtVorhandenException("Kunde oder Auto nicht vorhanden");
+					neu.setSuccessful(false);
+					throw new InsertException("Einfügen des Mieten ist fehlgeschlagen");
 				}
+			} else {
+				throw new NichtVorhandenException("Kunde oder Auto nicht vorhanden");
+			}
 		} catch (OnlineIntegrationExceptions e) {
 			neu.setReturnCode(e.getErrorCode());
 			neu.setMessage(e.getMessage());
@@ -410,12 +415,14 @@ public class OnlineIntegration {
     }
     
     /**
-     * @Autor Marian Vennewald
-     * Gets the mieten.
+     * @author Marian Vennewald
+     * Liefert eine Miete zurück
      *
-     * @param session the session id vom Aktiven Benutzer übergeben
-     * @param mid the mid
-     * @return the mieten
+     * @param Session id vom Aktiven Benutzer übergeben
+     * @param mid Id der Miete
+     * @return MietenResponse {@link de.autovermietung.dio.MietenResponse MietenResponse }
+     * @throws KeineSessionException wenn Session nicht vorhanden
+     * @throws NichtVorhandenException falls die Miete nicht vorhanden ist
      */
     public MietenResponse getMieten(@WebParam(name="Sessionid")int session, @WebParam(name="Mietenid") int mid) {
     	MietenResponse mr = new MietenResponse();
@@ -430,7 +437,6 @@ public class OnlineIntegration {
 					mr.setAutoId(m.getAuto().getAid());
 					mr.setKundeEmail(m.getKunde().getEmail());
 					mr.setTimestamp(m.getTimestamp().toString());
-					//TODO Rechnungen
 				} else {
 					throw new NichtVorhandenException("Die Miete ist nicht vorhanden");
 				}
@@ -442,45 +448,44 @@ public class OnlineIntegration {
     }
     
     /**
-     * @Autor Marian Vennewald
-     * Gets the all mieten.
+     * @author Marian Vennewald
+     * Liefert alle Mieten zurück
      *
-     * @param session the session id vom Aktiven Benutzer übergeben
-     * @return the all mieten
+     * @param Session id vom Aktiven Benutzer übergeben
+     * @return MietenListResponse {@link de.autovermietung.dio.MietenListResponse MietenListResponse }
+     * @throws KeineSessionException wenn Session nicht vorhanden
      */
     public MietenListResponse getAllMieten(@WebParam(name="Sessionid") int session){	
-    	MietenListResponse aar = new MietenListResponse();
+    	MietenListResponse mr = new MietenListResponse();
     	try {
     		Session sessionId = getSession(session);
-    		//logger.info("Test" + dao.getAllAutos().get(0).getClass().getName());
     		List<Integer> mId = dao.getAllMietenId();
     		List<Mieten> mietenList = new ArrayList<>();
     		for(int i = 0; i < mId.size(); i++) {
     			Mieten mieten = dao.findMietenbyID(mId.get(i));
     			mietenList.add(mieten);
     		}
-    		aar.setMietenList(dto.makeDto(mietenList));
+    		mr.setMietenList(dto.makeDto(mietenList));
 		} catch (OnlineIntegrationExceptions e) {
-			//logger.info("Test" + dao.getAllAutos().get(0).getClass().getName());
-			aar.setReturnCode(e.getErrorCode());
-			aar.setMessage(e.getMessage());
+			mr.setReturnCode(e.getErrorCode());
+			mr.setMessage(e.getMessage());
 		}
-    	return aar;
+    	return mr;
     }
     
     /**
-     * @Autor Marian Vennewald
-     * Gets the all mieten aid.
+     * @author Marian Vennewald
+     * Liefert alle Mieten eines Autos zurück
      *
-     * @param session the session id vom Aktiven Benutzer übergeben
-     * @param aid the aid
-     * @return the all mieten aid
+     * @param Session id vom Aktiven Benutzer übergeben
+     * @param aid id des gewählten Autos
+     * @return MietenListResponse {@link de.autovermietung.dio.MietenListResponse MietenListResponse }
+     * @throws KeineSessionException wenn Session nicht vorhanden
      */
     public MietenListResponse getAllMietenAid(@WebParam(name="Sessionid") int session, @WebParam(name="Aid") int aid){	
-    	MietenListResponse aar = new MietenListResponse();
+    	MietenListResponse mr = new MietenListResponse();
     	try {
     		Session sessionId = getSession(session);
-    		//logger.info("Test" + dao.getAllAutos().get(0).getClass().getName());
     		List<Integer> mId = dao.getAllMietenId();
     		List<Mieten> mietenList = new ArrayList<>();
     		for(int i = 0; i < mId.size(); i++) {
@@ -488,28 +493,27 @@ public class OnlineIntegration {
     			if(mieten.getAuto().getAid() == aid)
     				mietenList.add(mieten);
     		}
-    		aar.setMietenList(dto.makeDto(mietenList));
+    		mr.setMietenList(dto.makeDto(mietenList));
 		} catch (OnlineIntegrationExceptions e) {
-			//logger.info("Test" + dao.getAllAutos().get(0).getClass().getName());
-			aar.setReturnCode(e.getErrorCode());
-			aar.setMessage(e.getMessage());
+			mr.setReturnCode(e.getErrorCode());
+			mr.setMessage(e.getMessage());
 		}
-    	return aar;
+    	return mr;
     }
     
     /**
-     * @Autor Marian Vennewald
-     * Gets the all mieten k email.
+     * @author Marian Vennewald
+     * Liefert alle Mieten eines Kundens zurück
      *
-     * @param session the session id vom Aktiven Benutzer übergeben
-     * @param email the email
-     * @return the all mieten k email
+     * @param Session id vom Aktiven Benutzer übergeben
+     * @param email des aktiven Benutzers
+     * @return MietenListResponse {@link de.autovermietung.dio.MietenListResponse MietenListResponse }
+     * @throws KeineSessionException wenn Session nicht vorhanden
      */
     public MietenListResponse getAllMietenKEmail(@WebParam(name="Sessionid") int session, @WebParam(name="Kemail") String email){	
-    	MietenListResponse aar = new MietenListResponse();
+    	MietenListResponse mr = new MietenListResponse();
     	try {
     		Session sessionId = getSession(session);
-    		//logger.info("Test" + dao.getAllAutos().get(0).getClass().getName());
     		List<Integer> mId = dao.getAllMietenId();
     		List<Mieten> mietenList = new ArrayList<>();
     		for(int i = 0; i < mId.size(); i++) {
@@ -517,25 +521,25 @@ public class OnlineIntegration {
     			if(mieten.getKunde().getEmail().equals(email));
     				mietenList.add(mieten);
     		}
-    		aar.setMietenList(dto.makeDto(mietenList));
+    		mr.setMietenList(dto.makeDto(mietenList));
 		} catch (OnlineIntegrationExceptions e) {
-			//logger.info("Test" + dao.getAllAutos().get(0).getClass().getName());
-			aar.setReturnCode(e.getErrorCode());
-			aar.setMessage(e.getMessage());
+			mr.setReturnCode(e.getErrorCode());
+			mr.setMessage(e.getMessage());
 		}
-    	return aar;
+    	return mr;
     }
     
-    //TODO erst abgerechnet ohne Rechnung
     /**
-     * @Autor Marian Vennewald
-     * Update mieten.
+     * @author Marian Vennewald
+     * Aktualisiert eine Miete (Auto wird abgegeben)
      *
-     * @param session the session id vom Aktiven Benutzer übergeben
-     * @param mid the mid
-     * @param endKm the end km
-     * @param position the position
-     * @return the update response
+     * @param Session id vom Aktiven Benutzer übergeben
+     * @param mid id der gewählten Miete
+     * @param endKm des Autos das Gemietet wurde
+     * @param position des Autos das Gemietet wurde
+     * @return UpdateResponse {@link de.autovermietung.dio.UpdateResponse UpdateResponse }
+     * @throws KeineSessionException wenn Session nicht vorhanden
+     * @throws NichtVorhandenException falls die Miete nicht vorhanden ist
      */
     public UpdateResponse updateMieten(@WebParam(name="Sessionid")int session, @WebParam(name="Mietenid") int mid, 
     								   @WebParam(name="Endkilometer") String endKm, @WebParam(name="Position") String position) {
@@ -543,80 +547,72 @@ public class OnlineIntegration {
     	try {
     		Session Nsession = getSession(session);
 			Mieten m = dao.findMietenbyID(mid);
-				if (m != null) {
-					m.setEndkm(Double.parseDouble(endKm));
-					
-					m.getAuto().setPosition(position);
-				
-					//TODO Rechnungen
-					uM.setSuccessful(true);
-				} else {
-					throw new NichtVorhandenException("Die Miete ist nicht vorhanden");
-				}
+			if (m != null) {
+				m.setEndkm(Double.parseDouble(endKm));
+				m.getAuto().setPosition(position);
+				uM.setSuccessful(true);
+			} else {
+				throw new NichtVorhandenException("Die Miete ist nicht vorhanden");
 			}
-			catch (OnlineIntegrationExceptions e) {
-				uM.setReturnCode(e.getErrorCode());
-				uM.setMessage(e.getMessage());
-				uM.setSuccessful(false);
-			}
+		} catch (OnlineIntegrationExceptions e) {
+			uM.setReturnCode(e.getErrorCode());
+			uM.setMessage(e.getMessage());
+			uM.setSuccessful(false);
+		}
     	return uM;
     }
     
     /**
-     * @Autor Marian Vennewald
-     * Rechnung.
+     * @author Carlo Eefting
+     * Liefert eine Rechnung zurück
      *
-     * @param session the session id vom Aktiven Benutzer übergeben
-     * @param rid the rid
-     * @return the rechnungs response
+     * @param Session id vom Aktiven Benutzer übergeben
+     * @param rid id der Rechnung 
+     * @return RechnungsResponse {@link de.autovermietung.dio.RechnungsResponse} RechnungsResponse
+     * @throws KeineSessionException wenn Session nicht vorhanden
+     * @throws NichtVorhandenException falls die Rechnung nicht vorhanden ist
      */
-    public RechnungsResponse rechnung(@WebParam(name="Sessionid") int session,@WebParam(name="Rechnungsid") int rid){
-		RechnungsResponse rechung = new RechnungsResponse();
-		
-		 try {
-			 Session Nsession = getSession(session);
-		   		
-		   		Rechnung rechn = dao.findRechnungbyID(rid);
-				
-					if (rechn != null) {
-						rechung.setGesamtpreis(rechn.getGesamtpreis());
-						rechung.setMwst(rechn.getMwst());
-						rechung.setRechnungspositionen(rechn.getRechnungspositionen());
-						rechung.setKunde(rechn.getKunde());
-					}
-					else {
-						
-						throw new NichtVorhandenException("Rechnung ist nicht vorhanden");
-					}
-				}
-				catch (OnlineIntegrationExceptions e) {
-					rechung.setReturnCode(e.getErrorCode());
-					rechung.setMessage(e.getMessage());
-				}
-			   
-		  
-		  
-		  return rechung;
-		
-		
+    public RechnungsResponse getRechnung(@WebParam(name="Sessionid") int session,@WebParam(name="Rechnungsid") int rid){
+		RechnungsResponse rechnung = new RechnungsResponse();
+		try {
+			Session Nsession = getSession(session);	
+		   	Rechnung r = dao.findRechnungbyID(rid);	
+			if (r != null) {
+				rechnung.setGesamtpreis(r.getGesamtpreis());
+				rechnung.setMwst(r.getMwst());
+				rechnung.setRechnungspositionen(r.getRechnungspositionen());
+				rechnung.setKunde(r.getKunde());
+				rechnung.setRid(rid);
+				rechnung.setTimestamp(r.getTimestamp());
+				rechnung.setAbgerechnet(r.isAbgerechnet());
+			} else {
+				throw new NichtVorhandenException("Rechnung ist nicht vorhanden");
+			}
+		} catch (OnlineIntegrationExceptions e) {
+			rechnung.setReturnCode(e.getErrorCode());
+			rechnung.setMessage(e.getMessage());
+		}
+		return rechnung;
 	}
     /*
      * Aktualisierung der Kunden Daten
      */
     /**
-     * @Autor Carlo Eefting
-     * Update kunde.
+     * @author Carlo Eefting
+     * Aktualisiert einen Kunden
      *
-     * @param session the session id vom Aktiven Benutzer übergeben
-     * @param email the email
-     * @param kpassword the kpassword
-     * @param knachname the knachname
-     * @param kvorname the kvorname
-     * @param strasse the strasse
-     * @param plz the plz
-     * @param fsnummer the fsnummer
-     * @param pan the pan
-     * @return the edits the response
+     * @param Session id vom Aktiven Benutzer übergeben
+     * @param email des Kunden
+     * @param kpassword password des Kunden
+     * @param knachname nachname des Kunden
+     * @param kvorname vorname des Kunden
+     * @param strasse des Kunden
+     * @param plz des Kunden
+     * @param fsnummer führerscheinnummer des Kunden
+     * @param pan Personalausweisnummer des Kunden
+     * @return EditResponse {@link de.autovermietung.dio.EditResponse EditResponse }
+     * @throws KeineSessionException wenn Session nicht vorhanden
+     * @throws NichtVorhandenException falls der Kunde nicht vorhanden ist
      */
     public EditResponse updateKunde(@WebParam(name="Sessionid") int session,@WebParam(name="email") String email,
     		@WebParam(name="Password") String kpassword,
@@ -629,168 +625,109 @@ public class OnlineIntegration {
 		EditResponse up = new EditResponse();
 		
 		 try {
-			 Session Nsession = getSession(session);
-		   		
-		   		Kunde k = dao.findKundebyEmail(email);
-				
-					if (k != null) {
-						k.setEmail(email);
-						k.setKpassword(kpassword);
-						k.setKnachname(knachname);
-						k.setKvorname(kvorname);
-						k.setStrasse(strasse);
-						k.setKplz(dao.findPlzByID(plz));
-						k.setFsnummer(fsnummer);
-						k.setPan(pan);
-						
-						up.setSuccessful(true);
-					}
-					else {
+			Session Nsession = getSession(session);
+		   	Kunde k = dao.findKundebyEmail(email);
+				if (k != null) {
+					k.setEmail(email);
+					k.setKpassword(kpassword);
+					k.setKnachname(knachname);
+					k.setKvorname(kvorname);
+					k.setStrasse(strasse);
+					k.setKplz(dao.findPlzByID(plz));
+					k.setFsnummer(fsnummer);
+					k.setPan(pan);
+					up.setSuccessful(true);
+					} else {
 						throw new NichtVorhandenException("Kunde ist nicht vorhanden");
 					}
-				}
-				catch (OnlineIntegrationExceptions e) {
+				} catch (OnlineIntegrationExceptions e) {
 					up.setReturnCode(e.getErrorCode());
 					up.setMessage(e.getMessage());
 				}
-			   
-		  
-		  
 		  return up;
-		
-		
 	}
     
     /*
      * Rechnung auf bezahlt setzen
      */
     /**
-     * @Autor Carlo Eefting
+     * @author Carlo Eefting
      * Rechnung bezahlen.
      *
-     * @param session the session id vom Aktiven Benutzer übergeben
-     * @param rid the rid
-     * @return the edits the response
+     * @param Session id vom Aktiven Benutzer übergeben
+     * @param rid id einer Rechnung
+     * @return EditResponse {@link de.autovermietung.dio.EditResponse EditResponse}
+     * @throws KeineSessionException wenn Session nicht vorhanden
+     * @throws NichtVorhandenException falls die Rechnung nicht vorhanden ist
      */
     public EditResponse rechnungBezahlen(@WebParam(name="Sessionid") int session,@WebParam(name="Rechnungsid") int rid){
     	EditResponse response = new EditResponse();
 		 try {
-			 Session Nsession = getSession(session);
-		   		
-		   		Rechnung rechn = dao.findRechnungbyID(rid);
-				
-					if (rechn != null) {
-						rechn.setBezahlt(true);
-						response.setSuccessful(true);
-						
-					}
-					else {
-						
+			Session Nsession = getSession(session);
+		   	Rechnung rechn = dao.findRechnungbyID(rid);
+				if (rechn != null) {
+					rechn.setBezahlt(true);
+					response.setSuccessful(true);		
+					} else {
 						throw new NichtVorhandenException("Rechnung ist nicht vorhanden");
 					}
-				}
-				catch (OnlineIntegrationExceptions e) {
+				} catch (OnlineIntegrationExceptions e) {
 					response.setReturnCode(e.getErrorCode());
 					response.setMessage(e.getMessage());
 				}
-		  
-		  return response;
-	
+		  return response;	
 	}
     /*
      * Bezahlmethode hinzufügen
      */
     /**
-     * @Autor Carlo Eefting
-     * Adds the bezahlmethode.
+     * @author Carlo Eefting
+     * Fügt eine Bezahlmethode hinzu
      *
-     * @param session the session id vom Aktiven Benutzer übergeben
-     * @param email the email
-     * @param bezmeth the bezmeth
-     * @return the edits the response
+     * @param Session id vom Aktiven Benutzer übergeben
+     * @param email des Kunden
+     * @param bezmeth Bezahlmethode
+     * @return EditResponse {@link de.autovermietung.dio.EditResponse EditResponse }
+     * @throws KeineSessionException wenn Session nicht vorhanden
+     * @throws NichtVorhandenException falls der Kunde nicht vorhanden ist
      */
     public EditResponse addBezahlmethode(@WebParam(name="Sessionid") int session,@WebParam(name="email") String email,
     		@WebParam(name="addBezmeth") Bezahlmethode bezmeth){
 		EditResponse edit = new EditResponse();
-		
 		 try {
-			 Session Nsession = getSession(session);
-		   		Kunde kunde = dao.findKundebyEmail(email);
-					if (kunde != null) {
-						kunde.addBezahlmethoden(bezmeth);
-						edit.setSuccessful(true);
-					}
-					else {
-						throw new NichtVorhandenException("Kunde ist nicht vorhanden");
-					}
+			Session Nsession = getSession(session);
+		   	Kunde kunde = dao.findKundebyEmail(email);
+				if (kunde != null) {
+					kunde.addBezahlmethoden(bezmeth);
+					edit.setSuccessful(true);
+				} else {
+					throw new NichtVorhandenException("Kunde ist nicht vorhanden");
 				}
-				catch (OnlineIntegrationExceptions e) {
-					edit.setReturnCode(e.getErrorCode());
-					edit.setMessage(e.getMessage());
-
-				}
-	 	  
-		  return edit;
-		
-		
-	}
-    
-    /**
-     * @Autor Marian Vennewald
-     * Show kunde.
-     *
-     * @param session the session id vom Aktiven Benutzer übergeben
-     * @param Email the email
-     * @return the kunde
-     * @throws NichtVorhandenException the nicht vorhanden exception
-     */
-    public Kunde showKunde(@WebParam(name="Sessionid") int session, @WebParam(name="email") String Email) throws NichtVorhandenException{
-    	
-    	
-    		Kunde k = dao.findKundebyEmail(Email);
-    		
-    		if(k != null){
-    			k.getEmail();
-    			k.getFsnummer();
-    			k.getBezahlmethoden();
-    			k.getGemietet();
-    			k.getKnachname();
-    			k.getKplz();
-    			k.getKvorname();
-    			k.getPan();
-    			k.getRechnungen();
-    			k.getStrasse();
-    			k.getSchaden();
-    	}
-    		else {
-				
-				throw new NichtVorhandenException("Kunde ist nicht vorhanden");
+			} catch (OnlineIntegrationExceptions e) {
+				edit.setReturnCode(e.getErrorCode());
+				edit.setMessage(e.getMessage());
 			}
-		
-    	
-    	
-    	return k;
-    	
-    	}
-    	
-   
+		  return edit;
+	}
     /*
      * register Kunde
      */
     /**
-     * @Autor Carlo Eefting
-     * Regis kunde.
+     * @author Carlo Eefting
+     * Neuen Kunden anlegen
      *
-     * @param session the session id vom Aktiven Benutzer übergeben
-     * @param Email the email
-     * @param kpassword the kpassword
-     * @param knachname the knachname
-     * @param kvorname the kvorname
-     * @param strasse the strasse
-     * @param kplz the kplz
-     * @param fsn the fsn
-     * @param pan the pan
-     * @return the neuer eintrag response
+     * @param Session id vom Aktiven Benutzer übergeben
+     * @param Email des Kunden
+     * @param kpassword password des Kunden
+     * @param knachname Nachname des Kunden
+     * @param kvorname Vorname des Kunden
+     * @param strasse des kunden
+     * @param kplz Plz des Kunden
+     * @param fsn Führerscheinnummer des Kunden
+     * @param pan Personalausweisnummer des Kunden
+     * @return neuerEintragResponse {@link de.autovermietung.dio.neuerEintragResponse neuerEintragResponse }
+     * @throws KeineSessionException wenn Session nicht vorhanden
+     * @throws NichtVorhandenException falls der Kunde schon angelegt wurde
      */
     public neuerEintragResponse regisKunde(@WebParam(name="Sessionid") int session,
     		@WebParam(name="email") String Email,
@@ -800,31 +737,22 @@ public class OnlineIntegration {
     		@WebParam(name="Strasse")String strasse,
     		@WebParam(name="PLZ")String kplz,
     		@WebParam(name="fsn")String fsn,
-    		@WebParam(name="pan")String pan){
+    		@WebParam(name="pan")String pan) {
 		neuerEintragResponse up = new neuerEintragResponse();
 		
-		 try {
-		   		
-		   		Kunde k = dao.findKundebyEmail(Email);
-				
-					if (k == null) {
-						outputRequester.sendMessage(dao.createKunde(Email,kvorname, knachname,  kpassword, fsn, pan, strasse, dao.findPlzByID(kplz)));
-					
-						up.setSuccessful(true);
-					}
-					else {
-						
-						throw new NichtVorhandenException("Kunde ist nicht vorhanden");
-					}
+		try {
+			Session Nsession = getSession(session);
+			Kunde k = dao.findKundebyEmail(Email);
+				if (k == null) {
+					outputRequester.sendMessage(dao.createKunde(Email,kvorname, knachname,  kpassword, fsn, pan, strasse, dao.findPlzByID(kplz)));
+					up.setSuccessful(true);
+				} else {
+					throw new NichtVorhandenException("Kunde ist schon vorhanden");
 				}
-				catch (OnlineIntegrationExceptions e) {
-					up.setReturnCode(e.getErrorCode());
-					up.setMessage(e.getMessage());
-				}
-			   
-		  
-		  
-		  return up;
+		} catch (OnlineIntegrationExceptions e) {
+			up.setReturnCode(e.getErrorCode());
+			up.setMessage(e.getMessage());
+		}
+		return up;
     }
-    
 }
