@@ -1,10 +1,6 @@
-de.autovermietung.Output
 de.autovermietung.dao
 de.autovermietung.dto
 de.autovermietung.entities
 de.autovermietung.exceptions
 de.autovermietung.onlineSystem
-de.autovermietung.onlinesystem
-de.autovermietung.test
 de.autovermietung.util
-net.java.dev.jaxb.array
